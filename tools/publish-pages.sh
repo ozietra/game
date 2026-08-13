@@ -11,23 +11,32 @@ set -euo pipefail
 
 BRANCH="gh-pages"
 WORKTREE="$(mktemp -d)"
+STAGING="pages-staging-$$"
 
 npm run build
 
 git worktree add --detach "$WORKTREE" >/dev/null
-trap 'git worktree remove --force "$WORKTREE" >/dev/null 2>&1 || true' EXIT
+cleanup() {
+  git worktree remove --force "$WORKTREE" >/dev/null 2>&1 || true
+  git branch -D "$STAGING" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
+SOURCE="$PWD"
 cd "$WORKTREE"
-git switch --orphan "$BRANCH"
-git rm -rq --cached . 2>/dev/null || true
+
+# A throwaway orphan keeps this working whether or not gh-pages already exists
+# locally, since a worktree cannot check out a branch another one holds.
+git switch --orphan "$STAGING"
 find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
-cp -r "$OLDPWD/dist/." .
+cp -r "$SOURCE/dist/." .
 # Stops GitHub from running the files through Jekyll.
 touch .nojekyll
 
 git add -A
 git commit -qm "Publish build $(date -u +%Y-%m-%dT%H:%MZ)"
-git push -f origin "$BRANCH"
+git push -f origin "HEAD:refs/heads/$BRANCH"
+git branch -f "$BRANCH" HEAD
 
 echo "published $BRANCH"
