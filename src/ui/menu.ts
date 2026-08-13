@@ -155,6 +155,30 @@ export class Menu {
       writeSave(state);
     });
 
+    // Turning the shaft down without turning the interface off with it.
+    const effects = el('input', { type: 'checkbox', id: 'effects' });
+    (effects as HTMLInputElement).checked = state.audio.effects !== false;
+    on(effects, 'change', () => {
+      state.audio.effects = (effects as HTMLInputElement).checked;
+      sound.setEffects(state.audio.effects);
+      sound.play('click', { gain: 0.6 });
+      writeSave(state);
+    });
+
+    const music = el('input', { type: 'range', min: 0, max: 100, step: 5, class: 'slider', id: 'music' });
+    (music as HTMLInputElement).value = String(Math.round((state.audio.music ?? 0.35) * 100));
+    const musicValue = el('span', {
+      class: 'readout small',
+      text: `${Math.round((state.audio.music ?? 0.35) * 100)}`,
+    });
+    on(music, 'input', () => {
+      const value = Number((music as HTMLInputElement).value) / 100;
+      state.audio.music = value;
+      sound.setMusicVolume(value);
+      musicValue.textContent = String(Math.round(value * 100));
+    });
+    on(music, 'change', () => writeSave(state));
+
     const privacy: HTMLElement[] = [];
     if (metrics.available) {
       const share = el('input', { type: 'checkbox', id: 'share-metrics' });
@@ -191,7 +215,12 @@ export class Menu {
       el('div', { class: 'menu-section' }, [
         el('h2', { class: 'menu-heading', text: t('menu.audio') }),
         el('label', { class: 'row', for: 'volume' }, [el('span', { text: t('menu.volume') }), volume, volumeValue]),
+        sound.hasTheme
+          ? el('label', { class: 'row', for: 'music' }, [el('span', { text: t('menu.music') }), music, musicValue])
+          : null,
+        el('label', { class: 'row toggle', for: 'effects' }, [effects, el('span', { text: t('menu.effects') })]),
         el('label', { class: 'row toggle', for: 'mute' }, [mute, el('span', { text: t('menu.mute') })]),
+        el('p', { class: 'note', text: t('menu.audioNote') }),
       ]),
       ...privacy,
       el('div', { class: 'menu-section' }, [

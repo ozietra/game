@@ -172,6 +172,7 @@ export const tr = {
   'ladder.result.ok': '{floor}. kat gönderildi.',
   'ladder.result.name': 'En az iki harflik bir ad gerekiyor.',
   'ladder.result.implausible': 'Bu süreye göre bu kat mümkün değil, kabul edilmedi.',
+  'ladder.result.stale': 'Toplayıcı sıralamayı henüz tanımıyor. Worker yeniden dağıtılmalı.',
   'ladder.result.offline': 'Sıralamaya ulaşılamadı.',
   'ladder.rank': 'Sıra',
 
@@ -314,7 +315,11 @@ export const tr = {
   'menu.back': 'Geri',
   'menu.audio': 'Ses',
   'menu.volume': 'Ses seviyesi',
-  'menu.mute': 'Sessiz',
+  'menu.mute': 'Her şey sessiz',
+  'menu.effects': 'Kuyu sesleri',
+  'menu.music': 'Müzik',
+  'menu.audioNote':
+    'Kuyu sesleri kapalıyken darbeler, kapılar ve akçe susar; menü sesleri açık kalır. Her şey sessiz olan hepsini birden kapatır.',
   'menu.privacy': 'Gizlilik',
   'menu.metrics': 'Anonim ölçüm gönder',
   'menu.metricsNote':
@@ -424,6 +429,7 @@ export const tr = {
   'log.stow': '{affix} {rarity} {kind} (güç {power}) ambara kondu.',
   'log.level': '{name} {level}. seviyeye çıktı.',
   'log.boss': '{floor}. katın sahibi karşıda: {name}.',
+  'log.retreat.flee': 'Çarpışma bırakıldı, {floor}. kattan kaçılıyor. Çantadan {coin} akçe düştü.',
   'log.retreat.health': 'Kadro yıprandı, {floor}. kattan dönüyor.',
   'log.retreat.satchel': 'Çanta doldu, {floor}. kattan dönüyor.',
   'log.build': '{name} {level}. kademeye çıktı.',

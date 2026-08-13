@@ -134,7 +134,7 @@ export function freshState(): GameState {
   return {
     version: SAVE_VERSION,
     language: 'tr',
-    audio: { volume: 0.6, muted: false },
+    audio: { volume: 0.6, muted: false, effects: true, music: 0.35 },
     bank: { coin: 0, iron: 0, crystal: 0, relic: 0, echo: 0 },
     heroes,
     stash: [],
@@ -753,6 +753,42 @@ export class Game {
     }
   }
 
+  /**
+   * Whether the party should break off the fight it is in. A hand pressed
+   * descent is the player's own business, and so is a party that never set a
+   * retreat level, but everyone else gets pulled out before they are lost.
+   */
+  private shouldFlee(): boolean {
+    const policy = this.state.policy;
+    if (this.run.manual || !policy.autoDive || policy.retreatHealth <= 0) return false;
+
+    let current = 0;
+    let total = 0;
+    for (const fighter of this.run.party) {
+      current += fighter.hp;
+      total += fighter.stats.maxHp;
+    }
+    return total > 0 && current / total <= policy.retreatHealth;
+  }
+
+  /** What falls out of the satchel on the way out of a fight. */
+  private dropWhileFleeing(): void {
+    const satchel = this.run.satchel;
+    const share = BALANCE.fleeLoss;
+    const lost = Math.round(satchel.coin * share);
+
+    satchel.coin -= lost;
+    satchel.iron -= Math.round(satchel.iron * share);
+    satchel.crystal -= Math.round(satchel.crystal * share);
+    // One piece of gear, and it is the one they were most pleased with.
+    if (satchel.items.length > 0 && this.rng.chance(share * 2)) {
+      satchel.items.sort((a, b) => b.power - a.power);
+      satchel.items.shift();
+    }
+
+    this.note('log.retreat.flee', { floor: this.run.floor, coin: lost }, 'bad');
+  }
+
   private shouldTurnBack(): boolean {
     const policy = this.state.policy;
     // A descent the player started by hand keeps going until they say stop.
@@ -794,8 +830,13 @@ export class Game {
         run.phaseTimer -= dt;
         if (this.state.policy.autoDive && run.phaseTimer <= 0) {
           const party = partyOf(this.state);
-          const ready = party.every((hero) => hero.hp >= heroStats(this.state, hero).maxHp * 0.98);
-          if (ready) this.beginDive();
+          const rested = party.every((hero) => hero.hp >= heroStats(this.state, hero).maxHp * 0.98);
+          // Wounds compound: every rout adds one, each one costs stats, and a
+          // weaker party is likelier to be routed again. Waiting for the worst
+          // of them to close is what stops one bad dive turning into a night
+          // of them.
+          const patched = party.every((hero) => hero.wounds < 2);
+          if (rested && patched) this.beginDive();
         }
         break;
       }
@@ -836,10 +877,20 @@ export class Game {
 
       case 'fighting': {
         const events = stepCombat(run.party, run.foes, dt, this.rng);
-        this.keeperBehaviour(dt, events);
+        this.keeperBehaviour(events);
         if (!this.quiet && events.length > 0) this.events.push(...events);
         this.readFight(events);
         this.writeBackHealth();
+
+        // Standing orders apply mid fight, not only between them. Waiting for
+        // an encounter to end before honouring the retreat level is how a
+        // party ends up dying on the same floor all night with nothing to show
+        // for it, which is the one thing this game is not supposed to do.
+        if (this.shouldFlee()) {
+          this.dropWhileFleeing();
+          this.extract();
+          break;
+        }
 
         const outcome = encounterOver(run.party, run.foes);
         if (outcome === 'won') {
@@ -906,22 +957,22 @@ export class Game {
    * getting through at all; the last third is fought at half again the
    * attack; and twice on the way down it calls somebody in.
    */
-  private keeperBehaviour(dt: number, events: CombatEvent[]): void {
+  private keeperBehaviour(events: CombatEvent[]): void {
     const run = this.run;
     const keeper = run.foes.find((foe) => foe.rank === 'boss' && foe.alive);
     if (!keeper || keeper.wardMax === undefined) return;
 
-    keeper.wardTimer = (keeper.wardTimer ?? 0) - dt;
-    if (keeper.wardTimer <= 0) {
-      keeper.wardTimer = KEEPER.wardEvery;
-      if ((keeper.ward ?? 0) < keeper.wardMax) {
-        keeper.ward = keeper.wardMax;
-        events.push({ kind: 'ward', key: keeper.key, amount: keeper.wardMax });
-        this.note('log.keeper.ward', { name: keeper.nameKey }, 'bad');
-      }
-    }
-
     const share = keeper.hp / Math.max(1, keeper.stats.maxHp);
+
+    // Raised on the way down rather than on a clock, so a party that is
+    // winning slowly still gets to finish.
+    const raised = keeper.wardTimer ?? 0;
+    if (raised < KEEPER.wardAt.length && share <= KEEPER.wardAt[raised]) {
+      keeper.wardTimer = raised + 1;
+      keeper.ward = keeper.wardMax;
+      events.push({ kind: 'ward', key: keeper.key, amount: keeper.wardMax });
+      this.note('log.keeper.ward', { name: keeper.nameKey }, 'bad');
+    }
     if (!keeper.raged && share <= KEEPER.rageBelow) {
       keeper.raged = true;
       keeper.stats = {

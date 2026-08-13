@@ -154,8 +154,19 @@ from game-icons.net, sound effects are Kenney's CC0 RPG and UI audio packs, and
 the typefaces are Open Font Licence families served from the game's own files.
 
 Sound is deliberately quiet: every cue has a minimum gap and the mixer as a
-whole is capped, so a busy fight does not turn into a rattle. Volume and a
-silent switch live on the title screen and travel with the save.
+whole is capped, so a busy fight does not turn into a rattle. The title screen
+has three separate controls, because they are three different wishes: a master
+volume, a switch for the shaft itself (blows, doors, coin) that leaves the
+interface answering, and a music level. All of them travel with the save.
+
+**The theme is optional and not shipped.** The mixer looks for
+`public/assets/sound/theme.ogg`, loops it under everything else at about a
+third of the master volume, and simply has no music if the file is absent, in
+which case the music slider stays hidden. To add one, drop a CC0 or otherwise
+cleared loop in at that path and add its author, licence and source to
+`ASSETS.md` beside everything else. Kenney's Music Loops and Music Jingles
+packs are public domain and suit the game; so does the CC0 shelf on
+OpenGameArt. Nothing else needs changing.
 
 `tools/build_assets.py` fetches all of it and writes the credits at the same
 time, straight from the metadata each source ships with:

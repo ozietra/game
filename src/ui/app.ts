@@ -90,6 +90,8 @@ export class App {
     setLanguage(this.game.state.language);
     sound.setVolume(this.game.state.audio.volume);
     sound.setMuted(this.game.state.audio.muted);
+    sound.setEffects(this.game.state.audio.effects !== false);
+    sound.setMusicVolume(this.game.state.audio.music ?? 0.35);
     void sound.load();
 
     this.menu = new Menu(
@@ -265,9 +267,10 @@ export class App {
 
     const log = this.keep('log', el('ol', { class: 'log' }));
     const prompt = this.keep('eventBox', el('div', { class: 'event-box', hidden: true }));
-    const contracts = this.keep('contractCard', el('div', { class: 'card contract-card' }));
-    const lastDive = this.keep('lastDiveCard', el('div', { class: 'card', hidden: true }));
 
+    // The contracts and the dive summary live under Records. This column is
+    // for what the party is doing right now, and it was getting long enough
+    // that the standing orders fell off the bottom of the screen.
     return el('section', { class: 'panel shaft' }, [
       el('div', { class: 'shaft-main' }, [
         stage,
@@ -276,7 +279,7 @@ export class App {
         controls,
         el('div', { class: 'card log-card' }, [log]),
       ]),
-      el('div', { class: 'shaft-side' }, [contracts, partyCard, satchelCard, lastDive, orders]),
+      el('div', { class: 'shaft-side' }, [partyCard, satchelCard, orders]),
     ]);
   }
 
@@ -383,6 +386,18 @@ export class App {
     ]);
   }
 
+  /**
+   * A dot on the Records tab when a contract is finished and waiting. Moving
+   * the contracts off the shaft screen only works if there is still something
+   * telling the player to go and look.
+   */
+  private markClaimable(): void {
+    const tab = this.refs.get('tab:records');
+    if (!tab) return;
+    const waiting = this.game.state.contracts.goals.some((goal) => !goal.claimed && goal.progress >= goal.target);
+    tab.classList.toggle('has-claim', waiting);
+  }
+
   // -------------------------------------------------------- floor events
 
   /** The one moment the game stops and asks. It never waits forever. */
@@ -445,7 +460,8 @@ export class App {
   // ---------------------------------------------------------- contracts
 
   private renderContracts(): void {
-    const card = this.ref('contractCard');
+    const card = this.refs.get('contractCard');
+    if (!card) return;
     const contracts = this.game.state.contracts;
     const signature = `${contracts.day}|${contracts.goals
       .map((goal) => `${goal.id}:${goal.progress}/${goal.target}:${goal.claimed ? 1 : 0}`)
@@ -534,7 +550,8 @@ export class App {
   }
 
   private renderLastDive(): void {
-    const card = this.ref('lastDiveCard');
+    const card = this.refs.get('lastDiveCard');
+    if (!card) return;
     const report = this.game.state.lastDive;
     if (!report) {
       card.hidden = true;
@@ -625,6 +642,13 @@ export class App {
       this.renderShaft();
 
       if (this.tab === 'roster') this.refreshExperience();
+      if (this.tab === 'records') {
+        // Both update in place and cost nothing when nothing has changed, so
+        // watching a contract fill up does not rebuild the panel under it.
+        this.renderContracts();
+        this.renderLastDive();
+      }
+      this.markClaimable();
 
       this.panelTimer += elapsed;
       if (this.panelTimer > 0.4) {
@@ -748,10 +772,8 @@ export class App {
 
     this.refreshOrders();
     this.renderEvent();
-    this.renderContracts();
     this.renderSatchel();
     this.renderParty();
-    this.renderLastDive();
     this.renderLog();
   }
 
@@ -957,8 +979,17 @@ export class App {
       ).join('.')}|${relicYield(state)}|${echoYield(state)}`;
     }
     if (id === 'records') {
-      const seen = Object.entries(state.bestiary).reduce((sum, [, count]) => sum + count, 0);
-      return `${Object.keys(state.achievements).length}|${seen}|${state.milestones}|${state.lastDive?.at ?? 0}`;
+      // Kill counts tick up constantly and nothing on this panel needs to
+      // follow them that closely. Rebuilding on every one of them threw away
+      // whatever was half typed into the ladder field.
+      const kinds = Object.values(state.bestiary).filter((count) => count > 0).length;
+      return [
+        Object.keys(state.achievements).length,
+        kinds,
+        state.milestones,
+        state.lastDive?.at ?? 0,
+        state.diveHistory.length,
+      ].join('|');
     }
     return purse;
   }
@@ -1478,6 +1509,18 @@ export class App {
     const state = this.game.state;
     clear(panel);
 
+    // These three are kept rather than rebuilt. The ladder holds a field a
+    // player may be typing into, and the other two update themselves in place
+    // whenever their own contents actually change.
+    const contracts =
+      this.refs.get('contractCard') ?? this.keep('contractCard', el('div', { class: 'card wide contract-card' }));
+    const lastDive = this.refs.get('lastDiveCard') ?? this.keep('lastDiveCard', el('div', { class: 'card wide', hidden: true }));
+    panel.append(contracts, lastDive);
+    this.renderContracts();
+    this.renderLastDive();
+
+    if (ladderAvailable()) panel.append(this.refs.get('ladderCard') ?? this.buildLadder());
+
     // Milestones, which are the only permanent thing a rout cannot touch.
     const marks = state.milestones;
     const nextFloor = (marks + 1) * MILESTONE.everyFloors;
@@ -1501,8 +1544,6 @@ export class App {
         ]),
       ]),
     );
-
-    if (ladderAvailable()) panel.append(this.buildLadder());
 
     // Recent dives.
     const dives = el('div', { class: 'card wide' }, [
@@ -1595,6 +1636,10 @@ export class App {
 
     const name = el('input', { class: 'field', type: 'text', maxlength: 18, placeholder: t('ladder.namePlaceholder') });
     (name as HTMLInputElement).value = state.ladderName;
+    // Kept as it is typed, so nothing is lost to a reload or a rebuild either.
+    on(name, 'input', () => {
+      state.ladderName = (name as HTMLInputElement).value;
+    });
 
     const note = this.keep('ladderNote', el('p', { class: 'note', text: t('ladder.note') }));
 

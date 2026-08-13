@@ -12,6 +12,7 @@
 
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { schemaText } from './schema.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -135,9 +136,13 @@ async function checkLadder(env) {
 }
 
 async function main() {
+  // Nothing is created here on purpose: the worker is supposed to bring its
+  // own database up to date on the first request, and that is worth checking.
   const db = new DatabaseSync(':memory:');
-  db.exec(readFileSync(join(here, 'schema.sql'), 'utf8'));
   const env = { DB: new Database(db), PANEL_TOKEN: TOKEN };
+
+  const onDisk = readFileSync(join(here, 'schema.sql'), 'utf8');
+  assert(onDisk === schemaText(), 'schema.sql is stale: run node analytics/schema.js > analytics/schema.sql');
 
   const now = Date.now();
   const players = 60;

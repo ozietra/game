@@ -138,7 +138,8 @@ export function makeFoe(
   if (rank === 'boss') {
     foe.wardMax = Math.round(stats.maxHp * KEEPER.ward);
     foe.ward = foe.wardMax;
-    foe.wardTimer = KEEPER.wardEvery;
+    // How many times the ward has been raised so far.
+    foe.wardTimer = 0;
     foe.raged = false;
     foe.summons = 0;
   }
@@ -253,8 +254,14 @@ export function stepCombat(party: Combatant[], foes: Combatant[], dt: number, rn
       if (actor.abilityTimer > 0) actor.abilityTimer -= dt;
 
       actor.timer += dt;
-      if (actor.timer < interval(actor)) continue;
-      actor.timer = 0;
+      const wait = interval(actor);
+      if (actor.timer < wait) continue;
+      // Carrying the overshoot rather than dropping it is what makes the
+      // resolver give the same answer at any step size. Zeroing it rounded
+      // every swing up to the next tick, which cost a slow attacker a larger
+      // share of its rate than a fast one, so replaying a night offline at a
+      // coarser step quietly handed the fight to whoever swung fastest.
+      actor.timer -= wait;
 
       const allies = actor.side === 'party' ? party : foes;
       const enemies = actor.side === 'party' ? foes : party;

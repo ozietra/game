@@ -1,11 +1,12 @@
 -- Hollowdeep metrics store.
 --
--- Three tables, and only one of them grows per sitting. Everything the panel
--- shows is derived at query time instead of kept as a running total, so a
--- retried or duplicated request can never inflate a number: writes are upserts
--- keyed on an identifier the client already holds.
+-- Generated from schema.js, which is what the worker applies to itself on a
+-- cold start. Edit that file, not this one:
 --
---   sqlite3 metrics.db < schema.sql              (local)
+--   node analytics/schema.js > analytics/schema.sql
+--
+-- Applying it by hand is only needed for a database the worker cannot reach:
+--
 --   npx wrangler d1 execute hollowdeep-metrics --remote --file=schema.sql
 
 CREATE TABLE IF NOT EXISTS players (
@@ -19,10 +20,9 @@ CREATE TABLE IF NOT EXISTS players (
 );
 
 CREATE INDEX IF NOT EXISTS players_first_day ON players (first_day);
+
 CREATE INDEX IF NOT EXISTS players_last_seen ON players (last_seen);
 
--- One row per sitting. `seconds` and `floor` are high water marks reported by
--- the client, so a late batch that arrives out of order cannot lower them.
 CREATE TABLE IF NOT EXISTS sessions (
   sid       TEXT PRIMARY KEY,
   pid       TEXT    NOT NULL,
@@ -42,11 +42,11 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 
 CREATE INDEX IF NOT EXISTS sessions_pid ON sessions (pid);
+
 CREATE INDEX IF NOT EXISTS sessions_day ON sessions (day);
+
 CREATE INDEX IF NOT EXISTS sessions_started ON sessions (pid, started);
 
--- The two moments worth keeping a floor number for: where a party was lost and
--- where a player decided the run was over. Everything else is a counter.
 CREATE TABLE IF NOT EXISTS marks (
   id    INTEGER PRIMARY KEY AUTOINCREMENT,
   pid   TEXT    NOT NULL,
@@ -58,12 +58,9 @@ CREATE TABLE IF NOT EXISTS marks (
 );
 
 CREATE INDEX IF NOT EXISTS marks_kind_floor ON marks (kind, floor);
+
 CREATE INDEX IF NOT EXISTS marks_day ON marks (day);
 
--- The ladder. One row per player per week, holding their best claim for that
--- week, so a week is a fresh start and the all-time board is the best of them.
--- This is the only table with anything a player chose in it, and the only
--- thing they chose is a name.
 CREATE TABLE IF NOT EXISTS scores (
   pid       TEXT    NOT NULL,
   week      TEXT    NOT NULL,
@@ -77,4 +74,5 @@ CREATE TABLE IF NOT EXISTS scores (
 );
 
 CREATE INDEX IF NOT EXISTS scores_board ON scores (week, floor DESC);
+
 CREATE INDEX IF NOT EXISTS scores_all ON scores (floor DESC);

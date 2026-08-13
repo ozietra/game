@@ -33,7 +33,8 @@ export interface Board {
 }
 
 export type BoardScope = 'week' | 'all';
-export type SubmitResult = 'ok' | 'name' | 'implausible' | 'offline';
+/** `stale` means the collector is up but predates the ladder. */
+export type SubmitResult = 'ok' | 'name' | 'implausible' | 'stale' | 'offline';
 
 /** Whether this build has anywhere to send a score at all. */
 export const ladderAvailable = (): boolean => METRICS_ENDPOINT.length > 0;
@@ -79,6 +80,10 @@ export async function submitScore(state: GameState, name: string): Promise<Submi
     });
     if (response.status === 422) return 'implausible';
     if (response.status === 400) return 'name';
+    // A collector that answers but has never heard of the ladder is one that
+    // was deployed before it existed, which is a different problem entirely
+    // from being unreachable and deserves a different sentence.
+    if (response.status === 404) return 'stale';
     return response.ok ? 'ok' : 'offline';
   } catch {
     return 'offline';

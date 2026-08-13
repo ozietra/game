@@ -17,6 +17,8 @@
  *   ALLOWED_ORIGINS optional comma separated list, defaults to open
  */
 
+import { SCHEMA } from './schema.js';
+
 const PROTOCOL = 1;
 const MAX_BODY = 16 * 1024;
 const MAX_EVENTS = 40;
@@ -31,6 +33,25 @@ const ID = /^[a-zA-Z0-9]{8,64}$/;
 const DAY = 86400000;
 
 // ------------------------------------------------------------------ plumbing
+
+/**
+ * The worker brings its own database up to date rather than waiting for
+ * somebody to remember a migration. Every statement creates only if absent, so
+ * this is safe to run against a fresh database and against one that has been
+ * collecting for months; adding a table becomes a deploy and nothing else.
+ *
+ * It runs once per isolate, not once per request, and a failure is swallowed:
+ * a database that is already correct must not be able to take the collector
+ * down on the way past.
+ */
+let schemaReady = null;
+
+function ensureSchema(env) {
+  if (!schemaReady) {
+    schemaReady = env.DB.batch(SCHEMA.map((statement) => env.DB.prepare(statement))).catch(() => undefined);
+  }
+  return schemaReady;
+}
 
 function corsHeaders(origin, env) {
   const allowed = (env.ALLOWED_ORIGINS || '')
@@ -521,6 +542,8 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
 
     try {
+      await ensureSchema(env);
+
       if (url.pathname === '/collect' && request.method === 'POST') return await collect(request, env, cors);
 
       if (url.pathname === '/health') return json({ ok: true, protocol: PROTOCOL }, 200, cors);

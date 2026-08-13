@@ -36,6 +36,12 @@ export const BALANCE = {
   },
   xp: { base: 5.5, growth: 1.115, levelCost: 26, levelGrowth: 1.28 },
   prestige: { minFloor: 25, divisor: 9, exponent: 1.4 },
+  /**
+   * Breaking off mid fight is not free. A party that turns and runs drops part
+   * of what it was carrying, which keeps the retreat level an actual decision:
+   * set it high and bank a little every time, set it low and risk the lot.
+   */
+  fleeLoss: 0.25,
 } as const;
 
 /**
@@ -377,7 +383,14 @@ export const SET_CHANCE = { base: 0.12, perRarity: 0.09 } as const;
  */
 export const KEEPER = {
   ward: 0.2,
-  wardEvery: 15,
+  /**
+   * The ward comes back when the keeper's health crosses these, and never on a
+   * clock. A ward on a timer can outlast a party that is winning slowly, which
+   * turns a hard fight into one that cannot be finished at all: the shaft is
+   * supposed to be a decision about how deep to go, not a wall that eats an
+   * evening. Three wards, then it is a fair fight.
+   */
+  wardAt: [0.7, 0.4],
   rageBelow: 0.35,
   rageAttack: 0.5,
   summonAt: [0.62, 0.31],

@@ -184,8 +184,13 @@ export interface Bank {
 }
 
 export interface AudioSettings {
+  /** Everything, including the interface. */
   volume: number;
   muted: boolean;
+  /** The shaft itself: blows landing, doors, coin. */
+  effects: boolean;
+  /** The looping theme, kept well under the rest by default. */
+  music: number;
 }
 
 export interface GameState {

@@ -174,6 +174,7 @@ export const en: Record<StringKey, string> = {
   'ladder.result.ok': 'Floor {floor} sent.',
   'ladder.result.name': 'A name of at least two letters is needed.',
   'ladder.result.implausible': 'That floor is not possible in that much time, so it was refused.',
+  'ladder.result.stale': 'The collector does not know about the ladder yet. The worker needs deploying again.',
   'ladder.result.offline': 'The ladder could not be reached.',
   'ladder.rank': 'Rank',
 
@@ -316,7 +317,11 @@ export const en: Record<StringKey, string> = {
   'menu.back': 'Back',
   'menu.audio': 'Sound',
   'menu.volume': 'Volume',
-  'menu.mute': 'Silent',
+  'menu.mute': 'Everything silent',
+  'menu.effects': 'Shaft sounds',
+  'menu.music': 'Music',
+  'menu.audioNote':
+    'With shaft sounds off, blows, doors and coin go quiet while the interface still answers. Everything silent turns off the lot.',
   'menu.privacy': 'Privacy',
   'menu.metrics': 'Send anonymous metrics',
   'menu.metricsNote':
@@ -427,6 +432,7 @@ export const en: Record<StringKey, string> = {
   'log.stow': 'The {affix} {rarity} {kind} (power {power}) went to the store.',
   'log.level': '{name} reached level {level}.',
   'log.boss': 'The keeper of floor {floor} is here: {name}.',
+  'log.retreat.flee': 'They broke off and ran from floor {floor}. {coin} coin fell out of the satchel.',
   'log.retreat.health': 'The party is worn down and turns back from floor {floor}.',
   'log.retreat.satchel': 'The satchel is full; turning back from floor {floor}.',
   'log.build': '{name} rose to tier {level}.',

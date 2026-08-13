@@ -772,6 +772,22 @@ h3 {
   margin-top: auto;
 }
 
+/* A tab with something waiting behind it says so, quietly. */
+.tab.has-claim {
+  position: relative;
+}
+
+.tab.has-claim::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
 /* ---------------------------------------------------------------- ladder */
 
 .ladder-form {

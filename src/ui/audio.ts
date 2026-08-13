@@ -19,6 +19,16 @@ const GAP: Record<string, number> = {
 const DEFAULT_GAP = 0.25;
 const MAX_PER_SECOND = 9;
 
+/**
+ * Which switch a cue answers to. Pressing things and turning pages is how the
+ * interface talks back, and somebody who wants the fighting to shut up rarely
+ * wants that gone too, so the two are separate.
+ */
+const INTERFACE_CUES = new Set(['click', 'buy', 'rank', 'leaf']);
+
+/** The looping theme, if the build carries one. */
+const THEME = 'assets/sound/theme.ogg';
+
 export interface PlayOptions {
   gain?: number;
   rate?: number;
@@ -40,6 +50,13 @@ class Mixer {
 
   volume = 0.6;
   muted = false;
+  effects = true;
+  musicVolume = 0.35;
+
+  private music: GainNode | null = null;
+  private theme: AudioBufferSourceNode | null = null;
+  private themeBuffer: AudioBuffer | null = null;
+  private themeEncoded: ArrayBuffer | null = null;
 
   /** Downloads the clips. Decoding waits for a real audio context. */
   load(): Promise<void> {
@@ -59,6 +76,16 @@ class Mixer {
         );
       }
     }
+    // The theme is optional: a build without one simply never has music.
+    jobs.push(
+      fetch(url(THEME))
+        .then((response) => (response.ok ? response.arrayBuffer() : Promise.reject(new Error(THEME))))
+        .then((buffer) => {
+          this.themeEncoded = buffer;
+        })
+        .catch(() => undefined),
+    );
+
     this.loading = Promise.all(jobs).then(() => undefined);
     return this.loading;
   }
@@ -77,6 +104,10 @@ class Mixer {
     this.master.gain.value = this.muted ? 0 : this.volume;
     this.master.connect(this.context.destination);
 
+    this.music = this.context.createGain();
+    this.music.gain.value = this.musicVolume;
+    this.music.connect(this.master);
+
     await this.load();
     for (const [cue, buffers] of this.encoded) {
       for (const buffer of buffers) {
@@ -90,6 +121,39 @@ class Mixer {
         }
       }
     }
+
+    if (this.themeEncoded) {
+      try {
+        this.themeBuffer = await this.context.decodeAudioData(this.themeEncoded.slice(0));
+      } catch {
+        this.themeBuffer = null;
+      }
+    }
+    this.startTheme();
+  }
+
+  /** True when this build actually shipped a theme to play. */
+  get hasTheme(): boolean {
+    return this.themeBuffer !== null || this.themeEncoded !== null;
+  }
+
+  private startTheme(): void {
+    if (!this.context || !this.music || !this.themeBuffer || this.theme) return;
+    const source = this.context.createBufferSource();
+    source.buffer = this.themeBuffer;
+    source.loop = true;
+    source.connect(this.music);
+    source.start();
+    this.theme = source;
+  }
+
+  setMusicVolume(value: number): void {
+    this.musicVolume = Math.max(0, Math.min(1, value));
+    if (this.music) this.music.gain.value = this.musicVolume;
+  }
+
+  setEffects(on: boolean): void {
+    this.effects = on;
   }
 
   setVolume(value: number): void {
@@ -104,6 +168,7 @@ class Mixer {
 
   play(cue: string, options: PlayOptions = {}): void {
     if (this.muted || !this.context || !this.master) return;
+    if (!this.effects && !INTERFACE_CUES.has(cue)) return;
     if (document.visibilityState === 'hidden') return;
 
     const buffers = this.decoded.get(cue);
