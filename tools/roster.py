@@ -227,7 +227,7 @@ HEROES = {
                 "legs-Pants_brown",
                 "clothes-Longsleeve_bluegray",
                 "shoes-Boots_brown",
-                "weapon-Spear_spear",
+                "weapon-Spear_medium",
             ],
             [
                 "body-Body_color_light",
@@ -256,14 +256,14 @@ HEROES = {
         ],
     },
     "zealot": {
-        "body": "male",
+        "body": "female",
         "facing": "right",
         "attack": "slash",
         "tiers": [
             [
                 "body-Body_color_light",
-                "head-Human_male_light",
-                "hair-Balding_ash",
+                "head-Human_female_light",
+                "hair-Shoulderl_ash",
                 "legs-Pants_brown",
                 "clothes-Robe_brown",
                 "shoes-Boots_brown",
@@ -271,7 +271,7 @@ HEROES = {
             ],
             [
                 "body-Body_color_light",
-                "head-Human_male_light",
+                "head-Human_female_light",
                 "legs-Pants_charcoal",
                 "clothes-Robe_black",
                 "hat-Hood_hood_brown",
@@ -281,11 +281,11 @@ HEROES = {
             ],
             [
                 "body-Body_color_light",
-                "head-Human_male_light",
+                "head-Human_female_light",
                 "legs-Pants_charcoal",
                 "clothes-Robe_black",
                 "hat-Hood_hood_black",
-                "neck-Scarf_maroon",
+                "neck-Scarf_red",
                 "cape-Tattered_black",
                 "shoes-Boots_black",
                 "weapon-Scythe_scythe",

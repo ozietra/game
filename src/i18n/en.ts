@@ -12,6 +12,8 @@ export const en: Record<StringKey, string> = {
   'tab.ledger': 'Credits',
   'tab.records': 'Records',
 
+  'policy.wounded': 'Descend wounded',
+  'policy.woundedNote': 'Off, the party waits when it is badly cut up. On, it goes down whatever state it is in.',
   'policy.risk': 'Risk dial',
   'policy.riskNote': 'Turning it up makes the foes and the takings grow together. A rout becomes your own decision.',
   'policy.riskReadout': 'Foes +{foe}, spoils +{loot}',

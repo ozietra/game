@@ -164,6 +164,8 @@ export interface Policy {
   risk: number;
   /** How floor events are answered: by hand, or the same way every time. */
   eventChoice: EventChoice | 'ask';
+  /** Send the party down however cut up they are. */
+  woundedDives: boolean;
 }
 
 export interface LogEntry {

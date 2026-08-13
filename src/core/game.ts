@@ -149,6 +149,7 @@ export function freshState(): GameState {
       satchelLimit: 0,
       risk: 0,
       eventChoice: 'ask',
+      woundedDives: false,
     },
     run: {
       phase: 'camp',
@@ -744,20 +745,34 @@ export class Game {
    * two wound levels count, so a scratch never stops anybody.
    */
   heldBackByWounds(): boolean {
+    if (this.state.policy.woundedDives) return false;
     return partyOf(this.state).some((hero) => hero.wounds >= BALANCE.maxWounds - 1);
   }
 
   /** Time in camp closes wounds without a healer's fee. */
   private restWounds(seconds: number): void {
+    const party = partyOf(this.state);
+    if (!party.some((hero) => hero.wounds > 0)) {
+      this.woundRest = 0;
+      return;
+    }
+
     this.woundRest += seconds;
     while (this.woundRest >= BALANCE.woundRecoverySeconds) {
       this.woundRest -= BALANCE.woundRecoverySeconds;
-      const hurt = partyOf(this.state).filter((hero) => hero.wounds > 0);
-      if (hurt.length === 0) {
+      // Everybody mends at once. Sharing one clock across the party meant a
+      // full roster of five took five times as long to get back on its feet,
+      // which is not how anybody expects healing to work.
+      let mending = false;
+      for (const hero of party) {
+        if (hero.wounds <= 0) continue;
+        hero.wounds -= 1;
+        mending = true;
+      }
+      if (!mending) {
         this.woundRest = 0;
         break;
       }
-      hurt.sort((a, b) => b.wounds - a.wounds)[0].wounds -= 1;
     }
   }
 
@@ -830,11 +845,16 @@ export class Game {
     this.harvest.seconds += dt;
     if (run.phase !== 'camp') run.report.seconds += dt;
 
+    // Wounds knit with time, not with sitting still. They used to close only
+    // in camp, and a party running an automatic descent is in camp for a few
+    // seconds a cycle, so in practice they never closed at all and the only
+    // way out was paying the infirmary.
+    this.restWounds(dt * (1 + this.state.buildings.infirmary * BUILDING_EFFECT.infirmary));
+
     switch (run.phase) {
       case 'camp': {
         const care = 1 + this.state.buildings.infirmary * BUILDING_EFFECT.infirmary;
         healParty(this.state, BALANCE.restHealPerSecond * dt * care);
-        this.restWounds(dt * care);
         run.phaseTimer -= dt;
         if (this.state.policy.autoDive && run.phaseTimer <= 0) {
           const party = partyOf(this.state);

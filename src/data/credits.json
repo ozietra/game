@@ -1,5 +1,49 @@
 [
  {
+  "source": "arms/armour/plate/female/iron.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, adapted to female by makrohn, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
+  "source": "arms/armour/plate/female/steel.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, adapted to female by makrohn, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
   "source": "arms/armour/plate/male/gold.png",
   "authors": [
    "Michael Whitlock (bigbeargames)",
@@ -258,7 +302,10 @@
   "usedBy": [
    "hero:ranger",
    "hero:magus",
-   "hero:cutpurse"
+   "hero:cutpurse",
+   "hero:sentinel",
+   "hero:zealot",
+   "hero:tinker"
   ]
  },
  {
@@ -751,6 +798,28 @@
   ]
  },
  {
+  "source": "cape/solid/female/bluegray.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel",
+   "hero:tinker"
+  ]
+ },
+ {
   "source": "cape/solid/female/forest.png",
   "authors": [
    "bluecarrot16",
@@ -878,6 +947,27 @@
   ]
  },
  {
+  "source": "cape/solid_behind/bluegray.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel",
+   "hero:tinker"
+  ]
+ },
+ {
   "source": "cape/solid_behind/forest.png",
   "authors": [
    "Nila122",
@@ -976,6 +1066,46 @@
   "notes": "",
   "usedBy": [
    "hero:preacher"
+  ]
+ },
+ {
+  "source": "cape/tattered/female/black.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "cape/tattered_behind/black.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
   ]
  },
  {
@@ -1592,7 +1722,9 @@
   "usedBy": [
    "hero:cutpurse",
    "hero:ranger",
-   "hero:magus"
+   "hero:magus",
+   "hero:zealot",
+   "hero:tinker"
   ]
  },
  {
@@ -1613,7 +1745,10 @@
   "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
   "usedBy": [
    "hero:ranger",
-   "hero:magus"
+   "hero:magus",
+   "hero:sentinel",
+   "hero:zealot",
+   "hero:tinker"
   ]
  },
  {
@@ -1633,7 +1768,9 @@
   ],
   "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
   "usedBy": [
-   "hero:magus"
+   "hero:magus",
+   "hero:sentinel",
+   "hero:tinker"
   ]
  },
  {
@@ -1698,6 +1835,24 @@
   "usedBy": [
    "hero:warden",
    "hero:preacher"
+  ]
+ },
+ {
+  "source": "feet/boots_plating/universal/female/steel.png",
+  "authors": [
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "CC-BY 3.0+",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-relm-outfit-pieces-2-kimonos-2-sleeves-2-boots-tabi-socks"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel"
   ]
  },
  {
@@ -2380,6 +2535,27 @@
   ]
  },
  {
+  "source": "hair/braid/female/ash.png",
+  "authors": [
+   "Nila122",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "GPL 2.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/3-hairs-for-lpc",
+   "https://opengameart.org/content/lpc-hair"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
   "source": "hair/messy1/female/dark_brown.png",
   "authors": [
    "Manuel Riecke (MrBeast)"
@@ -2466,6 +2642,48 @@
   "notes": "",
   "usedBy": [
    "hero:ranger"
+  ]
+ },
+ {
+  "source": "hair/shoulderl/adult/ash.png",
+  "authors": [
+   "JaidynReiman",
+   "Lanea Zimmerman (Sharm)",
+   "Manuel Riecke (MrBeast)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://github.com/jrconway3/Universal-LPC-spritesheet/commit/c32ce8a7edd9fc7fe7daa62a39cf64e5946020a2"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "hair/shoulderl/adult/sandy.png",
+  "authors": [
+   "JaidynReiman",
+   "Lanea Zimmerman (Sharm)",
+   "Manuel Riecke (MrBeast)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://github.com/jrconway3/Universal-LPC-spritesheet/commit/c32ce8a7edd9fc7fe7daa62a39cf64e5946020a2"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:tinker"
   ]
  },
  {
@@ -2610,6 +2828,46 @@
   ]
  },
  {
+  "source": "hat/cloth/hood/adulthood_black.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adulthood_brown.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
   "source": "hat/cloth/hood/adultpurple.png",
   "authors": [
    "Johannes Sjölund (wulax)",
@@ -2627,6 +2885,27 @@
   "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
   "usedBy": [
    "hero:magus"
+  ]
+ },
+ {
+  "source": "hat/helmet/close/female/steel.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-helmets",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel"
   ]
  },
  {
@@ -2715,6 +2994,40 @@
   ]
  },
  {
+  "source": "hat/pirate/tricorne/basic/adult/black.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-pirates",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Pirate Hat by Bluecarrot16, layers and added animations by JaidynReiman",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "hat/pirate/tricorne/basic/adult/brown.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-pirates",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Pirate Hat by Bluecarrot16, layers and added animations by JaidynReiman",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
   "source": "head/heads/boarman/adult/fur_brown.png",
   "authors": [
    "Benjamin K. Smith (BenCreating)",
@@ -2794,7 +3107,10 @@
   "usedBy": [
    "hero:ranger",
    "hero:magus",
-   "hero:cutpurse"
+   "hero:cutpurse",
+   "hero:sentinel",
+   "hero:zealot",
+   "hero:tinker"
   ]
  },
  {
@@ -3581,6 +3897,48 @@
   ]
  },
  {
+  "source": "legs/armour/plate/female/iron.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
+  "source": "legs/armour/plate/female/steel.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
   "source": "legs/armour/plate/male/gold.png",
   "authors": [
    "bluecarrot16",
@@ -3889,6 +4247,101 @@
   ]
  },
  {
+  "source": "legs/pants/thin/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Joe White",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, edited for female by Joe White, recolors and edits to v3 base by bluecarrot16, teen legs by ElizaWy derived from base, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "hero:sentinel",
+   "hero:zealot",
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "legs/pants/thin/charcoal.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Joe White",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, edited for female by Joe White, recolors and edits to v3 base by bluecarrot16, teen legs by ElizaWy derived from base, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "hero:zealot",
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "neck/scarf/brown.png",
+  "authors": [
+   "Nila122",
+   "Johannes Sjölund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/more-lpc-clothes-and-hair"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "neck/scarf/red.png",
+  "authors": [
+   "Nila122",
+   "Johannes Sjölund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/more-lpc-clothes-and-hair"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
   "source": "quiver/quiver.png",
   "authors": [
    "Johannes Sjölund (wulax)"
@@ -3943,7 +4396,10 @@
    "enemy:stitched",
    "enemy:orc_spear",
    "enemy:hag",
-   "enemy:wartotaur"
+   "enemy:wartotaur",
+   "hero:sentinel",
+   "hero:zealot",
+   "hero:tinker"
   ]
  },
  {
@@ -4097,6 +4553,70 @@
   ]
  },
  {
+  "source": "shoulders/leather/female/leather.png",
+  "authors": [
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "adapted to female base by makrohn, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "shoulders/plate/female/iron.png",
+  "authors": [
+   "bluecarrot16",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "adapted to female base by makrohn, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
+  "source": "shoulders/plate/female/steel.png",
+  "authors": [
+   "bluecarrot16",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "adapted to female base by makrohn, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
   "source": "shoulders/plate/male/bronze.png",
   "authors": [
    "bluecarrot16",
@@ -4195,6 +4715,71 @@
   "notes": "recolors, adapted to v3 bases by bluecarrot16",
   "usedBy": [
    "hero:warden"
+  ]
+ },
+ {
+  "source": "torso/armour/leather/female/black.png",
+  "authors": [
+   "adapted to v3 bases by bluecarrot16"
+  ],
+  "licenses": [],
+  "urls": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolor of torso/armour/leather/female/brown.png; Michael Whitlock (bigbeargames); Matthew Krohn (makrohn); Johannes Sjölund (wulax)",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "torso/armour/leather/female/leather.png",
+  "authors": [
+   "adapted to v3 bases by bluecarrot16"
+  ],
+  "licenses": [],
+  "urls": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolor of torso/armour/leather/female/brown.png; Michael Whitlock (bigbeargames); Matthew Krohn (makrohn); Johannes Sjölund (wulax)",
+  "usedBy": [
+   "hero:sentinel",
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "torso/armour/plate/female/steel.png",
+  "authors": [
+   "adapted to female base by makrohn"
+  ],
+  "licenses": [],
+  "urls": [
+   "color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
+   "run/jump/sit/climb/revised combat by JaidynReiman",
+   "JaidynReiman",
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax; recolor by bigbeargames",
+  "usedBy": [
+   "hero:sentinel"
   ]
  },
  {
@@ -4327,7 +4912,30 @@
   ],
   "notes": "original by ElizaWy, edited to v3 bases by bluecarrot16",
   "usedBy": [
-   "hero:cutpurse"
+   "hero:cutpurse",
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/female/bluegray.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:sentinel"
   ]
  },
  {
@@ -4349,7 +4957,8 @@
   ],
   "notes": "original by ElizaWy, edited to v3 bases by bluecarrot16",
   "usedBy": [
-   "hero:cutpurse"
+   "hero:cutpurse",
+   "hero:tinker"
   ]
  },
  {
@@ -4471,6 +5080,23 @@
   ]
  },
  {
+  "source": "torso/clothes/robe/female/black.png",
+  "authors": [
+   "Luke Mehl"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/female-mage-clothing-set"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
   "source": "torso/clothes/robe/female/blue.png",
   "authors": [
    "Luke Mehl"
@@ -4501,7 +5127,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "hero:magus"
+   "hero:magus",
+   "hero:zealot"
   ]
  },
  {
@@ -4605,6 +5232,67 @@
   "notes": "original by ElizaWy walkcycle only; extended to all animations by adapting from longsleeve, edited to v3 bases by bluecarrot16",
   "usedBy": [
    "enemy:goblin"
+  ]
+ },
+ {
+  "source": "torso/clothes/sleeveless/sleeveless/female/bluegray.png",
+  "authors": [
+   "ElizaWy",
+   "JaidynReiman",
+   "Matthew Krohn (makrohn)",
+   "Marcel van de Steeg (MadMarcel)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-female-orcogregoblintroll-base-walkcycle",
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "weapon/blunt/flail/behind/flail.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "weapon/blunt/flail/flail.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
   ]
  },
  {
@@ -4866,6 +5554,76 @@
   ]
  },
  {
+  "source": "weapon/polearm/halberd/behind/halberd.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
+  "source": "weapon/polearm/halberd/halberd.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:sentinel"
+  ]
+ },
+ {
+  "source": "weapon/polearm/scythe/scythe.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
+  "source": "weapon/polearm/scythe/universal_behind/scythe.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:zealot"
+  ]
+ },
+ {
   "source": "weapon/polearm/spear/background/dark.png",
   "authors": [
    "walk animations redone by pvigier"
@@ -4901,7 +5659,8 @@
   ],
   "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
   "usedBy": [
-   "enemy:lizard"
+   "enemy:lizard",
+   "hero:sentinel"
   ]
  },
  {
@@ -4940,7 +5699,8 @@
   ],
   "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
   "usedBy": [
-   "enemy:lizard"
+   "enemy:lizard",
+   "hero:sentinel"
   ]
  },
  {
@@ -5085,6 +5845,40 @@
   "notes": "modified by daneeklu, from ",
   "usedBy": [
    "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/ranged/crossbow/background/crossbow.png",
+  "authors": [
+   "bluecarrot16",
+   "drjamgo@hotmail.com"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-crossbow-final"
+  ],
+  "notes": "original by drjamgo, modified for v3 character bases and split into layers by bluecarrot16",
+  "usedBy": [
+   "hero:tinker"
+  ]
+ },
+ {
+  "source": "weapon/ranged/crossbow/foreground/crossbow.png",
+  "authors": [
+   "bluecarrot16",
+   "drjamgo@hotmail.com"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-crossbow-final"
+  ],
+  "notes": "original by drjamgo, modified for v3 character bases and split into layers by bluecarrot16",
+  "usedBy": [
+   "hero:tinker"
   ]
  },
  {

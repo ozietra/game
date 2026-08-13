@@ -10,6 +10,8 @@ export const tr = {
   'tab.ledger': 'Künye',
   'tab.records': 'Kayıtlar',
 
+  'policy.wounded': 'Yaralarla da in',
+  'policy.woundedNote': 'Kapalıyken kadro ağır yaralıyken beklemeyi seçer. Açıkken ne durumda olursa olsun iner.',
   'policy.risk': 'Risk kadranı',
   'policy.riskNote': 'Kadranı çevirmek düşmanı da ganimeti de birlikte büyütür. Bozgun artık senin kararın.',
   'policy.riskReadout': 'Düşman +{foe}, ganimet +{loot}',

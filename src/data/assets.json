@@ -357,6 +357,213 @@
     }
    }
   },
+  "sentinel": {
+   "kind": "hero",
+   "owner": "sentinel",
+   "tier": 0,
+   "file": "assets/sprites/sentinel.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "thrust",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "sentinel_t1": {
+   "kind": "hero",
+   "owner": "sentinel",
+   "tier": 1,
+   "file": "assets/sprites/sentinel_t1.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "thrust",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "sentinel_t2": {
+   "kind": "hero",
+   "owner": "sentinel",
+   "tier": 2,
+   "file": "assets/sprites/sentinel_t2.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "thrust",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "zealot": {
+   "kind": "hero",
+   "owner": "zealot",
+   "tier": 0,
+   "file": "assets/sprites/zealot.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "zealot_t1": {
+   "kind": "hero",
+   "owner": "zealot",
+   "tier": 1,
+   "file": "assets/sprites/zealot_t1.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "zealot_t2": {
+   "kind": "hero",
+   "owner": "zealot",
+   "tier": 2,
+   "file": "assets/sprites/zealot_t2.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "tinker": {
+   "kind": "hero",
+   "owner": "tinker",
+   "tier": 0,
+   "file": "assets/sprites/tinker.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "shoot",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "tinker_t1": {
+   "kind": "hero",
+   "owner": "tinker",
+   "tier": 1,
+   "file": "assets/sprites/tinker_t1.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "shoot",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "tinker_t2": {
+   "kind": "hero",
+   "owner": "tinker",
+   "tier": 2,
+   "file": "assets/sprites/tinker_t2.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "shoot",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
   "rat": {
    "kind": "enemy",
    "owner": "rat",

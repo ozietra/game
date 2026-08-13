@@ -324,6 +324,12 @@ export class App {
       state.policy.satchelLimit = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
     });
 
+    const wounded = this.keep('woundedDives', el('input', { type: 'checkbox', id: 'wounded-dives' }));
+    (wounded as HTMLInputElement).checked = state.policy.woundedDives === true;
+    on(wounded, 'change', () => {
+      state.policy.woundedDives = (wounded as HTMLInputElement).checked;
+    });
+
     const risk = el('input', { type: 'range', min: 0, max: RISK.steps, step: 1, class: 'slider', id: 'risk-dial' });
     (risk as HTMLInputElement).value = String(state.policy.risk);
     const riskValue = this.keep('riskValue', el('span', { class: 'readout small', text: String(state.policy.risk) }));
@@ -375,6 +381,8 @@ export class App {
       el('label', { class: 'row', for: 'target-floor' }, [el('span', { text: t('policy.target') }), target]),
       el('label', { class: 'row', for: 'retreat-health' }, [el('span', { text: t('policy.retreat') }), retreat, retreatValue]),
       el('label', { class: 'row', for: 'satchel-limit' }, [el('span', { text: t('policy.satchel') }), limit]),
+      el('label', { class: 'row toggle', for: 'wounded-dives' }, [wounded, el('span', { text: t('policy.wounded') })]),
+      el('p', { class: 'note', text: t('policy.woundedNote') }),
       el('p', { class: 'note', text: t('policy.note') }),
       el('h3', { class: 'card-sub', text: t('policy.risk') }),
       el('label', { class: 'row', for: 'risk-dial' }, [el('span', { text: t('dive.risk') }), risk, riskValue]),
@@ -589,6 +597,8 @@ export class App {
     state.policy.startFloor = Math.max(1, Math.min(state.policy.startFloor, allowed));
     const auto = this.refs.get('autoDive') as HTMLInputElement | undefined;
     if (auto && auto.checked !== state.policy.autoDive) auto.checked = state.policy.autoDive;
+    const wounded = this.refs.get('woundedDives') as HTMLInputElement | undefined;
+    if (wounded && wounded.checked !== (state.policy.woundedDives === true)) wounded.checked = state.policy.woundedDives === true;
 
     const field = this.refs.get('startFloor') as HTMLInputElement | undefined;
     if (field) {
