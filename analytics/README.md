@@ -53,22 +53,39 @@ Deploy prints the address, something like
 curl https://hollowdeep-metrics.<account>.workers.dev/health
 ```
 
-Then point the game at it. In the repository root create a file called `.env`:
+Then point the game at it. Pass the address to the publisher and it is stamped
+into the published pages:
+
+```sh
+bash tools/publish-pages.sh https://hollowdeep-metrics.<account>.workers.dev
+```
+
+Finally open `<the game address>/panel/`, which now opens with the address
+already filled in, paste the panel key and press Connect. The key is kept in
+that browser and nowhere else.
+
+### If the game is already published without it
+
+Nothing needs rebuilding. Both pages carry the address in their own head:
+
+```html
+<meta name="hollowdeep-metrics" content="" />
+```
+
+Put the address in that `content` on the `gh-pages` branch, in `index.html` and
+in `panel/index.html`, and the very next visit starts reporting. This is the
+first thing to check when the panel connects but every number is zero: an empty
+tag means the game never had anywhere to send.
+
+A build time alternative exists for anyone wiring this into their own
+pipeline. Create a `.env` in the repository root, which git ignores:
 
 ```
 VITE_METRICS_URL=https://hollowdeep-metrics.<account>.workers.dev
 VITE_BUILD_ID=2026-08-13
 ```
 
-`.env` is ignored by git, so the address never lands in a commit. Publish as
-usual:
-
-```sh
-bash tools/publish-pages.sh
-```
-
-Finally open `<the game address>/panel/`, paste the same address and the panel
-key, and press Connect. Both are kept in that browser and nowhere else.
+The meta tag wins when both are set.
 
 Once the game is live it is worth closing the door behind you: set
 `ALLOWED_ORIGINS` in `wrangler.toml` to the published origin and deploy again,

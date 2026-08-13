@@ -108,6 +108,19 @@ const TR = {
   errorNet: 'Toplayıcıya ulaşılamadı.',
   errorFile: 'Bu dosya bir rapor değil.',
   empty: 'Henüz veri yok. İlk oyuncu geldiğinde burası dolar.',
+  quietTitle: 'Bağlantı var, sayaç yok',
+  quietLead: 'Toplayıcı cevap veriyor ama içi boş. Sırayla şunlara bak.',
+  quietBuild:
+    'Yayındaki oyunun adresi yazılı mı? index.html içindeki hollowdeep-metrics etiketinin content kısmı boşsa oyun hiçbir şey göndermez. Yeniden derlemeye gerek yok, yayındaki dosyada düzeltmek yeter.',
+  quietOrigin:
+    'Worker tarafındaki ALLOWED_ORIGINS oyunun adresiyle birebir aynı mı? Farklıysa tarayıcı isteği engeller.',
+  quietBrowser:
+    'Kendi tarayıcında izleme reddi açık olabilir. O zaman ayarlarda gizlilik anahtarı hiç görünmez ve tek bir istek bile gitmez.',
+  quietTest:
+    'Kendin dene: oyunu aç, bir dakika bekle veya sekmeyi kapat, sonra burada yenile. Tarayıcının ağ sekmesinde /collect isteğini görmen gerekir.',
+  quietProbe: 'Toplayıcıyı sına',
+  quietProbeOk: 'Toplayıcı çalışıyor ve yazıyor. Sorun oyunun gönderme tarafında.',
+  quietProbeFail: 'Toplayıcı bu tarayıcıdan yazamıyor: {detail}',
 
   kpiPlayers: 'Toplam oyuncu',
   kpiPlayersFoot: 'ilk kez oynayanların toplamı',
@@ -204,6 +217,19 @@ const EN: Record<Key, string> = {
   errorNet: 'The collector could not be reached.',
   errorFile: 'That file is not a report.',
   empty: 'Nothing yet. This fills up when the first player arrives.',
+  quietTitle: 'Connected, nothing counted',
+  quietLead: 'The collector answers, but it is empty. Work down this list.',
+  quietBuild:
+    'Does the published game carry the address? If the content of the hollowdeep-metrics meta tag in index.html is empty, the game sends nothing. No rebuild needed: editing the published file is enough.',
+  quietOrigin:
+    "Does ALLOWED_ORIGINS on the worker match the game's address exactly? If it does not, the browser blocks the request.",
+  quietBrowser:
+    'Your own browser may be asking not to be tracked. In that case the privacy switch never appears in settings and not a single request goes out.',
+  quietTest:
+    'Try it yourself: open the game, wait a minute or close the tab, then refresh here. The network tab should show a /collect request.',
+  quietProbe: 'Test the collector',
+  quietProbeOk: 'The collector is up and writing. The problem is on the sending side.',
+  quietProbeFail: 'The collector cannot be written to from this browser: {detail}',
 
   kpiPlayers: 'Players',
   kpiPlayersFoot: 'everyone who has ever opened it',
@@ -288,12 +314,20 @@ interface Settings {
 
 const STORE = 'hollowdeep.panel.v1';
 
+/** The address the page was published with, if the meta tag carries one. */
+function publishedEndpoint(): string {
+  return (document.querySelector('meta[name="hollowdeep-metrics"]')?.getAttribute('content') ?? '')
+    .trim()
+    .replace(/\/+$/, '');
+}
+
 function loadSettings(): Settings {
-  const fallback: Settings = { endpoint: '', token: '', days: 30, lang: 'tr' };
+  const fallback: Settings = { endpoint: publishedEndpoint(), token: '', days: 30, lang: 'tr' };
   try {
     const raw = localStorage.getItem(STORE);
     if (!raw) return fallback;
-    return { ...fallback, ...(JSON.parse(raw) as Partial<Settings>) };
+    const stored = JSON.parse(raw) as Partial<Settings>;
+    return { ...fallback, ...stored, endpoint: stored.endpoint || fallback.endpoint };
   } catch {
     return fallback;
   }
@@ -311,6 +345,7 @@ let settings = loadSettings();
 let report: Report | null = null;
 let status: 'idle' | 'loading' | 'ready' | 'file' = 'idle';
 let problem = '';
+let probeNote = '';
 
 const host = document.getElementById('panel');
 if (!host) throw new Error('panel host missing');
@@ -397,6 +432,50 @@ function openFile(file: File): void {
     render();
   };
   reader.readAsText(file);
+}
+
+/**
+ * Writes one throwaway sitting and deletes it again, which separates "the
+ * collector is broken" from "the game is not sending". It leaves nothing
+ * behind either way.
+ */
+async function probeCollector(): Promise<void> {
+  const base = settings.endpoint.replace(/\/+$/, '');
+  const id = () => `probe${Math.random().toString(36).slice(2).replace(/[^a-z0-9]/g, '')}0000000000`.slice(0, 20);
+  const pid = id();
+  const now = Date.now();
+
+  probeNote = '';
+  try {
+    const response = await fetch(`${base}/collect`, {
+      method: 'POST',
+      headers: { 'content-type': 'text/plain;charset=UTF-8' },
+      cache: 'no-store',
+      body: JSON.stringify({
+        v: 1,
+        pid,
+        sid: id(),
+        n: 1,
+        build: 'probe',
+        lang: settings.lang,
+        events: [
+          { k: 'session', t: now, s: 0, f: 0 },
+          { k: 'close', t: now, s: 4, f: 1 },
+        ],
+      }),
+    });
+    if (response.status !== 204) throw new Error(`collect ${response.status}`);
+
+    await fetch(`${base}/forget?pid=${pid}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${settings.token}` },
+      cache: 'no-store',
+    });
+    probeNote = t('quietProbeOk');
+  } catch (error) {
+    probeNote = t('quietProbeFail', { detail: String((error as Error)?.message ?? error) });
+  }
+  render();
 }
 
 function download(): void {
@@ -727,6 +806,23 @@ function prestigeView(data: Report): HTMLElement {
   ]);
 }
 
+/** Shown when the collector answers but has never been written to. */
+function quietView(): HTMLElement {
+  const probe = el('button', { class: 'btn on', type: 'button', text: t('quietProbe') });
+  on(probe, 'click', () => void probeCollector());
+
+  return card(t('quietTitle'), t('quietLead'), [
+    el('ol', { class: 'checks' }, [
+      el('li', { text: t('quietBuild') }),
+      el('li', { text: t('quietOrigin') }),
+      el('li', { text: t('quietBrowser') }),
+      el('li', { text: t('quietTest') }),
+    ]),
+    el('div', { class: 'tools' }, [probe]),
+    probeNote ? el('p', { class: 'note', text: probeNote }) : null,
+  ], true);
+}
+
 function mixView(data: Report): HTMLElement {
   const rows = [
     ...data.langs.map((row) => ({ kind: t('mixLang'), name: row.lang || '?', n: row.n })),
@@ -783,6 +879,7 @@ function render(): void {
 
   const data = report;
   root.append(tilesView(data));
+  if (data.totals.players === 0) root.append(el('div', { class: 'grid' }, [quietView()]));
   root.append(
     el('div', { class: 'grid' }, [
       dailyView(data),

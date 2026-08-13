@@ -351,6 +351,16 @@ td.young {
   width: 100%;
 }
 
+.checks {
+  color: var(--text-dim);
+  padding-left: 20px;
+  margin: 0 0 14px;
+}
+
+.checks li {
+  margin-bottom: 8px;
+}
+
 .warn {
   color: var(--series-3);
   font-size: 14px;
