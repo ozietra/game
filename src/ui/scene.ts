@@ -341,9 +341,13 @@ export class Scene {
 
       const depth = index / Math.max(1, count - 1 || 1);
       const lane = Number.isFinite(depth) ? depth : 0;
-      // The front rank stands nearest the middle; the rest trail behind it.
-      const spacing = Math.max(22, Math.min(30, Math.round(this.width * 0.06)));
+      // The front rank stands nearest the middle; the rest trail behind it,
+      // closing ranks when there are enough of them that the back would
+      // otherwise walk off the edge of the shaft.
       const front = Math.round(this.width * (side === 'party' ? 0.31 : 0.69));
+      const room = side === 'party' ? front - SPRITE / 2 : this.width - front - SPRITE / 2;
+      const fits = count > 1 ? room / (count - 1) : 30;
+      const spacing = Math.max(14, Math.min(30, Math.min(Math.round(this.width * 0.06), Math.floor(fits))));
       const x = side === 'party' ? front - index * spacing : front + index * spacing;
       const y = this.floorLine() + 20 + lane * 22 + (index % 2) * 6;
 

@@ -149,7 +149,8 @@ export function freshState(): GameState {
       satchelLimit: 0,
       risk: 0,
       eventChoice: 'ask',
-      woundedDives: false,
+      // On by default: waiting is the exception, not the rule.
+      woundedDives: true,
     },
     run: {
       phase: 'camp',

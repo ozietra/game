@@ -220,7 +220,7 @@ export interface HeroDefinition {
   base: { maxHp: number; attack: number; defence: number; speed: number; crit: number };
   growth: { maxHp: number; attack: number; defence: number };
   ability: {
-    kind: 'bulwark' | 'pierce' | 'volley' | 'mend' | 'backstab';
+    kind: 'bulwark' | 'pierce' | 'volley' | 'mend' | 'backstab' | 'rally' | 'fervour' | 'snare';
     cooldown: number;
     power: number;
     unlockLevel: number;
@@ -273,9 +273,46 @@ export const HEROES: Record<HeroId, HeroDefinition> = {
     growth: { maxHp: 1.088, attack: 1.072, defence: 1.07 },
     ability: { kind: 'mend', cooldown: 10, power: 0.3, unlockLevel: 1 },
   },
+  // The three who come later, each doing something the first five cannot.
+  sentinel: {
+    id: 'sentinel',
+    icon: 'guard',
+    cost: 26000,
+    taunt: 2,
+    base: { maxHp: 116, attack: 13, defence: 9, speed: 98, crit: 0.06 },
+    growth: { maxHp: 1.089, attack: 1.079, defence: 1.072 },
+    ability: { kind: 'rally', cooldown: 26, power: 0.4, unlockLevel: 1 },
+  },
+  zealot: {
+    id: 'zealot',
+    icon: 'faith',
+    cost: 62000,
+    taunt: 1,
+    base: { maxHp: 88, attack: 19, defence: 5, speed: 104, crit: 0.1 },
+    growth: { maxHp: 1.083, attack: 1.09, defence: 1.058 },
+    ability: { kind: 'fervour', cooldown: 14, power: 1.7, unlockLevel: 1 },
+  },
+  tinker: {
+    id: 'tinker',
+    icon: 'gear',
+    cost: 145000,
+    taunt: 1,
+    base: { maxHp: 78, attack: 14.5, defence: 5, speed: 112, crit: 0.11 },
+    growth: { maxHp: 1.081, attack: 1.083, defence: 1.06 },
+    ability: { kind: 'snare', cooldown: 18, power: 0.3, unlockLevel: 1 },
+  },
 };
 
-export const HERO_ORDER: HeroId[] = ['warden', 'ranger', 'magus', 'preacher', 'cutpurse'];
+export const HERO_ORDER: HeroId[] = [
+  'warden',
+  'ranger',
+  'magus',
+  'preacher',
+  'cutpurse',
+  'sentinel',
+  'zealot',
+  'tinker',
+];
 
 export const SLOTS: SlotId[] = ['weapon', 'armour', 'charm'];
 

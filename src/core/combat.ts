@@ -231,6 +231,44 @@ function useAbility(actor: Combatant, allies: Combatant[], foes: Combatant[], rn
       events.push({ kind: 'heal', key: hurt.key, amount: healed, from: actor.key });
       break;
     }
+
+    case 'rally': {
+      // Somebody who has already gone down is worth more than somebody who is
+      // merely hurt, and nobody else in the party can do this at all.
+      const fallen = allies.find((ally) => !ally.alive && ally.hero);
+      if (!fallen) return false;
+      fallen.hp = Math.max(1, Math.round(fallen.stats.maxHp * ability.power));
+      fallen.alive = true;
+      fallen.action = 'idle';
+      fallen.actionUntil = 0;
+      fallen.timer = 0;
+      events.push({ kind: 'heal', key: fallen.key, amount: fallen.hp, from: actor.key });
+      break;
+    }
+
+    case 'fervour': {
+      // Everything at once, and it is paid for out of the zealot's own hide.
+      const targets = foes.filter((foe) => foe.alive);
+      if (targets.length === 0) return false;
+      for (const target of targets) strike(actor, target, ability.power, rng, events);
+      const toll = Math.max(1, Math.round(actor.stats.maxHp * 0.08));
+      actor.hp = Math.max(1, actor.hp - toll);
+      events.push({ kind: 'hit', key: actor.key, amount: toll, from: actor.key });
+      break;
+    }
+
+    case 'snare': {
+      // Takes the speed out of the room for the rest of the encounter, which
+      // is worth more against a crowd than any single blow.
+      const caught = foes.filter((foe) => foe.alive && !foe.snared);
+      if (caught.length === 0) return false;
+      for (const foe of caught) {
+        foe.snared = true;
+        foe.stats = { ...foe.stats, speed: Math.max(20, Math.round(foe.stats.speed * (1 - ability.power))) };
+      }
+      events.push({ kind: 'guard', key: actor.key, amount: caught.length });
+      break;
+    }
   }
 
   actor.abilityTimer = ability.cooldown;

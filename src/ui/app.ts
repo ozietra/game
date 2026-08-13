@@ -1112,7 +1112,7 @@ export class App {
             document.createTextNode(
               t(`ability.${id}.line` as StringKey, {
                 value:
-                  definition.ability.kind === 'bulwark' || definition.ability.kind === 'mend'
+                  ['bulwark', 'mend', 'rally', 'snare'].includes(definition.ability.kind)
                     ? formatPercent(definition.ability.power)
                     : definition.ability.power.toFixed(1),
               }),

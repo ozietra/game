@@ -1,4 +1,12 @@
-export type HeroId = 'warden' | 'ranger' | 'magus' | 'preacher' | 'cutpurse';
+export type HeroId =
+  | 'warden'
+  | 'ranger'
+  | 'magus'
+  | 'preacher'
+  | 'cutpurse'
+  | 'sentinel'
+  | 'zealot'
+  | 'tinker';
 
 export type SlotId = 'weapon' | 'armour' | 'charm';
 
@@ -69,6 +77,8 @@ export interface Combatant {
   wardTimer?: number;
   raged?: boolean;
   summons?: number;
+  /** Already caught by a snare, so a second one is wasted on it. */
+  snared?: boolean;
 }
 
 export interface Satchel {
