@@ -18,6 +18,7 @@ import { heroLook, itemGain, masteryCost, heroStats, maxStartFloor, partyOf, rel
 import type { BuildingId, Item, RarityId, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
+import { metrics } from '../net/telemetry';
 import { sound } from './audio';
 import { icon, portraitStyle, preload, spriteMeta } from './assets';
 import { clear, el, on, setText, setWidth } from './dom';
@@ -57,6 +58,7 @@ export class App {
   }
 
   async start(): Promise<void> {
+    metrics.begin(this.game.state);
     setLanguage(this.game.state.language);
     sound.setVolume(this.game.state.audio.volume);
     sound.setMuted(this.game.state.audio.muted);
@@ -321,6 +323,7 @@ export class App {
     }
 
     this.cuesForPhase();
+    metrics.tick(elapsed, Math.max(this.game.run.floor, this.game.state.deepestFloor));
 
     if (this.view === 'game') {
       this.scene.render(this.game.state, elapsed);
@@ -357,6 +360,9 @@ export class App {
     if (phase !== this.lastPhase) {
       if (this.lastPhase === 'descending' && phase === 'fighting') sound.play('draw', { gain: 0.5 });
       if (phase === 'descending') sound.play('step', { gain: 0.45 });
+      if (this.lastPhase === 'camp' && phase === 'descending') metrics.mark('dive', this.game.run.floor);
+      if (phase === 'climbing') metrics.mark('extract', this.game.run.floor);
+      if (phase === 'wiped') metrics.mark('wipe', this.game.run.floor);
       this.lastPhase = phase;
     }
 
@@ -965,7 +971,9 @@ export class App {
     on(offer, 'click', () => {
       if (!this.game.canPrestige()) return;
       if (!window.confirm(t('relics.warning'))) return;
+      const reached = this.game.state.deepestFloor;
       this.game.prestige();
+      metrics.mark('prestige', reached);
       this.build();
       this.selectTab('relics');
     });

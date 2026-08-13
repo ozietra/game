@@ -116,6 +116,7 @@ export function freshState(): GameState {
     lastSeen: Date.now(),
     nextUid: 1,
     tutorialSeen: false,
+    shareMetrics: true,
   };
 }
 
@@ -645,6 +646,7 @@ export class Game {
     fresh.policy = policy;
     fresh.deepestBanked = deepestBanked;
     fresh.tutorialSeen = true;
+    fresh.shareMetrics = this.state.shareMetrics;
     Object.assign(fresh, carried);
     fresh.deepestFloor = 0;
 

@@ -145,6 +145,10 @@ export const en: Record<StringKey, string> = {
   'menu.audio': 'Sound',
   'menu.volume': 'Volume',
   'menu.mute': 'Silent',
+  'menu.privacy': 'Privacy',
+  'menu.metrics': 'Send anonymous metrics',
+  'menu.metricsNote':
+    'All that leaves is a random number, how long a sitting lasted and how deep it got. No name, no address, no account. Nothing is sent at all if your browser says it does not want to be tracked.',
   'menu.first': 'Nobody is waiting for you at the mouth of the shaft.',
   'menu.open': 'Menu',
 

@@ -143,6 +143,10 @@ export const tr = {
   'menu.audio': 'Ses',
   'menu.volume': 'Ses seviyesi',
   'menu.mute': 'Sessiz',
+  'menu.privacy': 'Gizlilik',
+  'menu.metrics': 'Anonim ölçüm gönder',
+  'menu.metricsNote':
+    'Giden tek şey rastgele bir numara, oturumun ne kadar sürdüğü ve ne kadar aşağı inildiği. İsim, adres, hesap yok. Tarayıcın izlenmek istemediğini söylüyorsa hiçbir şey gönderilmez.',
   'menu.first': 'Kuyunun ağzında kimse seni beklemiyor.',
   'menu.open': 'Menü',
 

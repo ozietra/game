@@ -63,7 +63,10 @@ catches the light.
 | `src/core` | The simulation: combat resolution, the descent state machine, loot, saves, offline catch up. No DOM access, so it also runs under Node. |
 | `src/data/content.ts` | Every tuning number, foe, hero, building and relic in one file. |
 | `src/ui` | Title screen, canvas scene, panels, floating numbers, the sound mixer. |
+| `src/net` | The only thing that ever leaves the tab: anonymous play metrics, switched off unless a build says otherwise. |
 | `src/i18n` | Turkish and English string tables. The English table is typed against the Turkish one, so a missing key fails the type check. |
+| `panel` | The owner's metrics dashboard, built as a second page at `/panel/`. |
+| `analytics` | The collector behind it: a Cloudflare Worker, a D1 schema, and two checks that run offline. |
 | `tools` | The asset pipeline and a headless balance harness. |
 
 ### Balance harness
@@ -92,6 +95,36 @@ npm run build
 npx vite preview --port 4173 &
 npm install --no-save playwright
 npm run smoke -- tools/.cache/save.json tools/.cache
+```
+
+## Measuring it
+
+A finished game and a game people keep playing are different problems, and the
+second one cannot be argued about without numbers. `analytics` holds a small
+collector and `panel` holds the dashboard that reads it: how many people have
+ever opened it, how many arrive each day, whether they come back the next day
+and the seventh, how long a first sitting lasts and how deep it gets, which
+floor a party is usually lost on, which floor players are on when they stop
+coming back, and how many ever take the offering.
+
+None of it is switched on by default. The game only sends anything when a build
+carries a `VITE_METRICS_URL`, and even then it stays quiet if the browser asks
+not to be tracked or the player turns the switch off under Settings, Privacy.
+What travels is a random number, a length and a floor. There is no name, no
+address, no account, no cookie and no third party.
+
+The panel lives at **<https://ozietra.github.io/game/panel/>** and is safe to
+publish because it holds nothing: without the address and key, typed in once
+and kept in that browser, it has nothing to show. It also opens a saved report
+from a file, so the numbers can be read on a machine that has neither.
+
+The collector is a Cloudflare Worker over a D1 database, which is free at any
+scale this game is likely to see. `analytics/README.md` has the eight commands
+that put it up, and both halves can be exercised without deploying anything:
+
+```sh
+node analytics/verify.mjs sample.json    # collector and queries, offline
+node analytics/roundtrip.mjs             # browser, collector and panel end to end
 ```
 
 ## Art, sound and typefaces

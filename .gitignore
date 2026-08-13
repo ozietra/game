@@ -3,3 +3,6 @@ dist/
 tools/.cache/
 *.local
 .DS_Store
+.env
+analytics/sample.json
+analytics/.wrangler/

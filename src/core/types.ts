@@ -135,4 +135,6 @@ export interface GameState {
   lastSeen: number;
   nextUid: number;
   tutorialSeen: boolean;
+  /** Whether anonymous play metrics may leave this browser. */
+  shareMetrics: boolean;
 }

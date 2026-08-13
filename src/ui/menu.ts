@@ -5,6 +5,7 @@ import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, setLanguage, t, type Language, type StringKey } from '../i18n';
 import { sound } from './audio';
 import { heroLook } from '../core/stats';
+import { metrics } from '../net/telemetry';
 import { icon, portraitStyle } from './assets';
 import { clear, el, on } from './dom';
 
@@ -154,6 +155,24 @@ export class Menu {
       writeSave(state);
     });
 
+    const privacy: HTMLElement[] = [];
+    if (metrics.available) {
+      const share = el('input', { type: 'checkbox', id: 'share-metrics' });
+      (share as HTMLInputElement).checked = state.shareMetrics !== false;
+      on(share, 'change', () => {
+        metrics.setEnabled((share as HTMLInputElement).checked);
+        sound.play('click', { gain: 0.6 });
+        writeSave(state);
+      });
+      privacy.push(
+        el('div', { class: 'menu-section' }, [
+          el('h2', { class: 'menu-heading', text: t('menu.privacy') }),
+          el('label', { class: 'row toggle', for: 'share-metrics' }, [share, el('span', { text: t('menu.metrics') })]),
+          el('p', { class: 'note', text: t('menu.metricsNote') }),
+        ]),
+      );
+    }
+
     const records: [StringKey, string][] = [
       ['ledger.stat.dives', formatNumber(state.totalDives)],
       ['ledger.stat.wipes', formatNumber(state.totalWipes)],
@@ -174,6 +193,7 @@ export class Menu {
         el('label', { class: 'row', for: 'volume' }, [el('span', { text: t('menu.volume') }), volume, volumeValue]),
         el('label', { class: 'row toggle', for: 'mute' }, [mute, el('span', { text: t('menu.mute') })]),
       ]),
+      ...privacy,
       el('div', { class: 'menu-section' }, [
         el('h2', { class: 'menu-heading', text: t('ledger.stats') }),
         el(

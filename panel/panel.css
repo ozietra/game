@@ -1,0 +1,357 @@
+/*
+ * The panel borrows the game's surface and typefaces so the two do not look
+ * like they came from different projects, but it is a reading tool, not a
+ * game screen: no textures behind numbers, no decoration on a chart.
+ */
+
+.viz {
+  color-scheme: dark;
+
+  --surface: #15120e;
+  --surface-raised: #1c1813;
+  --edge: #2e2619;
+  --edge-lit: #47392a;
+  --text: #ded2ba;
+  --text-dim: #9c8f78;
+  --text-faint: #6f6555;
+
+  /* Categorical slots, validated on this surface: OKLCH L 0.52 to 0.67,
+     C >= 0.11, worst adjacent CVD deltaE 12.5, all above 3:1 against the
+     surface. Slots 1 to 3 also clear the all-pairs gate; the fourth is only
+     ever used in a direct-labelled adjacent form. */
+  --series-1: #bc8b09;
+  --series-2: #008fb2;
+  --series-3: #ae4230;
+  --series-4: #809e3b;
+
+  /* One hue, light to dark, for magnitude. */
+  --ramp-1: #d3b373;
+  --ramp-2: #c19741;
+  --ramp-3: #aa7c00;
+  --ramp-4: #8c6400;
+  --ramp-5: #6c4c00;
+  --ramp-track: #241d12;
+
+  --grid: #2b2417;
+
+  --display: 'Grenze Gotisch', 'Times New Roman', serif;
+  --body: 'Grenze', Georgia, 'Times New Roman', serif;
+  --mono: 'Fragment Mono', 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #0b0908;
+  color: #ded2ba;
+  font-family: 'Grenze', Georgia, 'Times New Roman', serif;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.viz {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* --------------------------------------------------------------- head */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--edge);
+  padding-bottom: 14px;
+}
+
+.head h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.head .sub {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin: 2px 0 0;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn {
+  background: var(--surface-raised);
+  border: 1px solid var(--edge-lit);
+  border-radius: 2px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--ramp-2);
+}
+
+.btn.on {
+  background: #2a2115;
+  border-color: var(--ramp-3);
+}
+
+.field {
+  background: #100d0a;
+  border: 1px solid var(--edge-lit);
+  border-radius: 2px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 14px;
+  min-width: 260px;
+}
+
+/* --------------------------------------------------------------- cards */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  padding: 16px 18px 18px;
+}
+
+.card.wide {
+  grid-column: 1 / -1;
+}
+
+.card h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  margin: 0 0 2px;
+}
+
+.card .note {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+
+.card .note:last-child {
+  margin: 12px 0 0;
+}
+
+/* ------------------------------------------------------------- figures */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tile {
+  background: var(--surface);
+  padding: 14px 16px 16px;
+}
+
+.tile .label {
+  color: var(--text-dim);
+  font-size: 14px;
+  display: block;
+}
+
+.tile .value {
+  font-family: var(--mono);
+  font-size: 26px;
+  line-height: 1.2;
+  display: block;
+  margin-top: 4px;
+}
+
+.tile .value.hero {
+  font-size: 48px;
+}
+
+/* Three numbers sharing one tile need to fit on one line. */
+.tile .value.trio {
+  font-size: 20px;
+}
+
+.tile .foot {
+  color: var(--text-faint);
+  font-size: 13px;
+  display: block;
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------------- charts */
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart text {
+  font-family: var(--body);
+  fill: var(--text-dim);
+}
+
+.chart .tick {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: var(--text-faint);
+}
+
+.chart .value {
+  font-family: var(--mono);
+  font-size: 12px;
+  fill: var(--text);
+}
+
+.chart .axis {
+  stroke: var(--edge-lit);
+  stroke-width: 1;
+}
+
+.chart .grid-line {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend i {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* --------------------------------------------------------------- table */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: right;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--edge);
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th {
+  color: var(--text-dim);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+td.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+td.young {
+  color: var(--text-faint);
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+/* --------------------------------------------------------------- setup */
+
+.setup {
+  max-width: 640px;
+  margin: 40px auto;
+}
+
+.setup ol {
+  padding-left: 20px;
+  color: var(--text-dim);
+}
+
+.setup li {
+  margin-bottom: 8px;
+}
+
+.setup code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: #100d0a;
+  border: 1px solid var(--edge);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.rows {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.rows label {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.rows .field {
+  width: 100%;
+}
+
+.warn {
+  color: var(--series-3);
+  font-size: 14px;
+}
