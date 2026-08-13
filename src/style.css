@@ -772,6 +772,68 @@ h3 {
   margin-top: auto;
 }
 
+/* ---------------------------------------------------------------- ladder */
+
+.ladder-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ladder-form .field {
+  flex: 1 1 200px;
+  max-width: 280px;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.board-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--edge);
+  padding: 7px 0;
+}
+
+.board-row:first-child {
+  border-top: none;
+}
+
+.board-row.is-me {
+  background: #1f1a12;
+  border-left: 2px solid var(--gold);
+  padding-left: 8px;
+}
+
+.board-rank {
+  font-family: var(--mono);
+  color: var(--muted);
+  min-width: 28px;
+  text-align: right;
+}
+
+.board-name {
+  min-width: 140px;
+  color: var(--text);
+}
+
+.board-floor {
+  font-family: var(--mono);
+  color: var(--gold);
+  min-width: 120px;
+}
+
+.board-meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .bestiary {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));

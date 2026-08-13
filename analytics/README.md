@@ -91,6 +91,38 @@ Once the game is live it is worth closing the door behind you: set
 `ALLOWED_ORIGINS` in `wrangler.toml` to the published origin and deploy again,
 so only the real site can post.
 
+## The ladder
+
+The same worker carries the leaderboard, because standing up a second service
+for one table would be silly. It is the one thing here anybody may read:
+
+```
+POST /score    {v, pid, name, floor, prestiges, deep, played}
+GET  /board    ?scope=week|all
+```
+
+A week is a fresh start and the all time board is the best week each player
+ever had, so a good week is never taken away by a bad one. The board ranks the
+deepest floor a party actually climbed back out of, which is the only number in
+the game that cost something to get.
+
+Two things happen to a claim before it is stored. The name is stripped of
+anything that could lay out a page or impersonate the interface and cut to
+eighteen characters, and the floor is weighed against the time claimed: the
+simulated curve reaches floor 48 in eight hours, so a claim well past
+`25 * sqrt(hours) + 20` is refused outright with a 422. That is a sanity gate
+rather than a proof, and signed runs are the real answer.
+
+**If the collector was deployed before the ladder existed**, its database has
+no `scores` table yet. Running the schema again adds it and leaves everything
+else alone, because every statement in it is `CREATE ... IF NOT EXISTS`:
+
+```sh
+cd analytics
+npx wrangler d1 execute hollowdeep-metrics --remote --file=schema.sql
+npx wrangler deploy
+```
+
 ## Reading it back
 
 The panel is the intended reader, but the endpoint is plain JSON and answers

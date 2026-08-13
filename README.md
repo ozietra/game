@@ -39,6 +39,12 @@ Open the address Vite prints. `npm run build` produces a static `dist/` that can
 be served from any file host, including a subdirectory, since every asset path
 is relative.
 
+Three goals turn over every day, one floor in five holds something other than
+three fights, and a risk dial raises what the shaft pays and what it hits for
+at the same time. Ten floors banked sets a mark that nothing takes back, not a
+rout and not an offering. The Records tab keeps the last eight dives, the
+achievements, a bestiary and the ladder.
+
 There are two ways to run the shaft. Press Descend and the party keeps going
 down until you press Turn back, whatever the orders say. Leave the automatic
 descent on instead and the standing orders drive: the floor to start from, the
@@ -47,6 +53,14 @@ value that does the same. Either way they keep working while the tab is closed,
 up to the offline window that Waking Camp relics extend.
 
 The floor they start from can be any floor they have climbed out of before.
+
+Floor keepers are not ordinary foes with more health: a keeper carries a ward
+that soaks blows and comes back up on a clock, fights its last third harder,
+and calls in help twice on the way down.
+
+Relics carry a party only so far, and the curve flattens in the eighties. Past
+floor sixty the deep descent opens: it gives up the relics as well and pays in
+echoes, which nothing takes back.
 
 Gear is picked up mid dive and sorted out on the way home: whoever gains most
 puts it on, the rest waits in the store, filtered by rarity, where it can be
@@ -117,6 +131,10 @@ The panel lives at **<https://ozietra.github.io/game/panel/>** and is safe to
 publish because it holds nothing: without the address and key, typed in once
 and kept in that browser, it has nothing to show. It also opens a saved report
 from a file, so the numbers can be read on a machine that has neither.
+
+The same worker carries the ladder, which is the one thing on it anybody may
+read: a name a player typed and the deepest floor they climbed back out of,
+weekly and all time.
 
 The collector is a Cloudflare Worker over a D1 database, which is free at any
 scale this game is likely to see. `analytics/README.md` has the eight commands

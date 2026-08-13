@@ -181,6 +181,7 @@ export function freshState(): GameState {
     nextUid: 1,
     tutorialSeen: false,
     shareMetrics: true,
+    ladderName: '',
     contracts: { day: '', goals: [], streak: 0, best: 0 },
     achievements: {},
     bestiary: {},
@@ -1116,6 +1117,7 @@ export class Game {
     fresh.deepestBanked = deepestBanked;
     fresh.tutorialSeen = true;
     fresh.shareMetrics = this.state.shareMetrics;
+    fresh.ladderName = this.state.ladderName;
     Object.assign(fresh, carried);
     fresh.deepestFloor = 0;
 
@@ -1177,6 +1179,7 @@ export class Game {
       lastDive: this.state.lastDive,
       diveHistory: this.state.diveHistory,
       shareMetrics: this.state.shareMetrics,
+      ladderName: this.state.ladderName,
     };
 
     const fresh = freshState();

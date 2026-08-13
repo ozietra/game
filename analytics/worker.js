@@ -80,6 +80,42 @@ const clampInt = (value, low, high) => {
 const dayOf = (millis) => new Date(millis).toISOString().slice(0, 10);
 const short = (value, length) => (typeof value === 'string' ? value.slice(0, length) : '');
 
+/** ISO week, computed here because a client's idea of the week is not evidence. */
+function weekOf(millis) {
+  const date = new Date(millis);
+  const weekday = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() - weekday + 3);
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const firstWeekday = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstWeekday + 3);
+  const week = 1 + Math.round((date.getTime() - firstThursday.getTime()) / (7 * DAY));
+  return `${date.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
+/**
+ * A name a stranger will read. Anything that could be used to lay out the page
+ * or impersonate the interface comes out; what is left is one line of text.
+ */
+function cleanName(value) {
+  return short(value, 64)
+    .replace(/[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u2028\u2029\u202a-\u202e\ufeff]/g, '')
+    .replace(/[<>]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 18);
+}
+
+/**
+ * The floor a claim would need the shaft to have given up in the time claimed.
+ * The simulated curve reaches floor 48 in eight hours and 87 in thirty six, so
+ * this sits well above honest play and still refuses the impossible. It is a
+ * sanity gate, not a proof: signed runs are the real answer.
+ */
+function plausibleFloor(playedSeconds) {
+  const hours = Math.max(0, playedSeconds) / 3600;
+  return Math.round(25 * Math.sqrt(hours) + 20);
+}
+
 // ------------------------------------------------------------------- collect
 
 async function collect(request, env, cors) {
@@ -388,6 +424,93 @@ async function stats(env, url) {
   };
 }
 
+// -------------------------------------------------------------------- ladder
+
+const BOARD_LIMIT = 50;
+
+async function submitScore(request, env, cors) {
+  const text = await request.text();
+  if (text.length > 2048) return json({ error: 'too large' }, 413, cors);
+
+  let claim;
+  try {
+    claim = JSON.parse(text);
+  } catch {
+    return json({ error: 'bad json' }, 400, cors);
+  }
+
+  if (!claim || claim.v !== PROTOCOL) return json({ error: 'bad version' }, 400, cors);
+  if (!ID.test(claim.pid || '')) return json({ error: 'bad id' }, 400, cors);
+
+  const name = cleanName(claim.name);
+  if (name.length < 2) return json({ error: 'bad name' }, 400, cors);
+
+  const now = Date.now();
+  const played = clampInt(claim.played, 0, 400 * 24 * 3600);
+  const floor = clampInt(claim.floor, 1, MAX_FLOOR);
+  const prestiges = clampInt(claim.prestiges, 0, 100000);
+  const deep = clampInt(claim.deep, 0, 100000);
+
+  // Refusing the impossible outright, rather than storing it and sorting it out
+  // on the way back, keeps the board honest even when the read path is cached.
+  const ceiling = plausibleFloor(played);
+  if (floor > ceiling) return json({ error: 'implausible', floor, ceiling }, 422, cors);
+
+  const week = weekOf(now);
+  await env.DB.prepare(
+    `INSERT INTO scores (pid, week, name, floor, prestiges, deep, played, updated)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+     ON CONFLICT(pid, week) DO UPDATE SET
+       name      = excluded.name,
+       floor     = MAX(scores.floor, excluded.floor),
+       prestiges = MAX(scores.prestiges, excluded.prestiges),
+       deep      = MAX(scores.deep, excluded.deep),
+       played    = MAX(scores.played, excluded.played),
+       updated   = excluded.updated
+     WHERE excluded.updated - scores.updated > 15000 OR excluded.floor > scores.floor`,
+  )
+    .bind(claim.pid, week, name, floor, prestiges, deep, played, now)
+    .run();
+
+  return json({ ok: true, week, floor }, 200, cors);
+}
+
+async function board(env, url) {
+  const scope = url.searchParams.get('scope') === 'all' ? 'all' : 'week';
+  const limit = clampInt(url.searchParams.get('limit') || BOARD_LIMIT, 5, BOARD_LIMIT);
+  const week = weekOf(Date.now());
+
+  const statement =
+    scope === 'all'
+      ? env.DB.prepare(
+          `SELECT pid, name, MAX(floor) AS floor, prestiges, deep, played, updated
+           FROM scores GROUP BY pid ORDER BY floor DESC, played ASC LIMIT ?1`,
+        ).bind(limit)
+      : env.DB.prepare(
+          `SELECT pid, name, floor, prestiges, deep, played, updated
+           FROM scores WHERE week = ?1 ORDER BY floor DESC, played ASC LIMIT ?2`,
+        ).bind(week, limit);
+
+  const rows = (await statement.all()).results;
+  return {
+    scope,
+    week,
+    generated: Date.now(),
+    rows: rows.map((row, index) => ({
+      rank: index + 1,
+      // The identifier goes back out so a player can find their own line
+      // without the board having to know who is asking.
+      pid: row.pid,
+      name: row.name,
+      floor: row.floor,
+      prestiges: row.prestiges,
+      deep: row.deep,
+      played: row.played,
+      updated: row.updated,
+    })),
+  };
+}
+
 // ------------------------------------------------------------------- routing
 
 export default {
@@ -401,6 +524,11 @@ export default {
       if (url.pathname === '/collect' && request.method === 'POST') return await collect(request, env, cors);
 
       if (url.pathname === '/health') return json({ ok: true, protocol: PROTOCOL }, 200, cors);
+
+      // The ladder is the one thing here anybody may read. It holds a name a
+      // player chose and a floor number, and nothing else.
+      if (url.pathname === '/score' && request.method === 'POST') return await submitScore(request, env, cors);
+      if (url.pathname === '/board' && request.method === 'GET') return json(await board(env, url), 200, cors);
 
       if (url.pathname === '/stats' && request.method === 'GET') {
         if (!authorised(request, url, env)) return json({ error: 'unauthorised' }, 401, cors);

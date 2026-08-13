@@ -59,3 +59,22 @@ CREATE TABLE IF NOT EXISTS marks (
 
 CREATE INDEX IF NOT EXISTS marks_kind_floor ON marks (kind, floor);
 CREATE INDEX IF NOT EXISTS marks_day ON marks (day);
+
+-- The ladder. One row per player per week, holding their best claim for that
+-- week, so a week is a fresh start and the all-time board is the best of them.
+-- This is the only table with anything a player chose in it, and the only
+-- thing they chose is a name.
+CREATE TABLE IF NOT EXISTS scores (
+  pid       TEXT    NOT NULL,
+  week      TEXT    NOT NULL,
+  name      TEXT    NOT NULL,
+  floor     INTEGER NOT NULL,
+  prestiges INTEGER NOT NULL DEFAULT 0,
+  deep      INTEGER NOT NULL DEFAULT 0,
+  played    INTEGER NOT NULL DEFAULT 0,
+  updated   INTEGER NOT NULL,
+  PRIMARY KEY (pid, week)
+);
+
+CREATE INDEX IF NOT EXISTS scores_board ON scores (week, floor DESC);
+CREATE INDEX IF NOT EXISTS scores_all ON scores (floor DESC);

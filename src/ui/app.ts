@@ -44,6 +44,7 @@ import type { BuildingId, DiveReport, Hero, Item, RarityId, RelicId } from '../c
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { metrics } from '../net/telemetry';
+import { fetchBoard, ladderAvailable, myId, submitScore, type BoardScope } from '../net/leaderboard';
 import { sound } from './audio';
 import { icon, portraitStyle, preload, spriteMeta } from './assets';
 import { clear, el, on, setText, setWidth } from './dom';
@@ -77,6 +78,7 @@ export class App {
   private menu!: Menu;
   private lastPhase = '';
   private lastLogId = 0;
+  private boardScope: BoardScope = 'week';
 
   constructor(game: Game, root: HTMLElement) {
     this.game = game;
@@ -1500,6 +1502,8 @@ export class App {
       ]),
     );
 
+    if (ladderAvailable()) panel.append(this.buildLadder());
+
     // Recent dives.
     const dives = el('div', { class: 'card wide' }, [
       el('h2', { class: 'card-title', html: `${icon('descend')}<span>${t('records.dives')}</span>` }),
@@ -1577,6 +1581,103 @@ export class App {
         beasts,
       ]),
     );
+  }
+
+  // ------------------------------------------------------------------ ladder
+
+  /**
+   * The board ranks the deepest floor a party actually climbed out of, which
+   * is the only number in the game that cost something to get.
+   */
+  private buildLadder(): HTMLElement {
+    const state = this.game.state;
+    const card = this.keep('ladderCard', el('div', { class: 'card wide' }));
+
+    const name = el('input', { class: 'field', type: 'text', maxlength: 18, placeholder: t('ladder.namePlaceholder') });
+    (name as HTMLInputElement).value = state.ladderName;
+
+    const note = this.keep('ladderNote', el('p', { class: 'note', text: t('ladder.note') }));
+
+    const send = el('button', {
+      class: 'button primary',
+      type: 'button',
+      html: `${icon('rank')}<span>${t('ladder.submit')}</span>`,
+    });
+    on(send, 'click', () => {
+      const chosen = (name as HTMLInputElement).value.trim();
+      state.ladderName = chosen;
+      writeSave(state);
+      sound.play('click', { gain: 0.5 });
+      setText(note, t('ladder.sending'));
+      void submitScore(state, chosen).then((result) => {
+        setText(note, t(`ladder.result.${result}` as StringKey, { floor: state.deepestBanked }));
+        if (result === 'ok') void this.loadBoard();
+      });
+    });
+
+    const scopes = el('div', { class: 'lang-switch' });
+    for (const scope of ['week', 'all'] as BoardScope[]) {
+      const button = el('button', {
+        class: `button tiny${this.boardScope === scope ? ' primary' : ''}`,
+        type: 'button',
+        'data-scope': scope,
+        text: t(scope === 'week' ? 'ladder.week' : 'ladder.all'),
+      });
+      on(button, 'click', () => {
+        this.boardScope = scope;
+        for (const other of Array.from(scopes.children)) {
+          other.classList.toggle('primary', (other as HTMLElement).dataset.scope === scope);
+        }
+        void this.loadBoard();
+      });
+      scopes.append(button);
+    }
+
+    const rows = this.keep('ladderRows', el('div', { class: 'board' }));
+
+    card.append(
+      el('h2', { class: 'card-title' }, [
+        el('span', { html: icon('rank') }),
+        el('span', { text: t('ladder.title') }),
+        scopes,
+      ]),
+      el('div', { class: 'ladder-form' }, [name, send]),
+      note,
+      rows,
+    );
+
+    void this.loadBoard();
+    return card;
+  }
+
+  private async loadBoard(): Promise<void> {
+    const rows = this.refs.get('ladderRows');
+    if (!rows) return;
+    const board = await fetchBoard(this.boardScope);
+    const host = this.refs.get('ladderRows');
+    if (!host) return;
+
+    clear(host);
+    if (!board || board.rows.length === 0) {
+      host.append(el('p', { class: 'muted', text: t('ladder.empty') }));
+      return;
+    }
+
+    const me = myId();
+    for (const row of board.rows) {
+      host.append(
+        el('div', { class: `board-row${row.pid === me ? ' is-me' : ''}` }, [
+          el('span', { class: 'board-rank', text: `${row.rank}` }),
+          el('span', { class: 'board-name', text: row.name }),
+          el('span', { class: 'board-floor', text: `${t('dive.deepest')} ${formatNumber(row.floor)}` }),
+          el('span', {
+            class: 'board-meta',
+            text: `${t('ledger.stat.prestiges')} ${formatNumber(row.prestiges)}${row.deep > 0 ? ` · ${t('deep.title')} ${row.deep}` : ''}`,
+          }),
+          el('span', { class: 'board-meta', text: formatDuration(row.played) }),
+        ]),
+      );
+    }
   }
 
   // ---------------------------------------------------------------- overlays

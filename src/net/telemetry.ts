@@ -1,4 +1,5 @@
 import { BUILD_ID, METRICS_ENDPOINT, METRICS_PROTOCOL } from '../data/config';
+import { knownId, playerId, randomId, readLocal, writeLocal } from './identity';
 import type { GameState } from '../core/types';
 
 /**
@@ -27,7 +28,6 @@ interface Sample {
   d?: string;
 }
 
-const PID_KEY = 'hollowdeep.pid.v1';
 const RUNS_KEY = 'hollowdeep.runs.v1';
 
 /** A minute between flushes keeps a busy day inside a free collector's budget. */
@@ -35,30 +35,6 @@ const FLUSH_SECONDS = 60;
 const BEAT_SECONDS = 60;
 const BATCH_LIMIT = 40;
 const QUEUE_LIMIT = 120;
-
-function randomId(): string {
-  const scope = globalThis.crypto;
-  if (scope && 'randomUUID' in scope) return scope.randomUUID().replace(/-/g, '').slice(0, 24);
-  let out = '';
-  for (let i = 0; i < 24; i += 1) out += Math.floor(Math.random() * 16).toString(16);
-  return out;
-}
-
-function readLocal(key: string): string | null {
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeLocal(key: string, value: string): void {
-  try {
-    localStorage.setItem(key, value);
-  } catch {
-    // A blocked store just means this browser stays anonymous between visits.
-  }
-}
 
 /** Browser level refusals, which outrank the game's own switch. */
 function refusedByBrowser(): boolean {
@@ -92,12 +68,8 @@ class Telemetry {
     this.state = state;
     if (!this.configured) return;
 
-    this.pid = readLocal(PID_KEY) ?? '';
-    const known = this.pid.length > 0;
-    if (!known) {
-      this.pid = randomId();
-      writeLocal(PID_KEY, this.pid);
-    }
+    const known = knownId() !== null;
+    this.pid = playerId();
 
     this.ordinal = Math.max(1, Number(readLocal(RUNS_KEY) ?? '0') + 1);
     writeLocal(RUNS_KEY, String(this.ordinal));

@@ -214,6 +214,8 @@ export interface GameState {
   tutorialSeen: boolean;
   /** Whether anonymous play metrics may leave this browser. */
   shareMetrics: boolean;
+  /** The name this player goes by on the ladder, empty until they pick one. */
+  ladderName: string;
   contracts: Contracts;
   /** Achievement id to when it was earned. */
   achievements: Record<string, number>;

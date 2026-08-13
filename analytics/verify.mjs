@@ -40,6 +40,11 @@ class Statement {
     prepared.run(...this.args);
     return { results: [], success: true };
   }
+
+  /** D1 statements answer on their own as well as inside a batch. */
+  async all() {
+    return this.run();
+  }
 }
 
 class Database {
@@ -97,6 +102,36 @@ function sitting(at, seconds, floor, { dives = 1, wipes = 0, extracts = 1, prest
   for (let i = 0; i < prestiges; i += 1) events.push({ k: 'prestige', t: at + 4000, s: 40, f: floor });
   events.push({ k: 'close', t: at + 5000, s: seconds, f: floor });
   return events;
+}
+
+/** The ladder: a name gets cleaned, a claim gets weighed, a board comes back. */
+async function checkLadder(env) {
+  const post = async (body) =>
+    worker.fetch(new Request('https://metrics.test/score', { method: 'POST', body: JSON.stringify(body) }), env);
+
+  const honest = await post({ v: 1, pid: 'ladder00000001', name: '  Kuyucu  ', floor: 40, played: 8 * 3600, prestiges: 2, deep: 0 });
+  assert(honest.status === 200, `an honest claim should be taken, got ${honest.status}`);
+
+  const silly = await post({ v: 1, pid: 'ladder00000002', name: 'Hızlı', floor: 900, played: 300, prestiges: 0, deep: 0 });
+  assert(silly.status === 422, `an impossible claim should be refused, got ${silly.status}`);
+
+  const nameless = await post({ v: 1, pid: 'ladder00000003', name: ' <b> ', floor: 5, played: 3600, prestiges: 0, deep: 0 });
+  assert(nameless.status === 400, 'a name that is only markup should be refused');
+
+  const second = await post({ v: 1, pid: 'ladder00000004', name: 'Derinci', floor: 30, played: 6 * 3600, prestiges: 1, deep: 1 });
+  assert(second.status === 200, 'a second player should be taken');
+
+  const response = await worker.fetch(new Request('https://metrics.test/board'), env);
+  assert(response.status === 200, `the board should be public, got ${response.status}`);
+  const table = await response.json();
+
+  assert(table.rows.length === 2, `the board should hold two players, saw ${table.rows.length}`);
+  assert(table.rows[0].floor >= table.rows[1].floor, 'the board should be sorted by floor');
+  assert(table.rows[0].name === 'Kuyucu', `the name should come back trimmed, saw "${table.rows[0].name}"`);
+  assert(table.rows[0].rank === 1, 'the board should carry ranks');
+
+  const all = await worker.fetch(new Request('https://metrics.test/board?scope=all'), env);
+  assert((await all.json()).rows.length === 2, 'the all time board should hold the same players');
 }
 
 async function main() {
@@ -191,6 +226,8 @@ async function main() {
 
   const first = db.prepare('SELECT dives, extracts FROM sessions WHERE sid = ?').get(`${repeatPid}s1`);
   assert(first.dives === 1 && first.extracts === 1, 'a repeated batch must not double count counters');
+
+  await checkLadder(env);
 
   const forget = await worker.fetch(
     new Request(`https://metrics.test/forget?token=${TOKEN}&pid=${repeatPid}`, { method: 'DELETE' }),
