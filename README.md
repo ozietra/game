@@ -13,9 +13,20 @@ in one browser tab and saves to local storage.
 open it, press the button on the title screen and the party starts climbing
 down. Progress lives in that browser's local storage.
 
-Every push to the branch rebuilds and republishes through
-`.github/workflows/pages.yml`. GitHub needs one manual step before the first
-deploy: repository Settings, then Pages, then set Source to GitHub Actions.
+The site lives on the `gh-pages` branch, which holds the built files and
+nothing else. It has to be switched on once: repository Settings, then Pages,
+then Source, Deploy from a branch, `gh-pages`, `/ (root)`.
+
+Publishing a new build afterwards is one command:
+
+```sh
+bash tools/publish-pages.sh
+```
+
+For hands off deploys, `tools/pages-workflow.yml` is a ready made Actions
+workflow; copying it to `.github/workflows/pages.yml` from the GitHub web
+interface and setting Pages Source to GitHub Actions makes every push publish
+itself.
 
 To run it locally instead:
 
