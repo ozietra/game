@@ -77,7 +77,9 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
   // english pass, switched from the title screen
   await page.click('.topbar-right .button');
   await page.waitForTimeout(400);
-  await page.locator('.menu-buttons .button').nth(1).click();
+  // Settings is found by what it contains rather than by its position, so a
+  // new menu entry does not silently break the pass.
+  await page.locator('.menu-buttons .button').filter({ hasText: /Ayarlar|Settings/ }).first().click();
   await page.waitForTimeout(400);
   await page.click('.lang-switch .button:nth-child(2)');
   await page.waitForTimeout(500);
