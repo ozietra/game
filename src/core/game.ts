@@ -1,7 +1,14 @@
 import {
+  AFFIXES,
+  AFFIX_CHANCE,
+  AFFIX_ORDER,
   ALL_FOES,
+  ECHOES,
   BALANCE,
   BOON,
+  KEEPER,
+  SET_CHANCE,
+  SET_ORDER,
   BUILDINGS,
   BUILDING_EFFECT,
   CONTRACT_ORDER,
@@ -26,7 +33,7 @@ import {
   zoneForFloor,
   type ContractId,
 } from '../data/content';
-import { buildFoes, encounterOver, heroCombatant, stepCombat, type CombatEvent } from './combat';
+import { buildFoes, encounterOver, heroCombatant, makeFoe, stepCombat, type CombatEvent } from './combat';
 import { Rng } from './rng';
 import {
   grantXp,
@@ -37,12 +44,15 @@ import {
   offlineCapSeconds,
   partyOf,
   relicYield,
+  echoFortune,
+  echoYield,
   maxStartFloor,
   xpForLevel,
 } from './stats';
 import type {
   BuildingId,
   Contract,
+  EchoId,
   DiveReport,
   EventChoice,
   GameState,
@@ -125,11 +135,12 @@ export function freshState(): GameState {
     version: SAVE_VERSION,
     language: 'tr',
     audio: { volume: 0.6, muted: false },
-    bank: { coin: 0, iron: 0, crystal: 0, relic: 0 },
+    bank: { coin: 0, iron: 0, crystal: 0, relic: 0, echo: 0 },
     heroes,
     stash: [],
     buildings: { smithy: 0, armoury: 0, infirmary: 0, drillyard: 0, ropewright: 0, cartographer: 0 },
     relics: { deepmark: 0, looteye: 0, knot: 0, guidestone: 0, wakingcamp: 0, lampoil: 0 },
+    echoes: { wellspring: 0, ironblood: 0, oldlamp: 0, firstlight: 0 },
     policy: {
       autoDive: true,
       startFloor: 1,
@@ -163,6 +174,7 @@ export function freshState(): GameState {
     totalWipes: 0,
     descents: 0,
     prestiges: 0,
+    deepPrestiges: 0,
     lifetimeCoin: 0,
     playedSeconds: 0,
     lastSeen: Date.now(),
@@ -276,7 +288,7 @@ export class Game {
   /** What the dial and any blessing are doing to what the satchel picks up. */
   private fortune(): number {
     const boon = this.run.boon?.kind === 'loot' ? this.run.boon.power : 0;
-    return (1 + this.run.risk * RISK.loot + boon) * (1 + this.windfall);
+    return (1 + this.run.risk * RISK.loot + boon) * (1 + this.windfall) * echoFortune(this.state);
   }
 
   extract(): void {
@@ -370,7 +382,11 @@ export class Game {
     this.run.satchel.items.push(item);
     if (RARITY_ORDER.indexOf(item.rarity) >= 2) this.progressContract('loot', 1);
     if (item.rarity === 'fabled') this.award('fabled');
-    this.note('log.loot.item', { rarity: `rarity.${item.rarity}`, kind: `kind.${item.kind}`, power: item.power }, 'good');
+    this.note(
+      'log.loot.item',
+      { affix: item.affix ? `affix.${item.affix}` : '', rarity: `rarity.${item.rarity}`, kind: `kind.${item.kind}`, power: item.power },
+      'good',
+    );
     return item;
   }
 
@@ -384,7 +400,19 @@ export class Game {
         BALANCE.loot.itemPower.base * BALANCE.loot.itemPower.growth ** floor * RARITIES[rarity].multiplier * this.rng.range(0.9, 1.1),
       ),
     );
-    return { uid: this.state.nextUid++, slot, kind, rarity, power, floor };
+
+    const item: Item = { uid: this.state.nextUid++, slot, kind, rarity, power, floor };
+
+    // Rarity buys two things beyond raw power: a prefix, and a workshop mark
+    // worth collecting a matching set of.
+    const grade = RARITY_ORDER.indexOf(rarity);
+    if (this.rng.chance(AFFIX_CHANCE.base + grade * AFFIX_CHANCE.perRarity)) {
+      item.affix = this.rng.weighted(AFFIX_ORDER, (id) => AFFIXES[id].weight);
+    }
+    if (this.rng.chance(SET_CHANCE.base + grade * SET_CHANCE.perRarity)) {
+      item.set = this.rng.pick(SET_ORDER);
+    }
+    return item;
   }
 
   // ----------------------------------------------------------------- events
@@ -636,7 +664,7 @@ export class Game {
     let bestHero: Hero | null = null;
     let bestGain = 0;
     for (const hero of partyOf(this.state)) {
-      const gain = item.power - itemScore(hero.gear[item.slot]);
+      const gain = itemScore(item) - itemScore(hero.gear[item.slot]);
       if (gain > bestGain) {
         bestGain = gain;
         bestHero = hero;
@@ -647,14 +675,25 @@ export class Game {
       bestHero.gear[item.slot] = item;
       this.note(
         'log.equip',
-        { name: `hero.${bestHero.id}.name`, kind: `kind.${item.kind}`, rarity: `rarity.${item.rarity}`, power: item.power },
+        {
+          name: `hero.${bestHero.id}.name`,
+          affix: item.affix ? `affix.${item.affix}` : '',
+          kind: `kind.${item.kind}`,
+          rarity: `rarity.${item.rarity}`,
+          power: item.power,
+        },
         'good',
       );
       if (replaced) this.stow(replaced);
       return;
     }
     this.stow(item);
-    this.note('log.stow', { kind: `kind.${item.kind}`, rarity: `rarity.${item.rarity}`, power: item.power });
+    this.note('log.stow', {
+      affix: item.affix ? `affix.${item.affix}` : '',
+      kind: `kind.${item.kind}`,
+      rarity: `rarity.${item.rarity}`,
+      power: item.power,
+    });
   }
 
   /** The stash holds spare gear; anything past the shelf space is melted down. */
@@ -796,6 +835,7 @@ export class Game {
 
       case 'fighting': {
         const events = stepCombat(run.party, run.foes, dt, this.rng);
+        this.keeperBehaviour(dt, events);
         if (!this.quiet && events.length > 0) this.events.push(...events);
         this.readFight(events);
         this.writeBackHealth();
@@ -860,6 +900,49 @@ export class Game {
   }
 
   /**
+   * What a floor keeper does between swings. The ward comes back up on a
+   * clock, so a party that cannot break through it in fifteen seconds is not
+   * getting through at all; the last third is fought at half again the
+   * attack; and twice on the way down it calls somebody in.
+   */
+  private keeperBehaviour(dt: number, events: CombatEvent[]): void {
+    const run = this.run;
+    const keeper = run.foes.find((foe) => foe.rank === 'boss' && foe.alive);
+    if (!keeper || keeper.wardMax === undefined) return;
+
+    keeper.wardTimer = (keeper.wardTimer ?? 0) - dt;
+    if (keeper.wardTimer <= 0) {
+      keeper.wardTimer = KEEPER.wardEvery;
+      if ((keeper.ward ?? 0) < keeper.wardMax) {
+        keeper.ward = keeper.wardMax;
+        events.push({ kind: 'ward', key: keeper.key, amount: keeper.wardMax });
+        this.note('log.keeper.ward', { name: keeper.nameKey }, 'bad');
+      }
+    }
+
+    const share = keeper.hp / Math.max(1, keeper.stats.maxHp);
+    if (!keeper.raged && share <= KEEPER.rageBelow) {
+      keeper.raged = true;
+      keeper.stats = {
+        ...keeper.stats,
+        attack: Math.round(keeper.stats.attack * (1 + KEEPER.rageAttack) * 10) / 10,
+      };
+      events.push({ kind: 'rage', key: keeper.key, amount: 0 });
+      this.note('log.keeper.rage', { name: keeper.nameKey }, 'bad');
+    }
+
+    const called = keeper.summons ?? 0;
+    if (called < KEEPER.summonAt.length && share <= KEEPER.summonAt[called] && run.foes.length < KEEPER.maxFoes) {
+      keeper.summons = called + 1;
+      const zone = zoneForFloor(run.floor);
+      const kind = this.rng.pick(zone.foes);
+      run.foes.push(makeFoe(kind, run.foes.length, 'common', run.floor, this.danger(), this.rng));
+      events.push({ kind: 'summon', key: keeper.key, amount: 1 });
+      this.note('log.keeper.summon', { name: keeper.nameKey, foe: `foe.${kind}` }, 'bad');
+    }
+  }
+
+  /**
    * Reads a round of combat for everything the ledger cares about: what was
    * put down, and the hardest single blow anybody in the party landed.
    */
@@ -889,7 +972,8 @@ export class Game {
   catchUp(seconds: number): Harvest {
     const capped = Math.min(seconds, offlineCapSeconds(this.state));
     this.harvest = emptyHarvest();
-    if (capped < 30) return this.harvest;
+    // Short enough to be a hiccup rather than an absence.
+    if (capped < 2) return this.harvest;
 
     this.quiet = true;
     const step = 0.2;
@@ -1039,6 +1123,77 @@ export class Game {
     this.rng = Rng.restore(fresh.run.seed);
     this.award('prestige');
     this.note('log.prestige', { relics: gain }, 'loud');
+    return true;
+  }
+
+  // ------------------------------------------------------------------ echoes
+
+  echoCost(id: EchoId): number {
+    const definition = ECHOES[id];
+    return Math.round(definition.cost * definition.costGrowth ** this.state.echoes[id]);
+  }
+
+  buyEcho(id: EchoId): boolean {
+    if (this.state.echoes[id] >= ECHOES[id].maxRank) return false;
+    const cost = this.echoCost(id);
+    if (this.state.bank.echo < cost) return false;
+    this.state.bank.echo -= cost;
+    this.state.echoes[id] += 1;
+    this.note('log.echo', { name: `echo.${id}.name`, rank: this.state.echoes[id] }, 'good');
+    return true;
+  }
+
+  canDescendDeep(): boolean {
+    return echoYield(this.state) > 0;
+  }
+
+  /**
+   * The deep reset. It gives up the relics as well, which is the whole point:
+   * the same currency stops moving the curve somewhere in the eighties, so the
+   * only way further down is to trade the lot for something that never resets.
+   */
+  deepPrestige(): boolean {
+    const gain = echoYield(this.state);
+    if (gain <= 0) return false;
+
+    const keptEchoes = { ...this.state.echoes };
+    const echoBank = this.state.bank.echo + gain;
+    const language = this.state.language;
+    const audio = { ...this.state.audio };
+    const policy = { ...this.state.policy };
+
+    const carried = {
+      prestiges: this.state.prestiges,
+      deepPrestiges: this.state.deepPrestiges + 1,
+      totalDives: this.state.totalDives,
+      totalWipes: this.state.totalWipes,
+      descents: this.state.descents,
+      lifetimeCoin: this.state.lifetimeCoin,
+      playedSeconds: this.state.playedSeconds,
+      achievements: this.state.achievements,
+      bestiary: this.state.bestiary,
+      contracts: this.state.contracts,
+      milestones: this.state.milestones,
+      lastDive: this.state.lastDive,
+      diveHistory: this.state.diveHistory,
+      shareMetrics: this.state.shareMetrics,
+    };
+
+    const fresh = freshState();
+    fresh.language = language;
+    fresh.audio = audio;
+    fresh.policy = policy;
+    fresh.echoes = keptEchoes;
+    fresh.bank.echo = echoBank;
+    fresh.tutorialSeen = true;
+    Object.assign(fresh, carried);
+    fresh.deepestFloor = 0;
+    fresh.deepestBanked = 1;
+
+    this.state = fresh;
+    this.rng = Rng.restore(fresh.run.seed);
+    this.award('deepdive');
+    this.note('log.deep', { echoes: gain }, 'loud');
     return true;
   }
 

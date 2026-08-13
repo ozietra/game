@@ -1,4 +1,4 @@
-import type { BuildingId, HeroId, RarityId, RelicId, ResourceId, SlotId } from '../core/types';
+import type { BuildingId, EchoId, HeroId, RarityId, RelicId, ResourceId, SlotId } from '../core/types';
 
 /** Every tuning number the simulation reads, in one place. */
 export const BALANCE = {
@@ -131,6 +131,7 @@ export type AchievementId =
   | 'clean20'
   | 'daring'
   | 'prestige'
+  | 'deepdive'
   | 'bestiary';
 
 export const ACHIEVEMENTS: { id: AchievementId; icon: string }[] = [
@@ -146,6 +147,7 @@ export const ACHIEVEMENTS: { id: AchievementId; icon: string }[] = [
   { id: 'clean20', icon: 'guard' },
   { id: 'daring', icon: 'wound' },
   { id: 'prestige', icon: 'relic' },
+  { id: 'deepdive', icon: 'stone' },
   { id: 'bestiary', icon: 'ledger' },
 ];
 
@@ -322,6 +324,66 @@ export const ITEM_KINDS: Record<ItemKindId, { slot: SlotId; gain: StatGain }> = 
   talisman: { slot: 'charm', gain: { maxHp: 1.1, defence: 0.3, speed: 0.3 } },
 };
 
+/**
+ * A prefix hangs one more stat on a piece, on top of whatever its kind already
+ * gives. The numbers are per point of power, same as the kinds above, so a
+ * cruel blade is worth about a fifth again in attack.
+ */
+export type AffixId = 'cruel' | 'bear' | 'warded' | 'swift' | 'keen' | 'grim';
+
+export const AFFIXES: Record<AffixId, { gain: StatGain; weight: number }> = {
+  cruel: { gain: { attack: 0.18 }, weight: 22 },
+  bear: { gain: { maxHp: 0.85 }, weight: 22 },
+  warded: { gain: { defence: 0.16 }, weight: 20 },
+  swift: { gain: { speed: 0.07 }, weight: 15 },
+  keen: { gain: { crit: 0.0007 }, weight: 12 },
+  grim: { gain: { attack: 0.11, maxHp: 0.35 }, weight: 9 },
+};
+
+export const AFFIX_ORDER: AffixId[] = ['cruel', 'bear', 'warded', 'swift', 'keen', 'grim'];
+
+/**
+ * A suffix says which workshop a piece came out of. Two from the same one on
+ * the same hero start paying, three pay properly. Health, attack and defence
+ * are fractions of the total; speed and crit are added outright.
+ */
+export type SetId = 'wellwork' | 'gravewrought' | 'emberforged' | 'huntsman';
+
+export interface SetBonus {
+  attack?: number;
+  defence?: number;
+  maxHp?: number;
+  speed?: number;
+  crit?: number;
+}
+
+export const SETS: Record<SetId, { two: SetBonus; three: SetBonus }> = {
+  wellwork: { two: { maxHp: 0.07 }, three: { maxHp: 0.16, defence: 0.1 } },
+  gravewrought: { two: { defence: 0.1 }, three: { defence: 0.22, maxHp: 0.08 } },
+  emberforged: { two: { attack: 0.07 }, three: { attack: 0.17, crit: 0.02 } },
+  huntsman: { two: { speed: 5 }, three: { speed: 12, crit: 0.03 } },
+};
+
+export const SET_ORDER: SetId[] = ['wellwork', 'gravewrought', 'emberforged', 'huntsman'];
+
+/** Better pieces carry more of both, which is most of what rarity buys. */
+export const AFFIX_CHANCE = { base: 0.22, perRarity: 0.13 } as const;
+export const SET_CHANCE = { base: 0.12, perRarity: 0.09 } as const;
+
+/**
+ * What a floor keeper does that an ordinary foe does not: it raises a ward
+ * that has to be broken through again, it fights harder as it dies, and it
+ * calls for help twice.
+ */
+export const KEEPER = {
+  ward: 0.2,
+  wardEvery: 15,
+  rageBelow: 0.35,
+  rageAttack: 0.5,
+  summonAt: [0.62, 0.31],
+  maxFoes: 5,
+} as const;
+
 export const KINDS_BY_SLOT: Record<SlotId, ItemKindId[]> = {
   weapon: ['blade', 'axe', 'spear', 'bow', 'rod'],
   armour: ['leather', 'mail', 'plate', 'robe'],
@@ -389,6 +451,38 @@ export const RELIC_EFFECT = {
   guidestone: 5,
   wakingcamp: BALANCE.offlineHoursPerRelic,
   lampoil: 0.2,
+} as const;
+
+/**
+ * The second reset. Relics make each run start stronger, and eventually that
+ * stops mattering: the depth curve flattens somewhere in the eighties and no
+ * amount of the same currency moves it. Going deep gives up the relics too and
+ * pays in echoes, which nothing takes back.
+ */
+export const DEEP = { minFloor: 60, divisor: 26, exponent: 1.25 } as const;
+
+export interface EchoDefinition {
+  id: EchoId;
+  icon: string;
+  maxRank: number;
+  cost: number;
+  costGrowth: number;
+}
+
+export const ECHOES: Record<EchoId, EchoDefinition> = {
+  wellspring: { id: 'wellspring', icon: 'coin', maxRank: 20, cost: 1, costGrowth: 1.85 },
+  ironblood: { id: 'ironblood', icon: 'vitals', maxRank: 20, cost: 1, costGrowth: 1.85 },
+  oldlamp: { id: 'oldlamp', icon: 'ember', maxRank: 10, cost: 2, costGrowth: 2.2 },
+  firstlight: { id: 'firstlight', icon: 'descend', maxRank: 15, cost: 2, costGrowth: 2 },
+};
+
+export const ECHO_ORDER: EchoId[] = ['wellspring', 'ironblood', 'oldlamp', 'firstlight'];
+
+export const ECHO_EFFECT = {
+  wellspring: 0.08,
+  ironblood: 0.06,
+  oldlamp: 1,
+  firstlight: 3,
 } as const;
 
 export const RESOURCE_ICONS: Record<ResourceId, string> = {

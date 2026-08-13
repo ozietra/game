@@ -4,6 +4,7 @@ import {
   ELITE_SCALE,
   FOES,
   HEROES,
+  KEEPER,
   ZONES,
   cycleForFloor,
   isBossFloor,
@@ -16,7 +17,7 @@ import { heroLook, heroStats } from './stats';
 import type { Combatant, GameState, Hero, Stats } from './types';
 
 export interface CombatEvent {
-  kind: 'hit' | 'crit' | 'heal' | 'guard' | 'down';
+  kind: 'hit' | 'crit' | 'heal' | 'guard' | 'down' | 'ward' | 'rage' | 'summon';
   key: string;
   amount: number;
   from?: string;
@@ -105,25 +106,43 @@ export function buildFoes(
     if (elite) kinds[0] = zone.boss;
   }
 
-  return kinds.map((kind, index) => {
-    const rank = boss && index === 0 ? 'boss' : elite && index === 0 ? 'elite' : 'common';
-    const stats = foeStats(kind, floor, rank, danger);
-    return {
-      key: `foe:${index}:${kind}`,
-      side: 'foe' as const,
-      sprite: kind,
-      nameKey: `foe.${kind}`,
-      rank,
-      stats,
-      hp: stats.maxHp,
-      timer: rng.range(0, 0.9),
-      abilityTimer: 999,
-      guard: 0,
-      alive: true,
-      action: 'idle' as const,
-      actionUntil: 0,
-    } satisfies Combatant;
-  });
+  return kinds.map((kind, index) => makeFoe(kind, index, boss && index === 0 ? 'boss' : elite && index === 0 ? 'elite' : 'common', floor, danger, rng));
+}
+
+/** One foe, built the same way whether it walked in or was called for. */
+export function makeFoe(
+  kind: string,
+  index: number,
+  rank: 'common' | 'elite' | 'boss',
+  floor: number,
+  danger: number,
+  rng: Rng,
+): Combatant {
+  const stats = foeStats(kind, floor, rank, danger);
+  const foe: Combatant = {
+    key: `foe:${index}:${kind}`,
+    side: 'foe',
+    sprite: kind,
+    nameKey: `foe.${kind}`,
+    rank,
+    stats,
+    hp: stats.maxHp,
+    timer: rng.range(0, 0.9),
+    abilityTimer: 999,
+    guard: 0,
+    alive: true,
+    action: 'idle',
+    actionUntil: 0,
+  };
+
+  if (rank === 'boss') {
+    foe.wardMax = Math.round(stats.maxHp * KEEPER.ward);
+    foe.ward = foe.wardMax;
+    foe.wardTimer = KEEPER.wardEvery;
+    foe.raged = false;
+    foe.summons = 0;
+  }
+  return foe;
 }
 
 function interval(combatant: Combatant): number {
@@ -137,7 +156,17 @@ function strike(attacker: Combatant, defender: Combatant, multiplier: number, rn
   if (critical) damage *= BALANCE.critMultiplier;
   if (defender.guard > 0) damage *= 1 - HEROES.warden.ability.power;
 
-  const dealt = Math.max(1, Math.round(damage));
+  let dealt = Math.max(1, Math.round(damage));
+
+  // A keeper's ward soaks the blow before its health ever hears about it.
+  if (defender.ward && defender.ward > 0) {
+    const soaked = Math.min(defender.ward, dealt);
+    defender.ward -= soaked;
+    dealt -= soaked;
+    events.push({ kind: 'ward', key: defender.key, amount: soaked, from: attacker.key });
+    if (dealt <= 0) return;
+  }
+
   defender.hp -= dealt;
   events.push({ kind: critical ? 'crit' : 'hit', key: defender.key, amount: dealt, from: attacker.key });
 

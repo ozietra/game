@@ -473,15 +473,25 @@ export class Scene {
   private drawBar(fighter: Combatant, centreX: number, y: number): void {
     const width = 26;
     const fraction = Math.max(0, Math.min(1, fighter.hp / Math.max(1, fighter.stats.maxHp)));
-    if (fraction >= 1 && fighter.side === 'foe') return;
+    const warded = (fighter.ward ?? 0) > 0;
+    if (fraction >= 1 && fighter.side === 'foe' && !warded) return;
 
     const x = Math.round(centreX - width / 2);
     this.ctx.fillStyle = 'rgba(10, 8, 10, 0.85)';
-    this.ctx.fillRect(x - 1, y - 1, width + 2, 5);
+    this.ctx.fillRect(x - 1, y - 1, width + 2, warded ? 8 : 5);
     this.ctx.fillStyle = '#2a2320';
     this.ctx.fillRect(x, y, width, 3);
     this.ctx.fillStyle = fighter.side === 'party' ? '#9ac06a' : '#b4503f';
     this.ctx.fillRect(x, y, Math.round(width * fraction), 3);
+
+    // A keeper's ward sits under its health, so the reason nothing is landing
+    // is visible rather than inferred.
+    if (!warded) return;
+    const share = Math.max(0, Math.min(1, (fighter.ward ?? 0) / Math.max(1, fighter.wardMax ?? 1)));
+    this.ctx.fillStyle = '#2a2320';
+    this.ctx.fillRect(x, y + 4, width, 2);
+    this.ctx.fillStyle = '#6f9fb0';
+    this.ctx.fillRect(x, y + 4, Math.round(width * share), 2);
   }
 
   private drawGuard(centreX: number, y: number): void {

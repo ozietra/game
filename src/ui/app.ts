@@ -2,6 +2,10 @@ import {
   ACHIEVEMENTS,
   ALL_FOES,
   BALANCE,
+  DEEP,
+  ECHOES,
+  ECHO_EFFECT,
+  ECHO_ORDER,
   BUILDINGS,
   BUILDING_EFFECT,
   BUILDING_ORDER,
@@ -24,8 +28,19 @@ import {
   type ContractId,
 } from '../data/content';
 import type { Game, Harvest } from '../core/game';
-import { heroLook, itemGain, masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
-import type { BuildingId, DiveReport, Item, RarityId, RelicId } from '../core/types';
+import {
+  echoYield,
+  heroLook,
+  itemGain,
+  masteryCost,
+  heroStats,
+  maxStartFloor,
+  partyOf,
+  relicYield,
+  setsWorn,
+  xpForLevel,
+} from '../core/stats';
+import type { BuildingId, DiveReport, Hero, Item, RarityId, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { metrics } from '../net/telemetry';
@@ -106,6 +121,9 @@ export class App {
     });
     window.addEventListener('beforeunload', () => writeSave(this.game.state));
 
+    // Preloading takes time the shaft has already been credited for, so the
+    // clock starts here rather than when the object was built.
+    this.lastFrame = performance.now();
     requestAnimationFrame(() => this.frame());
   }
 
@@ -565,9 +583,27 @@ export class App {
 
   private frame(): void {
     const now = performance.now();
-    const elapsed = Math.min(0.5, (now - this.lastFrame) / 1000);
+    const real = (now - this.lastFrame) / 1000;
     this.lastFrame = now;
 
+    // A hidden tab stops getting frames and a sleeping machine stops entirely,
+    // so anything past a couple of seconds is a stall, not a slow frame.
+    // Stepping it one frame at a time would throw the missing time away, which
+    // is exactly the wrong answer for a game that is supposed to run on its
+    // own: it is replayed instead, the same way a closed tab is.
+    if (real > 2) {
+      const harvest = this.game.catchUp(real);
+      this.carry = 0;
+      this.game.events.length = 0;
+      this.lastLogId = this.game.log[0]?.id ?? this.lastLogId;
+      this.lastPhase = this.game.run.phase;
+      if (this.view === 'game' && harvest.seconds > 180) this.showHarvest(harvest);
+      writeSave(this.game.state);
+      requestAnimationFrame(() => this.frame());
+      return;
+    }
+
+    const elapsed = Math.min(0.5, real);
     this.carry += elapsed;
     const step = BALANCE.tickSeconds;
     let steps = 0;
@@ -654,6 +690,12 @@ export class App {
       ['crystal', bank.crystal, 'crystal'],
       ['relic', bank.relic, 'relic'],
     ];
+    // Echoes only exist once a shaft has been given up entirely, so the chip
+    // stays out of the way until there is something to put in it.
+    const state = this.game.state;
+    if (bank.echo > 0 || state.deepPrestiges > 0 || Object.values(state.echoes ?? {}).some((rank) => rank > 0)) {
+      entries.push(['echo', bank.echo, 'stone']);
+    }
 
     if (purse.childElementCount !== entries.length) {
       clear(purse);
@@ -833,9 +875,21 @@ export class App {
         sound.play('leaf', { gain: 0.45 });
       }
 
+      // A blow the ward eats never becomes a hit, so the swing still has to be
+      // drawn from here or the fight looks like it stopped.
+      if (event.kind === 'ward') {
+        this.scene.flash(event.key);
+        if (event.from) this.scene.spawnAttack(event.from, event.key, this.styleOf(event.from));
+        else sound.play('rope', { gain: 0.55 });
+      } else if (event.kind === 'rage') {
+        sound.play('keeper', { gain: 0.8 });
+      } else if (event.kind === 'summon') {
+        sound.play('gate', { gain: 0.7 });
+      }
+
       const spot = spots.get(event.key);
       if (!spot) continue;
-      if (event.kind === 'guard') continue;
+      if (event.kind === 'guard' || event.kind === 'rage' || event.kind === 'summon') continue;
       const node = el('span', {
         class: `float ${event.kind}`,
         text: event.kind === 'heal' ? `+${formatNumber(event.amount)}` : formatNumber(event.amount),
@@ -895,7 +949,11 @@ export class App {
       return `${purse}|${heroes}|${this.stashFilter}|${state.stash.map((item) => item.uid).join('.')}`;
     }
     if (id === 'camp') return `${purse}|${Object.values(state.buildings).join('.')}|${this.game.mendCost()}`;
-    if (id === 'relics') return `${purse}|${Object.values(state.relics).join('.')}|${relicYield(state)}`;
+    if (id === 'relics') {
+      return `${purse}|${state.bank.echo}|${Object.values(state.relics).join('.')}|${Object.values(
+        state.echoes ?? {},
+      ).join('.')}|${relicYield(state)}|${echoYield(state)}`;
+    }
     if (id === 'records') {
       const seen = Object.entries(state.bestiary).reduce((sum, [, count]) => sum + count, 0);
       return `${Object.keys(state.achievements).length}|${seen}|${state.milestones}|${state.lastDive?.at ?? 0}`;
@@ -1018,6 +1076,7 @@ export class App {
             ),
           ]),
           el('div', { class: 'gear-row' }, SLOTS.map((slot) => this.gearChip(hero.gear[slot], slot))),
+          this.setLine(hero),
           el('div', { class: 'stat-line' }, [
             el('span', { text: `${t('roster.mastery')} ${hero.mastery}` }),
             el('span', { class: hero.wounds > 0 ? 'bad' : 'muted', text: `${t('roster.wounds')} ${hero.wounds}` }),
@@ -1105,6 +1164,36 @@ export class App {
     return parts.join('  ');
   }
 
+  /** Which workshops a hero has pieces from, and which of them are paying. */
+  private setLine(hero: Hero): HTMLElement {
+    const worn = setsWorn(hero);
+    if (worn.length === 0) return el('p', { class: 'note muted', text: t('set.none') });
+
+    return el(
+      'p',
+      { class: 'note set-line' },
+      worn.map((entry) =>
+        el('span', {
+          class: `set-mark${entry.count >= 2 ? ' is-live' : ''}`,
+          text: `${t(`set.${entry.id}.name` as StringKey)} ${entry.count}/3${
+            entry.count >= 3 ? ` · ${t('set.three')}` : entry.count === 2 ? ` · ${t('set.two')}` : ''
+          }`,
+        }),
+      ),
+    );
+  }
+
+  /** Prefix, grade, kind, and the workshop it came out of. */
+  private itemName(item: Item): string {
+    const parts = [
+      item.affix ? t(`affix.${item.affix}` as StringKey) : '',
+      t(`rarity.${item.rarity}` as StringKey),
+      t(`kind.${item.kind}` as StringKey),
+    ].filter(Boolean);
+    const name = parts.join(' ');
+    return item.set ? `${name} (${t(`set.${item.set}.name` as StringKey)})` : name;
+  }
+
   private gearChip(item: Item | null, slot: string): HTMLElement {
     if (!item) {
       return el('div', { class: 'gear-chip empty' }, [
@@ -1114,7 +1203,7 @@ export class App {
     }
     const chip = el('div', { class: 'gear-chip' }, [
       el('span', { class: 'gear-slot', text: t(`slot.${item.slot}` as StringKey) }),
-      el('span', { class: 'gear-name', text: `${t(`rarity.${item.rarity}` as StringKey)} ${t(`kind.${item.kind}` as StringKey)}` }),
+      el('span', { class: 'gear-name', text: this.itemName(item) }),
       el('span', { class: 'gear-gain', text: this.gearGainText(item) }),
     ]);
     chip.style.setProperty('--rarity', RARITIES[item.rarity].shade);
@@ -1292,6 +1381,86 @@ export class App {
           el('div', { class: 'stat-line' }, [
             el('span', { text: `${t('relics.rank')} ${rank}` }),
             el('span', { class: 'muted', text: `/ ${definition.maxRank}` }),
+          ]),
+          button,
+        ]),
+      );
+    }
+    panel.append(grid);
+    this.renderEchoes(panel);
+  }
+
+  /**
+   * The second reset, which only shows up once the shaft has been pushed far
+   * enough for the first one to have stopped helping.
+   */
+  private renderEchoes(panel: HTMLElement): void {
+    const state = this.game.state;
+    const gain = echoYield(state);
+    const seen = gain > 0 || state.deepPrestiges > 0 || state.bank.echo > 0;
+    if (!seen) return;
+
+    const offer = el('button', {
+      class: 'button primary',
+      type: 'button',
+      disabled: gain <= 0,
+      html: `${icon('stone')}<span>${t('deep.title')}</span>`,
+    });
+    on(offer, 'click', () => {
+      if (!this.game.canDescendDeep()) return;
+      if (!window.confirm(t('deep.warning'))) return;
+      const reached = this.game.state.deepestFloor;
+      this.game.deepPrestige();
+      metrics.mark('prestige', reached, 'deep');
+      this.build();
+      this.selectTab('relics');
+    });
+
+    panel.append(
+      el('div', { class: 'card wide' }, [
+        el('h2', { class: 'card-title' }, [
+          el('span', { html: icon('stone') }),
+          el('span', { text: t('deep.title') }),
+          el('span', { class: 'tagline', text: `${t('deep.count')}: ${formatNumber(state.deepPrestiges)}` }),
+        ]),
+        el('p', { class: 'note', text: t('deep.note') }),
+        el('p', {
+          class: gain > 0 ? 'readout' : 'muted',
+          text: gain > 0 ? t('deep.offer', { echoes: gain }) : t('deep.locked', { floor: DEEP.minFloor }),
+        }),
+        offer,
+      ]),
+    );
+
+    const grid = el('div', { class: 'grid' });
+    for (const id of ECHO_ORDER) {
+      const definition = ECHOES[id];
+      const rank = state.echoes[id];
+      const cost = this.game.echoCost(id);
+      const maxed = rank >= definition.maxRank;
+      const raw = ECHO_EFFECT[id];
+      const value = id === 'oldlamp' || id === 'firstlight' ? `${raw}` : formatPercent(raw as number);
+
+      const button = el('button', {
+        class: 'button',
+        type: 'button',
+        disabled: maxed || state.bank.echo < cost,
+        html: maxed ? `<span>${t('camp.max')}</span>` : `${icon('stone')}<span>${formatNumber(cost)} ${t('res.echo')}</span>`,
+      });
+      on(button, 'click', () => {
+        sound.play('buy', { gain: 0.8 });
+        this.game.buyEcho(id);
+        this.renderPanel('relics', true);
+      });
+
+      grid.append(
+        el('article', { class: 'card' }, [
+          el('h3', { class: 'card-title', html: `${icon(definition.icon)}<span>${t(`echo.${id}.name` as StringKey)}</span>` }),
+          el('p', { class: 'note', text: t(`echo.${id}.line` as StringKey) }),
+          el('div', { class: 'stat-line' }, [
+            el('span', { text: `${t('relics.rank')} ${rank}` }),
+            el('span', { class: 'muted', text: `/ ${definition.maxRank}` }),
+            el('span', { class: 'muted', text: value }),
           ]),
           button,
         ]),

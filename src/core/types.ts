@@ -9,6 +9,7 @@ export type ResourceId = 'coin' | 'iron' | 'crystal' | 'relic';
 export type BuildingId = 'smithy' | 'armoury' | 'infirmary' | 'drillyard' | 'ropewright' | 'cartographer';
 
 export type RelicId = 'deepmark' | 'looteye' | 'knot' | 'guidestone' | 'wakingcamp' | 'lampoil';
+export type EchoId = 'wellspring' | 'ironblood' | 'oldlamp' | 'firstlight';
 
 export interface Item {
   uid: number;
@@ -17,6 +18,10 @@ export interface Item {
   rarity: RarityId;
   power: number;
   floor: number;
+  /** A prefix, which hangs one more stat on the piece. */
+  affix?: string;
+  /** A suffix, which is the workshop it came from and the set it counts for. */
+  set?: string;
 }
 
 export interface Hero {
@@ -58,6 +63,12 @@ export interface Combatant {
   /** Animation state driven by the resolver, read by the renderer. */
   action: 'idle' | 'attack' | 'hurt' | 'down';
   actionUntil: number;
+  /** A keeper's ward: damage goes here first, and it comes back up. */
+  ward?: number;
+  wardMax?: number;
+  wardTimer?: number;
+  raged?: boolean;
+  summons?: number;
 }
 
 export interface Satchel {
@@ -168,6 +179,8 @@ export interface Bank {
   iron: number;
   crystal: number;
   relic: number;
+  /** Earned by the deep reset, and the only currency that survives one. */
+  echo: number;
 }
 
 export interface AudioSettings {
@@ -184,6 +197,7 @@ export interface GameState {
   stash: Item[];
   buildings: Record<BuildingId, number>;
   relics: Record<RelicId, number>;
+  echoes: Record<EchoId, number>;
   policy: Policy;
   run: RunState;
   deepestFloor: number;
@@ -192,6 +206,7 @@ export interface GameState {
   totalWipes: number;
   descents: number;
   prestiges: number;
+  deepPrestiges: number;
   lifetimeCoin: number;
   playedSeconds: number;
   lastSeen: number;

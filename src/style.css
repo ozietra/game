@@ -350,6 +350,10 @@ h3 {
   color: var(--moss);
 }
 
+.float.ward {
+  color: #6f9fb0;
+}
+
 .float.down {
   display: none;
 }
@@ -510,6 +514,20 @@ h3 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
   gap: 14px;
+}
+
+.set-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.set-mark {
+  color: var(--muted);
+}
+
+.set-mark.is-live {
+  color: var(--moss);
 }
 
 .boon-line {
