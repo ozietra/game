@@ -1,0 +1,3580 @@
+[
+ {
+  "source": "arms/armour/plate/male/gold.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "arms/armour/plate/male/iron.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "arms/armour/plate/male/steel.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "bauldron/female/leather.png",
+  "authors": [
+   "Nila122"
+  ],
+  "licenses": [
+   "GPL 2.0",
+   "GPL 3.0",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/more-lpc-clothes-and-hair"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "bauldron/male/leather.png",
+  "authors": [
+   "Nila122"
+  ],
+  "licenses": [
+   "GPL 2.0",
+   "GPL 3.0",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/more-lpc-clothes-and-hair"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:orc"
+  ]
+ },
+ {
+  "source": "body/bodies/child/fur_grey.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "ElizaWy",
+   "MuffinElZangano",
+   "Durrani",
+   "Nila122",
+   "kheftel",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-child-standing-template",
+   "https://opengameart.org/content/lpc-children-walk-animation",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-jump-expanded"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:rat"
+  ]
+ },
+ {
+  "source": "body/bodies/child/pale_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "ElizaWy",
+   "MuffinElZangano",
+   "Durrani",
+   "Nila122",
+   "kheftel",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-child-standing-template",
+   "https://opengameart.org/content/lpc-children-walk-animation",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-jump-expanded"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:goblin"
+  ]
+ },
+ {
+  "source": "body/bodies/female/light.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "TheraHedwig",
+   "Evert",
+   "MuffinElZangano",
+   "Durrani",
+   "Pierre Vigier (pvigier)",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-ladies",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://gitlab.com/vagabondgame/lpc-characters",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "hero:ranger",
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "body/bodies/male/bright_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Evert",
+   "Eliza Wyatt (ElizaWy)",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+  "usedBy": [
+   "enemy:lizard"
+  ]
+ },
+ {
+  "source": "body/bodies/male/lavender.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Evert",
+   "Eliza Wyatt (ElizaWy)",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "body/bodies/male/light.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Evert",
+   "Eliza Wyatt (ElizaWy)",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+  "usedBy": [
+   "hero:warden",
+   "hero:preacher",
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "body/bodies/male/pale_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Evert",
+   "Eliza Wyatt (ElizaWy)",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+   "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "body/bodies/muscular/dark_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Evert",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "Eliza Wyatt (ElizaWy)",
+   "dalonedrau",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-barbarian-sprite-base",
+   "https://opengameart.org/content/lpc-muscular-swing-animation",
+   "https://opengameart.org/content/lpc-muscular-hurt-animation",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "enemy:troll"
+  ]
+ },
+ {
+  "source": "body/bodies/muscular/fur_black.png",
+  "authors": [
+   "bluecarrot16",
+   "Evert",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "Eliza Wyatt (ElizaWy)",
+   "dalonedrau",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-barbarian-sprite-base",
+   "https://opengameart.org/content/lpc-muscular-swing-animation",
+   "https://opengameart.org/content/lpc-muscular-hurt-animation",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "enemy:minotaur"
+  ]
+ },
+ {
+  "source": "body/bodies/muscular/fur_brown.png",
+  "authors": [
+   "bluecarrot16",
+   "Evert",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "Eliza Wyatt (ElizaWy)",
+   "dalonedrau",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-barbarian-sprite-base",
+   "https://opengameart.org/content/lpc-muscular-swing-animation",
+   "https://opengameart.org/content/lpc-muscular-hurt-animation",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "enemy:boarman"
+  ]
+ },
+ {
+  "source": "body/bodies/muscular/fur_grey.png",
+  "authors": [
+   "bluecarrot16",
+   "Evert",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "Eliza Wyatt (ElizaWy)",
+   "dalonedrau",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-barbarian-sprite-base",
+   "https://opengameart.org/content/lpc-muscular-swing-animation",
+   "https://opengameart.org/content/lpc-muscular-hurt-animation",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "enemy:wolfman"
+  ]
+ },
+ {
+  "source": "body/bodies/muscular/green.png",
+  "authors": [
+   "bluecarrot16",
+   "Evert",
+   "TheraHedwig",
+   "MuffinElZangano",
+   "Durrani",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "Eliza Wyatt (ElizaWy)",
+   "dalonedrau",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-barbarian-sprite-base",
+   "https://opengameart.org/content/lpc-muscular-swing-animation",
+   "https://opengameart.org/content/lpc-muscular-hurt-animation",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-revised-character-basics",
+   "https://opengameart.org/content/lpc-be-seated",
+   "https://opengameart.org/content/lpc-jump-expanded",
+   "https://opengameart.org/content/lpc-character-bases",
+   "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+  ],
+  "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+  "usedBy": [
+   "enemy:orc"
+  ]
+ },
+ {
+  "source": "body/bodies/skeleton/universal/skeleton.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-skeleton",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:skeleton",
+   "enemy:gravewarden",
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "body/bodies/zombie/universal/zombie.png",
+  "authors": [
+   "Stephen Challener (Redshrike)",
+   "Johannes Sj?lund (wulax)",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-zombie",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:revenant"
+  ]
+ },
+ {
+  "source": "cape/solid/female/black.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "cape/solid/female/gray.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "cape/solid/female/maroon.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "cape/solid_behind/black.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "cape/solid_behind/gray.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "cape/solid_behind/maroon.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crypt0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crypt3.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crypt7.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crystal_floor0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crystal_floor2.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/crystal_floor5.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/demonic_red1.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/demonic_red4.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/demonic_red8.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/dirt0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/dirt1.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/dirt2.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/mud0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/mud1.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/mud2.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/pebble_brown0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/pebble_brown3.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/floor/pebble_brown6.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_brown0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_brown2.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_brown5.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:cellars"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_2_0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_2_4.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_2_9.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:catacombs"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_3_0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_3_13.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_3_5.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:maw"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_4_0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_4_11.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_4_6.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:warrens"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_5_0.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_5_12.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "crawl/dngn/wall/brick_dark_5_7.png",
+  "authors": [
+   "Dungeon Crawl Stone Soup contributors"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://github.com/crawl/tiles",
+   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
+  ],
+  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
+  "usedBy": [
+   "zone:seam"
+  ]
+ },
+ {
+  "source": "feet/boots/female/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-clothes-and-hair"
+  ],
+  "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "feet/boots/female/charcoal.png",
+  "authors": [
+   "bluecarrot16",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-clothes-and-hair"
+  ],
+  "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "feet/boots/male/black.png",
+  "authors": [
+   "bluecarrot16",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-clothes-and-hair"
+  ],
+  "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:cutthroat",
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "feet/boots/male/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-clothes-and-hair"
+  ],
+  "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "feet/boots/male/charcoal.png",
+  "authors": [
+   "bluecarrot16",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-clothes-and-hair"
+  ],
+  "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "feet/boots_plating/universal/male/steel.png",
+  "authors": [
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "CC-BY 3.0+",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-relm-outfit-pieces-2-kimonos-2-sleeves-2-boots-tabi-socks"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "font/Fragment Mono",
+  "authors": [
+   "Wei Huang"
+  ],
+  "licenses": [
+   "SIL Open Font License 1.1"
+  ],
+  "urls": [
+   "https://fonts.google.com/specimen/Fragment+Mono"
+  ],
+  "notes": "Served from the game's own files.",
+  "usedBy": [
+   "typeface"
+  ]
+ },
+ {
+  "source": "font/Grenze",
+  "authors": [
+   "Omnibus-Type"
+  ],
+  "licenses": [
+   "SIL Open Font License 1.1"
+  ],
+  "urls": [
+   "https://fonts.google.com/specimen/Grenze"
+  ],
+  "notes": "Served from the game's own files.",
+  "usedBy": [
+   "typeface"
+  ]
+ },
+ {
+  "source": "font/Grenze Gotisch",
+  "authors": [
+   "Omnibus-Type"
+  ],
+  "licenses": [
+   "SIL Open Font License 1.1"
+  ],
+  "urls": [
+   "https://fonts.google.com/specimen/Grenze+Gotisch"
+  ],
+  "notes": "Served from the game's own files.",
+  "usedBy": [
+   "typeface"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/backpack.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:satchel"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/chest.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:hoard"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/dungeon-gate.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:gate"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/orc-head.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:tusk"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/skills.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:talent"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/stairs.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:descend"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/two-coins.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:coin"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/upgrade.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:upgrade"
+  ]
+ },
+ {
+  "source": "game-icons/delapouite/wizard-face.svg",
+  "authors": [
+   "delapouite"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:magus"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/battle-gear.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:gear"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/bone-knife.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:bone"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/bowman.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:bow"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/broadsword.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:blade"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/campfire.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:camp"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/cog.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:settings"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/crossed-swords.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:swords"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/crystal-cluster.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:shard"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/crystal-shine.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:crystal"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/holy-symbol.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:faith"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/magic-swirl.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:spell"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/mining.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:pick"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/return-arrow.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:ascend"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/scroll-unfurled.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:ledger"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/skull-crack.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:death"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/spiral-arrow.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:relic"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/stone-block.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:stone"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/sword-wound.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:wound"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/tombstone.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:grave"
+  ]
+ },
+ {
+  "source": "game-icons/lorc/wolf-head.svg",
+  "authors": [
+   "lorc"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:fang"
+  ]
+ },
+ {
+  "source": "game-icons/sbed/fire.svg",
+  "authors": [
+   "sbed"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:ember"
+  ]
+ },
+ {
+  "source": "game-icons/sbed/helmet.svg",
+  "authors": [
+   "sbed"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:helm"
+  ]
+ },
+ {
+  "source": "game-icons/sbed/shield.svg",
+  "authors": [
+   "sbed"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:guard"
+  ]
+ },
+ {
+  "source": "game-icons/skoll/hearts.svg",
+  "authors": [
+   "skoll"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:vitals"
+  ]
+ },
+ {
+  "source": "game-icons/skoll/rank-3.svg",
+  "authors": [
+   "skoll"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:rank"
+  ]
+ },
+ {
+  "source": "game-icons/willdabeast/gold-bar.svg",
+  "authors": [
+   "willdabeast"
+  ],
+  "licenses": [
+   "CC BY 3.0"
+  ],
+  "urls": [
+   "https://game-icons.net/",
+   "https://github.com/game-icons/icons"
+  ],
+  "notes": "Icon from game-icons.net.",
+  "usedBy": [
+   "icon:ingot"
+  ]
+ },
+ {
+  "source": "hair/ponytail/female/dark_brown.png",
+  "authors": [
+   "Manuel Riecke (MrBeast)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adult/charcoal.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adult/purple.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adult/white.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adultblue.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "hat/helmet/close/male/iron.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-helmets",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "hat/helmet/greathelm/male/gold.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-helmets",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "hat/helmet/greathelm/male/steel.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-helmets",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "head/heads/boarman/adult/fur_brown.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "Daniel Eddeland (daneeklu)"
+  ],
+  "licenses": [
+   "CC-BY 3.0",
+   "GPL 2.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-style-farm-animals",
+   "https://opengameart.org/content/lpc-wild-boar",
+   "https://opengameart.org/content/lpc-boarman"
+  ],
+  "notes": "pig by daneeklu adapted to boarman by BenCreating, placed to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:boarman"
+  ]
+ },
+ {
+  "source": "head/heads/goblin/adult/pale_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Stephen Challener (Redshrike)",
+   "William.Thomsponj"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-goblin",
+   "https://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original goblin by Redshrike, commisioned by William.Thomsponj; modular head extracted and enlarged by bluecarrot16",
+  "usedBy": [
+   "enemy:goblin"
+  ]
+ },
+ {
+  "source": "head/heads/human/female/light.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+  "usedBy": [
+   "hero:ranger",
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "head/heads/human/male/light.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+  "usedBy": [
+   "hero:warden",
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "head/heads/human/male/zombie_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+  "usedBy": [
+   "enemy:revenant"
+  ]
+ },
+ {
+  "source": "head/heads/human/male_gaunt/light.png",
+  "authors": [
+   "Stephen Challener (Redshrike)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original head by Redshrike, gaunt version by bluecarrot16",
+  "usedBy": [
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "head/heads/human/male_gaunt/pale_green.png",
+  "authors": [
+   "Stephen Challener (Redshrike)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original head by Redshrike, gaunt version by bluecarrot16",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "head/heads/lizard/male/bright_green.png",
+  "authors": [
+   "bluecarrot16",
+   "Benjamin K. Smith (BenCreating)",
+   "Nila122"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/drakes-and-lizardfolk",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "original lizard/drake by Nila122, reworked by BenCreating, modular head and further revisions by bluecarrot16. Nila122 gave blanket permission to MedicineStorm to use Nila122's LPC assets under OGA-BY 3.0 (where original or derived only from other works under OGA-BY).",
+  "usedBy": [
+   "enemy:lizard"
+  ]
+ },
+ {
+  "source": "head/heads/minotaur/male/fur_black.png",
+  "authors": [
+   "Evert",
+   "Nila122",
+   "Daniel Eddeland (daneeklu)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-style-farm-animals",
+   "https://opengameart.org/content/lpc-lizard-headgear",
+   "https://opengameart.org/content/lpc-faun-and-minotaur"
+  ],
+  "notes": "original cow by daneeklu, combined with horns by Nila122 and adapted to minotaur by Evert",
+  "usedBy": [
+   "enemy:minotaur"
+  ]
+ },
+ {
+  "source": "head/heads/orc/male/green.png",
+  "authors": [
+   "bluecarrot16",
+   "Matthew Krohn (makrohn)",
+   "Stephen Challener (Redshrike)",
+   "Zi Ye"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/four-characters-my-lpc-entries",
+   "https://opengameart.org/content/sinbad-the-ogre",
+   "https://opengameart.org/content/lpc-male-sheets",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "Sinbad the ogre design by Zi Ye, original 4-direction sprite by Redshrike, additional hurt/cast animations by makrohn, headless version by bluecarrot16",
+  "usedBy": [
+   "enemy:orc"
+  ]
+ },
+ {
+  "source": "head/heads/rat/adult/fur_grey.png",
+  "authors": [
+   "bluecarrot16",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/bunny-rabbit-lpc-style-for-pixelfarm",
+   "http://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original rabbit by Redshrike, adapted to modular head by bluecarrot16, modified to rat by bluecarrot16",
+  "usedBy": [
+   "enemy:rat"
+  ]
+ },
+ {
+  "source": "head/heads/skeleton/adult/skeleton.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sj?lund (wulax)",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-skeleton",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:skeleton",
+   "enemy:gravewarden",
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "head/heads/troll/adult/dark_green.png",
+  "authors": [
+   "bluecarrot16",
+   "AntumDeluge",
+   "Tuomo Untinen (reemax)"
+  ],
+  "licenses": [
+   "CC-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/musclemanogreminotaur",
+   "https://opengameart.org/content/trolls-0",
+   "https://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original ",
+  "usedBy": [
+   "enemy:troll"
+  ]
+ },
+ {
+  "source": "head/heads/vampire/adult/lavender.png",
+  "authors": [
+   "gaunt version by bluecarrot16"
+  ],
+  "licenses": [],
+  "urls": [
+   "Stephen Challener (Redshrike)",
+   "bluecarrot16",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-folk"
+  ],
+  "notes": "original head by Redshrike; vampire fangs by bluecarrot16",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "head/heads/wolf/male/fur_grey.png",
+  "authors": [
+   "bluecarrot16",
+   "Sander Frenken (castelonia)",
+   "Benjamin K. Smith (BenCreating)",
+   "William.Thompsonj",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-wolf-animation",
+   "https://opengameart.org/content/lpc-wolfman",
+   "https://opengameart.org/content/lpc-character-bases"
+  ],
+  "notes": "original wolf animation by Redshrike, commissioned by William.Thompsonj; wolfman sprite by BenCreating, commissioned by castelonia; tweaks and headless version by bluecarrot16",
+  "usedBy": [
+   "enemy:wolfman"
+  ]
+ },
+ {
+  "source": "legs/armour/plate/male/gold.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "legs/armour/plate/male/iron.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "legs/armour/plate/male/steel.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "legs/leggings/thin/leather.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "Mandi Paugh",
+   "Stephen Challener (Redshrike)",
+   "William.Thompsonj",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "http://opengameart.org/content/sara-wizard",
+   "https://opengameart.org/content/lpc-sara",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "adapted from sara's leggings to v3 bases by bluecarrot16, jump/run/sit by JaidynReiman based on ElizaWy's and modified to match",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "legs/pants/male/black.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "legs/pants/male/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "enemy:goblin",
+   "enemy:orc",
+   "enemy:boarman",
+   "enemy:wolfman",
+   "enemy:troll"
+  ]
+ },
+ {
+  "source": "legs/pants/male/charcoal.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "enemy:cutthroat",
+   "enemy:revenant",
+   "enemy:minotaur"
+  ]
+ },
+ {
+  "source": "legs/pants/male/forest.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "enemy:lizard"
+  ]
+ },
+ {
+  "source": "legs/pants/male/gray.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "ElizaWy",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "GPL 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "quiver/quiver.png",
+  "authors": [
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "shadow/adult/shadow.png",
+  "authors": [
+   "drjamgo@hotmail.com"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/shadow-for-lpc-sprite"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden",
+   "hero:ranger",
+   "hero:magus",
+   "hero:preacher",
+   "enemy:cutthroat",
+   "enemy:skeleton",
+   "enemy:revenant",
+   "enemy:gravewarden",
+   "enemy:orc",
+   "enemy:boarman",
+   "enemy:wolfman",
+   "enemy:lizard",
+   "enemy:troll",
+   "enemy:warlock",
+   "enemy:minotaur",
+   "enemy:vampire",
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "shadow/child/shadow.png",
+  "authors": [
+   "drjamgo@hotmail.com"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/shadow-for-lpc-sprite"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:rat",
+   "enemy:goblin"
+  ]
+ },
+ {
+  "source": "shield/heater/original/wood/bg/coffee.png",
+  "authors": [
+   "bluecarrot16",
+   "Sander Frenken (castelonia)",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-shields"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "shield/heater/original/wood/bg/umber.png",
+  "authors": [
+   "bluecarrot16",
+   "Sander Frenken (castelonia)",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-shields"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "shield/heater/original/wood/fg/coffee.png",
+  "authors": [
+   "bluecarrot16",
+   "Sander Frenken (castelonia)",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-shields"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "shield/heater/original/wood/fg/umber.png",
+  "authors": [
+   "bluecarrot16",
+   "Sander Frenken (castelonia)",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-shields"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "shield/male/round_silver.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "Michael Whitlock (bigbeargames)",
+   "DarkwallLKE",
+   "Tuomo Untinen (reemax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-shields-pack"
+  ],
+  "notes": "?",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "shoulders/plate/male/gold.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolors, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "shoulders/plate/male/iron.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolors, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "shoulders/plate/male/steel.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolors, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "torso/armour/plate/male/gold.png",
+  "authors": [
+   "recolor by bigbeargames"
+  ],
+  "licenses": [],
+  "urls": [
+   "run/jump/sit/climb/revised combat by JaidynReiman",
+   "JaidynReiman",
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Johannes Sjölund (wulax)",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women"
+  ],
+  "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "torso/armour/plate/male/iron.png",
+  "authors": [
+   "recolor by bigbeargames"
+  ],
+  "licenses": [],
+  "urls": [
+   "run/jump/sit/climb/revised combat by JaidynReiman",
+   "JaidynReiman",
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Johannes Sjölund (wulax)",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women"
+  ],
+  "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "torso/armour/plate/male/steel.png",
+  "authors": [
+   "recolor by bigbeargames"
+  ],
+  "licenses": [],
+  "urls": [
+   "run/jump/sit/climb/revised combat by JaidynReiman",
+   "JaidynReiman",
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Johannes Sjölund (wulax)",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women"
+  ],
+  "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "torso/chainmail/male/gray.png",
+  "authors": [
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "minor edits by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/female/forest.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/male/black.png",
+  "authors": [
+   "JaidynReiman",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors and cleanup by JaidynReiman, further recolors by bluecarrot16",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/male/brown.png",
+  "authors": [
+   "JaidynReiman",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors and cleanup by JaidynReiman, further recolors by bluecarrot16",
+  "usedBy": [
+   "enemy:revenant"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/male/charcoal.png",
+  "authors": [
+   "JaidynReiman",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors and cleanup by JaidynReiman, further recolors by bluecarrot16",
+  "usedBy": [
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "torso/clothes/robe/female/blue.png",
+  "authors": [
+   "Luke Mehl"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/female-mage-clothing-set"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "torso/clothes/robe/female/purple.png",
+  "authors": [
+   "Luke Mehl"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/female-mage-clothing-set"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "torso/clothes/shortsleeve/shortsleeve/male/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "http://opengameart.org/content/lpc-revised-character-basics",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy walkcycle only; extended to all animations by adapting from longsleeve, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "enemy:goblin"
+  ]
+ },
+ {
+  "source": "weapon/blunt/mace/mace.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "weapon/blunt/mace/universal_behind/mace.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "weapon/blunt/waraxe/behind/waraxe.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:orc",
+   "enemy:minotaur"
+  ]
+ },
+ {
+  "source": "weapon/blunt/waraxe/waraxe.png",
+  "authors": [
+   "Benjamin K. Smith (BenCreating)",
+   "bluecarrot16",
+   "Sander Frenken (castelonia)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:orc",
+   "enemy:minotaur"
+  ]
+ },
+ {
+  "source": "weapon/magic/diamond/universal/background/silver.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "weapon/magic/diamond/universal/foreground/silver.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "weapon/magic/gnarled/universal/background/gold.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "weapon/magic/gnarled/universal/foreground/gold.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:warlock"
+  ]
+ },
+ {
+  "source": "weapon/polearm/spear/background/dark.png",
+  "authors": [
+   "walk animations redone by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Pierre Vigier (pvigier)",
+   "Johannes Sjölund (wulax)",
+   "Inboxninja",
+   "CC-BY-SA 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-spear-and-shovel-reworked"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "weapon/polearm/spear/background/medium.png",
+  "authors": [
+   "walk animations redone by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Pierre Vigier (pvigier)",
+   "Johannes Sjölund (wulax)",
+   "Inboxninja",
+   "CC-BY-SA 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-spear-and-shovel-reworked"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
+  "usedBy": [
+   "enemy:lizard"
+  ]
+ },
+ {
+  "source": "weapon/polearm/spear/foreground/dark.png",
+  "authors": [
+   "walk animations redone by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Pierre Vigier (pvigier)",
+   "Johannes Sjölund (wulax)",
+   "Inboxninja",
+   "CC-BY-SA 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-spear-and-shovel-reworked"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
+  "usedBy": [
+   "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "weapon/polearm/spear/foreground/medium.png",
+  "authors": [
+   "walk animations redone by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Pierre Vigier (pvigier)",
+   "Johannes Sjölund (wulax)",
+   "Inboxninja",
+   "CC-BY-SA 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-spear-and-shovel-reworked"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16",
+  "usedBy": [
+   "enemy:lizard"
+  ]
+ },
+ {
+  "source": "weapon/ranged/bow/arrow/arrow.png",
+  "authors": [
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/ranged/bow/normal/universal/background/dark.png",
+  "authors": [
+   "walk animations by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Johannes Sjölund (wulax)",
+   "Pierre Vigier (pvigier)",
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-walk-animations-for-bows"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16. pvigier has agreed to license this sheet as OGA-BY 3.0+.",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/ranged/bow/normal/universal/foreground/dark.png",
+  "authors": [
+   "walk animations by pvigier"
+  ],
+  "licenses": [],
+  "urls": [
+   "Johannes Sjölund (wulax)",
+   "Pierre Vigier (pvigier)",
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-walk-animations-for-bows"
+  ],
+  "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16. pvigier has agreed to license this sheet as OGA-BY 3.0+.",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/sword/arming/universal/bg/iron.png",
+  "authors": [
+   "ElizaWy; walk and down by JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://github.com/ElizaWy/LPC/tree/main/Characters/Props/Sword%2001%20-%20Arming%20Sword",
+   "https://opengameart.org/content/expanded-universal-lpc-spritesheet-idle-run-jump-lpc-revised-combat-and-assets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:skeleton"
+  ]
+ },
+ {
+  "source": "weapon/sword/arming/universal/fg/iron.png",
+  "authors": [
+   "ElizaWy; walk and down by JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "https://github.com/ElizaWy/LPC/tree/main/Characters/Props/Sword%2001%20-%20Arming%20Sword",
+   "https://opengameart.org/content/expanded-universal-lpc-spritesheet-idle-run-jump-lpc-revised-combat-and-assets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:skeleton"
+  ]
+ },
+ {
+  "source": "weapon/sword/dagger/behind/dagger.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)",
+   "Matthew Krohn (makrohn)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:goblin",
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "weapon/sword/dagger/dagger.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)",
+   "Matthew Krohn (makrohn)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:goblin",
+   "enemy:cutthroat"
+  ]
+ },
+ {
+  "source": "weapon/sword/longsword/longsword.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden",
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "weapon/sword/longsword/universal_behind/longsword.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden",
+   "enemy:bone_knight"
+  ]
+ },
+ {
+  "source": "weapon/sword/rapier/rapier.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ },
+ {
+  "source": "weapon/sword/rapier/universal_behind/rapier.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-extended-weapon-animations"
+  ],
+  "notes": "",
+  "usedBy": [
+   "enemy:vampire"
+  ]
+ }
+]

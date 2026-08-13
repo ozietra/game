@@ -1,0 +1,487 @@
+{
+ "sprites": {
+  "warden": {
+   "kind": "hero",
+   "file": "assets/sprites/warden.png",
+   "frame": 64,
+   "facing": "right",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "ranger": {
+   "kind": "hero",
+   "file": "assets/sprites/ranger.png",
+   "frame": 64,
+   "facing": "right",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "magus": {
+   "kind": "hero",
+   "file": "assets/sprites/magus.png",
+   "frame": 64,
+   "facing": "right",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 7
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "preacher": {
+   "kind": "hero",
+   "file": "assets/sprites/preacher.png",
+   "frame": 64,
+   "facing": "right",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    },
+    "cast": {
+     "row": 3,
+     "frames": 7
+    }
+   }
+  },
+  "rat": {
+   "kind": "enemy",
+   "file": "assets/sprites/rat.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "goblin": {
+   "kind": "enemy",
+   "file": "assets/sprites/goblin.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "cutthroat": {
+   "kind": "enemy",
+   "file": "assets/sprites/cutthroat.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "skeleton": {
+   "kind": "enemy",
+   "file": "assets/sprites/skeleton.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "revenant": {
+   "kind": "enemy",
+   "file": "assets/sprites/revenant.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "gravewarden": {
+   "kind": "enemy",
+   "file": "assets/sprites/gravewarden.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "orc": {
+   "kind": "enemy",
+   "file": "assets/sprites/orc.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "boarman": {
+   "kind": "enemy",
+   "file": "assets/sprites/boarman.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "wolfman": {
+   "kind": "enemy",
+   "file": "assets/sprites/wolfman.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "lizard": {
+   "kind": "enemy",
+   "file": "assets/sprites/lizard.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "troll": {
+   "kind": "enemy",
+   "file": "assets/sprites/troll.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "warlock": {
+   "kind": "enemy",
+   "file": "assets/sprites/warlock.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 7
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "minotaur": {
+   "kind": "enemy",
+   "file": "assets/sprites/minotaur.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "vampire": {
+   "kind": "enemy",
+   "file": "assets/sprites/vampire.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "bone_knight": {
+   "kind": "enemy",
+   "file": "assets/sprites/bone_knight.png",
+   "frame": 64,
+   "facing": "left",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  }
+ },
+ "zones": {
+  "cellars": {
+   "wall": [
+    "assets/tiles/cellars_wall_0.png",
+    "assets/tiles/cellars_wall_1.png",
+    "assets/tiles/cellars_wall_2.png"
+   ],
+   "floor": [
+    "assets/tiles/cellars_floor_0.png",
+    "assets/tiles/cellars_floor_1.png",
+    "assets/tiles/cellars_floor_2.png"
+   ]
+  },
+  "catacombs": {
+   "wall": [
+    "assets/tiles/catacombs_wall_0.png",
+    "assets/tiles/catacombs_wall_1.png",
+    "assets/tiles/catacombs_wall_2.png"
+   ],
+   "floor": [
+    "assets/tiles/catacombs_floor_0.png",
+    "assets/tiles/catacombs_floor_1.png",
+    "assets/tiles/catacombs_floor_2.png"
+   ]
+  },
+  "warrens": {
+   "wall": [
+    "assets/tiles/warrens_wall_0.png",
+    "assets/tiles/warrens_wall_1.png",
+    "assets/tiles/warrens_wall_2.png"
+   ],
+   "floor": [
+    "assets/tiles/warrens_floor_0.png",
+    "assets/tiles/warrens_floor_1.png",
+    "assets/tiles/warrens_floor_2.png"
+   ]
+  },
+  "seam": {
+   "wall": [
+    "assets/tiles/seam_wall_0.png",
+    "assets/tiles/seam_wall_1.png",
+    "assets/tiles/seam_wall_2.png"
+   ],
+   "floor": [
+    "assets/tiles/seam_floor_0.png",
+    "assets/tiles/seam_floor_1.png",
+    "assets/tiles/seam_floor_2.png"
+   ]
+  },
+  "maw": {
+   "wall": [
+    "assets/tiles/maw_wall_0.png",
+    "assets/tiles/maw_wall_1.png",
+    "assets/tiles/maw_wall_2.png"
+   ],
+   "floor": [
+    "assets/tiles/maw_floor_0.png",
+    "assets/tiles/maw_floor_1.png",
+    "assets/tiles/maw_floor_2.png"
+   ]
+  }
+ },
+ "icons": {
+  "blade": "assets/icons/blade.svg",
+  "wound": "assets/icons/wound.svg",
+  "guard": "assets/icons/guard.svg",
+  "vitals": "assets/icons/vitals.svg",
+  "swords": "assets/icons/swords.svg",
+  "bow": "assets/icons/bow.svg",
+  "magus": "assets/icons/magus.svg",
+  "faith": "assets/icons/faith.svg",
+  "helm": "assets/icons/helm.svg",
+  "coin": "assets/icons/coin.svg",
+  "ingot": "assets/icons/ingot.svg",
+  "stone": "assets/icons/stone.svg",
+  "shard": "assets/icons/shard.svg",
+  "descend": "assets/icons/descend.svg",
+  "ascend": "assets/icons/ascend.svg",
+  "camp": "assets/icons/camp.svg",
+  "gate": "assets/icons/gate.svg",
+  "death": "assets/icons/death.svg",
+  "grave": "assets/icons/grave.svg",
+  "gear": "assets/icons/gear.svg",
+  "talent": "assets/icons/talent.svg",
+  "upgrade": "assets/icons/upgrade.svg",
+  "settings": "assets/icons/settings.svg",
+  "ledger": "assets/icons/ledger.svg",
+  "satchel": "assets/icons/satchel.svg",
+  "hoard": "assets/icons/hoard.svg",
+  "spell": "assets/icons/spell.svg",
+  "ember": "assets/icons/ember.svg",
+  "relic": "assets/icons/relic.svg",
+  "rank": "assets/icons/rank.svg",
+  "pick": "assets/icons/pick.svg",
+  "fang": "assets/icons/fang.svg",
+  "tusk": "assets/icons/tusk.svg",
+  "bone": "assets/icons/bone.svg",
+  "crystal": "assets/icons/crystal.svg"
+ }
+}

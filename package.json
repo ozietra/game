@@ -1,0 +1,19 @@
+{
+  "name": "alacakuyu",
+  "version": "1.0.0",
+  "description": "An idle dungeon crawler where loot only counts once your party climbs back out.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "assets": "python3 tools/build_assets.py",
+    "smoke": "node tools/smoke.cjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
