@@ -67,7 +67,60 @@ export interface Satchel {
   items: Item[];
 }
 
-export type RunPhase = 'camp' | 'descending' | 'fighting' | 'looting' | 'climbing' | 'wiped';
+export type RunPhase = 'camp' | 'descending' | 'event' | 'fighting' | 'looting' | 'climbing' | 'wiped';
+
+/** Which way a floor event is answered when nobody is watching. */
+export type EventChoice = 'bold' | 'safe';
+
+export interface PendingEvent {
+  id: string;
+  floor: number;
+  /** Seconds left before the standing order answers for the player. */
+  timer: number;
+}
+
+/** A blessing picked up at an altar, good for the next few floors. */
+export interface Boon {
+  kind: 'attack' | 'loot';
+  power: number;
+  floorsLeft: number;
+}
+
+/** What one descent came back with, or did not. */
+export interface DiveReport {
+  at: number;
+  seconds: number;
+  from: number;
+  deepest: number;
+  floors: number;
+  fights: number;
+  risk: number;
+  coin: number;
+  iron: number;
+  crystal: number;
+  items: number;
+  /** The single hardest blow anyone in the party landed. */
+  hardest: number;
+  hardestBy: string;
+  wiped: boolean;
+  lost: number;
+}
+
+export interface Contract {
+  id: string;
+  target: number;
+  progress: number;
+  claimed: boolean;
+}
+
+export interface Contracts {
+  /** The UTC day these were rolled for. */
+  day: string;
+  goals: Contract[];
+  /** Consecutive days with all three finished. */
+  streak: number;
+  best: number;
+}
 
 export interface RunState {
   phase: RunPhase;
@@ -83,6 +136,11 @@ export interface RunState {
   party: Combatant[];
   foes: Combatant[];
   seed: number;
+  /** The dial this descent was started on; changing it mid dive changes nothing. */
+  risk: number;
+  event: PendingEvent | null;
+  boon: Boon | null;
+  report: DiveReport;
 }
 
 export interface Policy {
@@ -91,6 +149,10 @@ export interface Policy {
   targetFloor: number;
   retreatHealth: number;
   satchelLimit: number;
+  /** 0 is the shaft as it comes; every step up pays better and hits harder. */
+  risk: number;
+  /** How floor events are answered: by hand, or the same way every time. */
+  eventChoice: EventChoice | 'ask';
 }
 
 export interface LogEntry {
@@ -137,4 +199,13 @@ export interface GameState {
   tutorialSeen: boolean;
   /** Whether anonymous play metrics may leave this browser. */
   shareMetrics: boolean;
+  contracts: Contracts;
+  /** Achievement id to when it was earned. */
+  achievements: Record<string, number>;
+  /** Foe kind to how many have been put down. */
+  bestiary: Record<string, number>;
+  /** Ten floor marks banked, which are kept through everything. */
+  milestones: number;
+  lastDive: DiveReport | null;
+  diveHistory: DiveReport[];
 }

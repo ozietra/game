@@ -44,7 +44,7 @@ export function heroCombatant(state: GameState, hero: Hero): Combatant {
   };
 }
 
-function foeStats(kind: string, floor: number, rank: 'common' | 'elite' | 'boss'): Stats {
+function foeStats(kind: string, floor: number, rank: 'common' | 'elite' | 'boss', danger: number): Stats {
   const shape = FOES[kind];
   const steps = floor - 1;
   const scale = rank === 'boss' ? BOSS_SCALE : rank === 'elite' ? ELITE_SCALE : { health: 1, attack: 1, defence: 1 };
@@ -53,11 +53,24 @@ function foeStats(kind: string, floor: number, rank: 'common' | 'elite' | 'boss'
 
   return {
     maxHp: Math.round(
-      BALANCE.foe.health.base * BALANCE.foe.health.growth ** steps * shape.health * scale.health * cycle * ease,
+      BALANCE.foe.health.base *
+        BALANCE.foe.health.growth ** steps *
+        shape.health *
+        scale.health *
+        cycle *
+        ease *
+        danger,
     ),
     attack:
       Math.round(
-        BALANCE.foe.attack.base * BALANCE.foe.attack.growth ** steps * shape.attack * scale.attack * cycle * ease * 10,
+        BALANCE.foe.attack.base *
+          BALANCE.foe.attack.growth ** steps *
+          shape.attack *
+          scale.attack *
+          cycle *
+          ease *
+          danger *
+          10,
       ) / 10,
     defence:
       Math.round(BALANCE.foe.defence.base * BALANCE.foe.defence.growth ** steps * shape.defence * scale.defence * 10) / 10,
@@ -66,10 +79,21 @@ function foeStats(kind: string, floor: number, rank: 'common' | 'elite' | 'boss'
   };
 }
 
-export function buildFoes(floor: number, encounter: number, rng: Rng): Combatant[] {
+/**
+ * `danger` is everything outside the depth curve that makes this fight worse:
+ * the risk dial, an ambush, a guarded hoard. `forceElite` promotes the front
+ * rank whatever the floor number says.
+ */
+export function buildFoes(
+  floor: number,
+  encounter: number,
+  rng: Rng,
+  danger = 1,
+  forceElite = false,
+): Combatant[] {
   const zone = zoneForFloor(floor);
   const boss = isBossFloor(floor) && encounter === BALANCE.encountersPerFloor;
-  const elite = isEliteFloor(floor) && encounter === BALANCE.encountersPerFloor;
+  const elite = forceElite || (isEliteFloor(floor) && encounter === BALANCE.encountersPerFloor);
 
   const kinds: string[] = [];
   if (boss) {
@@ -83,7 +107,7 @@ export function buildFoes(floor: number, encounter: number, rng: Rng): Combatant
 
   return kinds.map((kind, index) => {
     const rank = boss && index === 0 ? 'boss' : elite && index === 0 ? 'elite' : 'common';
-    const stats = foeStats(kind, floor, rank);
+    const stats = foeStats(kind, floor, rank, danger);
     return {
       key: `foe:${index}:${kind}`,
       side: 'foe' as const,

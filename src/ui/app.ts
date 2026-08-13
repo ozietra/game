@@ -1,21 +1,31 @@
 import {
+  ACHIEVEMENTS,
+  ALL_FOES,
   BALANCE,
   BUILDINGS,
   BUILDING_EFFECT,
   BUILDING_ORDER,
+  CONTRACTS,
+  EVENTS,
+  EVENT_SECONDS,
+  FOE_ORDER,
   HEROES,
   HERO_ORDER,
+  MILESTONE,
   RARITIES,
   RARITY_ORDER,
   RELICS,
   RELIC_EFFECT,
   RELIC_ORDER,
+  RISK,
   SLOTS,
+  contractReward,
   zoneForFloor,
+  type ContractId,
 } from '../data/content';
 import type { Game, Harvest } from '../core/game';
 import { heroLook, itemGain, masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
-import type { BuildingId, Item, RarityId, RelicId } from '../core/types';
+import type { BuildingId, DiveReport, Item, RarityId, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { metrics } from '../net/telemetry';
@@ -25,13 +35,14 @@ import { clear, el, on, setText, setWidth } from './dom';
 import { Menu } from './menu';
 import { Scene, type AttackStyle } from './scene';
 
-type TabId = 'shaft' | 'roster' | 'camp' | 'relics';
+type TabId = 'shaft' | 'roster' | 'camp' | 'relics' | 'records';
 
 const TAB_ICONS: Record<TabId, string> = {
   shaft: 'descend',
   roster: 'swords',
   camp: 'camp',
   relics: 'relic',
+  records: 'ledger',
 };
 
 export class App {
@@ -173,6 +184,7 @@ export class App {
       this.keep('panel:roster', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:camp', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:relics', el('section', { class: 'panel', hidden: true })),
+      this.keep('panel:records', el('section', { class: 'panel', hidden: true })),
     ]);
 
     this.root.append(el('div', { class: 'frame' }, [header, tabs, panels]));
@@ -194,6 +206,7 @@ export class App {
       el('div', { class: 'status-block' }, [
         this.keep('zoneName', el('span', { class: 'zone-name', text: '' })),
         this.keep('zoneLine', el('span', { class: 'zone-line', text: '' })),
+        this.keep('boonLine', el('span', { class: 'boon-line', text: '' })),
       ]),
       el('div', { class: 'status-block right' }, [
         this.keep('phase', el('strong', { class: 'phase', text: '' })),
@@ -231,10 +244,19 @@ export class App {
     ]);
 
     const log = this.keep('log', el('ol', { class: 'log' }));
+    const prompt = this.keep('eventBox', el('div', { class: 'event-box', hidden: true }));
+    const contracts = this.keep('contractCard', el('div', { class: 'card contract-card' }));
+    const lastDive = this.keep('lastDiveCard', el('div', { class: 'card', hidden: true }));
 
     return el('section', { class: 'panel shaft' }, [
-      el('div', { class: 'shaft-main' }, [stage, status, controls, el('div', { class: 'card log-card' }, [log])]),
-      el('div', { class: 'shaft-side' }, [partyCard, satchelCard, orders]),
+      el('div', { class: 'shaft-main' }, [
+        stage,
+        status,
+        prompt,
+        controls,
+        el('div', { class: 'card log-card' }, [log]),
+      ]),
+      el('div', { class: 'shaft-side' }, [contracts, partyCard, satchelCard, lastDive, orders]),
     ]);
   }
 
@@ -279,6 +301,50 @@ export class App {
       state.policy.satchelLimit = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
     });
 
+    const risk = el('input', { type: 'range', min: 0, max: RISK.steps, step: 1, class: 'slider', id: 'risk-dial' });
+    (risk as HTMLInputElement).value = String(state.policy.risk);
+    const riskValue = this.keep('riskValue', el('span', { class: 'readout small', text: String(state.policy.risk) }));
+    const riskNote = this.keep('riskNote', el('p', { class: 'note', text: '' }));
+    const showRisk = () => {
+      const step = state.policy.risk;
+      setText(riskValue, String(step));
+      setText(
+        riskNote,
+        t('policy.riskReadout', {
+          foe: formatPercent(step * RISK.foe),
+          loot: formatPercent(step * RISK.loot),
+        }),
+      );
+    };
+    on(risk, 'input', () => {
+      state.policy.risk = Number((risk as HTMLInputElement).value);
+      showRisk();
+    });
+    showRisk();
+
+    const events = el('div', { class: 'lang-switch' });
+    const choices: [typeof state.policy.eventChoice, StringKey][] = [
+      ['ask', 'policy.eventAsk'],
+      ['bold', 'policy.eventBold'],
+      ['safe', 'policy.eventSafe'],
+    ];
+    for (const [value, label] of choices) {
+      const button = el('button', {
+        class: `button tiny${state.policy.eventChoice === value ? ' primary' : ''}`,
+        type: 'button',
+        'data-choice': value,
+        text: t(label),
+      });
+      on(button, 'click', () => {
+        sound.play('click', { gain: 0.4 });
+        state.policy.eventChoice = value;
+        for (const other of Array.from(events.children)) {
+          other.classList.toggle('primary', (other as HTMLElement).dataset.choice === value);
+        }
+      });
+      events.append(button);
+    }
+
     return el('div', { class: 'card' }, [
       el('h2', { class: 'card-title', html: `${icon('gear')}<span>${t('policy.title')}</span>` }),
       el('label', { class: 'row toggle', for: 'auto-dive' }, [auto, el('span', { text: t('action.autoDive') })]),
@@ -287,7 +353,196 @@ export class App {
       el('label', { class: 'row', for: 'retreat-health' }, [el('span', { text: t('policy.retreat') }), retreat, retreatValue]),
       el('label', { class: 'row', for: 'satchel-limit' }, [el('span', { text: t('policy.satchel') }), limit]),
       el('p', { class: 'note', text: t('policy.note') }),
+      el('h3', { class: 'card-sub', text: t('policy.risk') }),
+      el('label', { class: 'row', for: 'risk-dial' }, [el('span', { text: t('dive.risk') }), risk, riskValue]),
+      riskNote,
+      el('p', { class: 'note', text: t('policy.riskNote') }),
+      el('h3', { class: 'card-sub', text: t('policy.event') }),
+      events,
+      el('p', { class: 'note', text: t('policy.eventNote', { seconds: EVENT_SECONDS }) }),
     ]);
+  }
+
+  // -------------------------------------------------------- floor events
+
+  /** The one moment the game stops and asks. It never waits forever. */
+  private renderEvent(): void {
+    const box = this.ref('eventBox');
+    const run = this.game.run;
+    const event = run.phase === 'event' ? run.event : null;
+
+    if (!event) {
+      if (!box.hidden) {
+        box.hidden = true;
+        clear(box);
+        box.dataset.id = '';
+      }
+      return;
+    }
+
+    if (box.dataset.id !== `${event.id}:${event.floor}`) {
+      box.dataset.id = `${event.id}:${event.floor}`;
+      box.hidden = false;
+      clear(box);
+      sound.play('gate', { gain: 0.6 });
+
+      const shape = EVENTS[event.id as keyof typeof EVENTS];
+      const clock = this.keep('eventClock', el('strong', { class: 'readout small', text: '' }));
+
+      const choice = (kind: 'bold' | 'safe', glyph: string) => {
+        const button = el('button', {
+          class: `button${kind === 'bold' ? ' primary' : ''}`,
+          type: 'button',
+          html: `${icon(glyph)}<span>${t(`event.${event.id}.${kind}` as StringKey)}</span>`,
+        });
+        on(button, 'click', () => {
+          sound.play('click', { gain: 0.5 });
+          this.game.answerEvent(kind);
+          this.renderEvent();
+        });
+        return el('div', { class: 'event-choice' }, [
+          button,
+          el('span', { class: 'note', text: t(`event.${event.id}.${kind}Note` as StringKey) }),
+        ]);
+      };
+
+      box.append(
+        el('div', { class: 'event-head' }, [
+          el('span', { class: 'event-icon', html: icon(shape.icon) }),
+          el('div', {}, [
+            el('h2', { class: 'event-title', text: t(`event.${event.id}.name` as StringKey) }),
+            el('p', { class: 'event-line', text: t(`event.${event.id}.line` as StringKey) }),
+          ]),
+          el('div', { class: 'event-clock' }, [el('span', { class: 'label', text: t('event.wait') }), clock]),
+        ]),
+        el('div', { class: 'event-choices' }, [choice('bold', shape.bold), choice('safe', shape.safe)]),
+      );
+    }
+
+    setText(this.refs.get('eventClock') ?? null, `${Math.max(0, Math.ceil(event.timer))}`);
+  }
+
+  // ---------------------------------------------------------- contracts
+
+  private renderContracts(): void {
+    const card = this.ref('contractCard');
+    const contracts = this.game.state.contracts;
+    const signature = `${contracts.day}|${contracts.goals
+      .map((goal) => `${goal.id}:${goal.progress}/${goal.target}:${goal.claimed ? 1 : 0}`)
+      .join('|')}|${contracts.streak}`;
+    if (card.dataset.signature === signature) return;
+    card.dataset.signature = signature;
+
+    clear(card);
+    const deepest = Math.max(1, this.game.state.deepestBanked, this.game.state.deepestFloor);
+
+    card.append(
+      el('h2', { class: 'card-title', html: `${icon('ledger')}<span>${t('contract.title')}</span>` }),
+      el('p', { class: 'note' }, [
+        document.createTextNode(`${t('contract.streak')}: `),
+        el('strong', { class: 'readout small', text: String(contracts.streak) }),
+        document.createTextNode(`  ·  ${t('contract.best')}: `),
+        el('strong', { class: 'readout small', text: String(contracts.best) }),
+      ]),
+    );
+
+    for (const goal of contracts.goals) {
+      const shape = CONTRACTS[goal.id as ContractId];
+      const done = goal.progress >= goal.target;
+      const reward = contractReward(goal.id as ContractId, deepest);
+
+      const bar = el('span', { class: 'bar-fill' });
+      bar.style.width = `${Math.min(100, (goal.progress / Math.max(1, goal.target)) * 100)}%`;
+
+      const action = el('button', {
+        class: `button tiny${done && !goal.claimed ? ' primary' : ''}`,
+        type: 'button',
+        disabled: !done || goal.claimed,
+        text: goal.claimed ? t('contract.claimed') : t('contract.claim'),
+      });
+      on(action, 'click', () => {
+        if (!this.game.claimContract(goal.id)) return;
+        sound.play('coins', { gain: 0.7 });
+        this.renderContracts();
+        this.renderPurse();
+      });
+
+      card.append(
+        el('div', { class: `contract${goal.claimed ? ' is-done' : ''}` }, [
+          el('div', { class: 'contract-head' }, [
+            el('span', { class: 'contract-icon', html: icon(shape?.icon ?? 'ledger') }),
+            el('div', { class: 'contract-body' }, [
+              el('span', { class: 'contract-name', text: t(`contract.${goal.id}.name` as StringKey) }),
+              el('span', {
+                class: 'contract-line',
+                text: t(`contract.${goal.id}.line` as StringKey, { target: formatNumber(goal.target) }),
+              }),
+            ]),
+            action,
+          ]),
+          el('div', { class: 'bar' }, [bar]),
+          el('span', { class: 'contract-meta' }, [
+            document.createTextNode(`${formatNumber(goal.progress)} / ${formatNumber(goal.target)}`),
+            document.createTextNode(`  ·  ${t('contract.reward')}: ${formatNumber(reward.coin)} `),
+            document.createTextNode(`${t('res.coin')}, ${formatNumber(reward.iron)} ${t('res.iron')}`),
+          ]),
+        ]),
+      );
+    }
+  }
+
+  // --------------------------------------------------------- dive summary
+
+  private diveRows(report: DiveReport): [string, string][] {
+    const rows: [string, string][] = [
+      [t('dive.deepest'), String(report.deepest)],
+      [t('dive.floors'), String(report.floors)],
+      [t('dive.fights'), String(report.fights)],
+      [t('dive.time'), formatDuration(report.seconds)],
+      [t('res.coin'), formatNumber(report.coin)],
+      [t('res.iron'), formatNumber(report.iron)],
+    ];
+    if (report.crystal > 0) rows.push([t('res.crystal'), formatNumber(report.crystal)]);
+    if (report.items > 0) rows.push([t('offline.items'), String(report.items)]);
+    if (report.hardest > 0) {
+      const by = report.hardestBy ? t(`hero.${report.hardestBy}.name` as StringKey) : '';
+      rows.push([t('dive.hardest'), `${formatNumber(report.hardest)}${by ? ` · ${by}` : ''}`]);
+    }
+    if (report.risk > 0) rows.push([t('dive.risk'), String(report.risk)]);
+    if (report.wiped) rows.push([t('dive.lost'), formatNumber(report.lost)]);
+    return rows;
+  }
+
+  private renderLastDive(): void {
+    const card = this.ref('lastDiveCard');
+    const report = this.game.state.lastDive;
+    if (!report) {
+      card.hidden = true;
+      return;
+    }
+    const signature = `${report.at}:${report.deepest}:${report.coin}:${report.wiped ? 1 : 0}`;
+    if (card.dataset.signature === signature) return;
+    card.dataset.signature = signature;
+    card.hidden = false;
+
+    clear(card);
+    card.append(
+      el('h2', { class: 'card-title' }, [
+        el('span', { html: icon(report.wiped ? 'grave' : 'ascend') }),
+        el('span', { text: t('dive.last') }),
+        el('span', { class: `tagline ${report.wiped ? 'bad' : 'good'}`, text: report.wiped ? t('dive.wiped') : t('dive.returned') }),
+      ]),
+      el(
+        'div',
+        { class: 'record-grid tight' },
+        this.diveRows(report).map(([label, value]) =>
+          el('div', { class: 'record' }, [
+            el('span', { class: 'label', text: label }),
+            el('strong', { class: 'readout', text: value }),
+          ]),
+        ),
+      ),
+    );
   }
 
   /** Keeps the start-floor order inside what the party has actually unlocked. */
@@ -436,12 +691,23 @@ export class App {
     else if (run.phase === 'climbing') note = `${Math.max(0, Math.ceil(run.phaseTimer))}s`;
     setText(this.ref('phaseNote'), note);
 
+    const boon = run.boon;
+    setText(
+      this.ref('boonLine'),
+      boon
+        ? t(`boon.${boon.kind}` as StringKey, { power: formatPercent(boon.power), floors: boon.floorsLeft })
+        : '',
+    );
+
     (this.ref('diveButton') as HTMLButtonElement).disabled = run.phase !== 'camp';
     (this.ref('backButton') as HTMLButtonElement).disabled = !inShaft || run.phase === 'climbing';
 
     this.refreshOrders();
+    this.renderEvent();
+    this.renderContracts();
     this.renderSatchel();
     this.renderParty();
+    this.renderLastDive();
     this.renderLog();
   }
 
@@ -630,6 +896,10 @@ export class App {
     }
     if (id === 'camp') return `${purse}|${Object.values(state.buildings).join('.')}|${this.game.mendCost()}`;
     if (id === 'relics') return `${purse}|${Object.values(state.relics).join('.')}|${relicYield(state)}`;
+    if (id === 'records') {
+      const seen = Object.entries(state.bestiary).reduce((sum, [, count]) => sum + count, 0);
+      return `${Object.keys(state.achievements).length}|${seen}|${state.milestones}|${state.lastDive?.at ?? 0}`;
+    }
     return purse;
   }
 
@@ -651,6 +921,9 @@ export class App {
         break;
       case 'relics':
         this.renderRelics();
+        break;
+      case 'records':
+        this.renderRecords();
         break;
       default:
         break;
@@ -1025,6 +1298,116 @@ export class App {
       );
     }
     panel.append(grid);
+  }
+
+  // ----------------------------------------------------------------- records
+
+  private renderRecords(): void {
+    const panel = this.ref('panel:records');
+    const state = this.game.state;
+    clear(panel);
+
+    // Milestones, which are the only permanent thing a rout cannot touch.
+    const marks = state.milestones;
+    const nextFloor = (marks + 1) * MILESTONE.everyFloors;
+    panel.append(
+      el('div', { class: 'card wide' }, [
+        el('h2', { class: 'card-title', html: `${icon('rank')}<span>${t('milestone.title')}</span>` }),
+        el('p', { class: 'note', text: t('milestone.line', { every: MILESTONE.everyFloors }) }),
+        el('div', { class: 'record-grid' }, [
+          el('div', { class: 'record' }, [
+            el('span', { class: 'label', text: t('milestone.count') }),
+            el('strong', { class: 'readout', text: String(marks) }),
+          ]),
+          el('div', { class: 'record' }, [
+            el('span', { class: 'label', text: t('milestone.bonus') }),
+            el('strong', { class: 'readout', text: formatPercent(marks * MILESTONE.attack) }),
+          ]),
+          el('div', { class: 'record' }, [
+            el('span', { class: 'label', text: t('milestone.next') }),
+            el('strong', { class: 'readout', text: String(nextFloor) }),
+          ]),
+        ]),
+      ]),
+    );
+
+    // Recent dives.
+    const dives = el('div', { class: 'card wide' }, [
+      el('h2', { class: 'card-title', html: `${icon('descend')}<span>${t('records.dives')}</span>` }),
+    ]);
+    if (state.diveHistory.length === 0) {
+      dives.append(el('p', { class: 'muted', text: t('records.none') }));
+    } else {
+      const table = el('div', { class: 'dive-list' });
+      for (const report of state.diveHistory) {
+        table.append(
+          el('div', { class: `dive-row${report.wiped ? ' bad' : ''}` }, [
+            el('span', { class: 'dive-icon', html: icon(report.wiped ? 'grave' : 'ascend') }),
+            el('span', { class: 'dive-depth', text: `${t('dive.deepest')} ${report.deepest}` }),
+            el('span', { class: 'dive-take', text: `${formatNumber(report.coin)} ${t('res.coin')}` }),
+            el('span', { class: 'dive-meta', text: `${report.fights} ${t('dive.fights')}` }),
+            el('span', { class: 'dive-meta', text: formatDuration(report.seconds) }),
+            el('span', {
+              class: `dive-tag ${report.wiped ? 'bad' : 'good'}`,
+              text: report.wiped ? t('dive.wiped') : t('dive.returned'),
+            }),
+          ]),
+        );
+      }
+      dives.append(table);
+    }
+    panel.append(dives);
+
+    // Achievements.
+    const earned = ACHIEVEMENTS.filter((entry) => state.achievements[entry.id]).length;
+    const list = el('div', { class: 'grid' });
+    for (const entry of ACHIEVEMENTS) {
+      const at = state.achievements[entry.id];
+      list.append(
+        el('div', { class: `card badge${at ? ' is-earned' : ' is-locked'}` }, [
+          el('h3', { class: 'badge-title', html: `${icon(entry.icon)}<span>${t(`achievement.${entry.id}.name` as StringKey)}</span>` }),
+          el('p', { class: 'note', text: t(`achievement.${entry.id}.line` as StringKey) }),
+          el('span', {
+            class: 'badge-meta',
+            text: at ? new Date(at).toLocaleDateString(state.language === 'tr' ? 'tr-TR' : 'en-GB') : t('achievement.locked'),
+          }),
+        ]),
+      );
+    }
+    panel.append(
+      el('div', { class: 'card wide' }, [
+        el('h2', { class: 'card-title' }, [
+          el('span', { html: icon('rank') }),
+          el('span', { text: t('achievement.title') }),
+          el('span', { class: 'tagline', text: t('achievement.count', { done: earned, total: ACHIEVEMENTS.length }) }),
+        ]),
+        list,
+      ]),
+    );
+
+    // Bestiary.
+    const seen = ALL_FOES.filter((kind) => (state.bestiary[kind] ?? 0) > 0).length;
+    const beasts = el('div', { class: 'bestiary' });
+    for (const kind of FOE_ORDER) {
+      const kills = state.bestiary[kind] ?? 0;
+      beasts.append(
+        el('div', { class: `beast${kills > 0 ? '' : ' is-unseen'}` }, [
+          el('span', { class: 'beast-portrait', style: portraitStyle(kind) }),
+          el('span', { class: 'beast-name', text: kills > 0 ? t(`foe.${kind}` as StringKey) : t('bestiary.unknown') }),
+          el('span', { class: 'beast-count', text: kills > 0 ? `${formatNumber(kills)} ${t('bestiary.kills')}` : '' }),
+        ]),
+      );
+    }
+    panel.append(
+      el('div', { class: 'card wide' }, [
+        el('h2', { class: 'card-title' }, [
+          el('span', { html: icon('swords') }),
+          el('span', { text: t('bestiary.title') }),
+          el('span', { class: 'tagline', text: t('bestiary.seen', { seen, total: ALL_FOES.length }) }),
+        ]),
+        beasts,
+      ]),
+    );
   }
 
   // ---------------------------------------------------------------- overlays

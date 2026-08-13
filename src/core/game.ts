@@ -1,18 +1,30 @@
 import {
+  ALL_FOES,
   BALANCE,
+  BOON,
   BUILDINGS,
   BUILDING_EFFECT,
+  CONTRACT_ORDER,
+  EVENT_CHANCE,
+  EVENT_FIRST_FLOOR,
+  EVENT_ORDER,
+  EVENT_SECONDS,
   HEROES,
   HERO_ORDER,
   KINDS_BY_SLOT,
+  MILESTONE,
   RARITIES,
   RARITY_ORDER,
   RELICS,
   RELIC_EFFECT,
+  RISK,
   SLOTS,
+  contractReward,
+  contractTarget,
   isBossFloor,
   isEliteFloor,
   zoneForFloor,
+  type ContractId,
 } from '../data/content';
 import { buildFoes, encounterOver, heroCombatant, stepCombat, type CombatEvent } from './combat';
 import { Rng } from './rng';
@@ -30,6 +42,9 @@ import {
 } from './stats';
 import type {
   BuildingId,
+  Contract,
+  DiveReport,
+  EventChoice,
   GameState,
   Hero,
   HeroId,
@@ -58,6 +73,31 @@ export interface Harvest {
 
 function emptySatchel(): Satchel {
   return { coin: 0, iron: 0, crystal: 0, items: [] };
+}
+
+function emptyReport(): DiveReport {
+  return {
+    at: 0,
+    seconds: 0,
+    from: 0,
+    deepest: 0,
+    floors: 0,
+    fights: 0,
+    risk: 0,
+    coin: 0,
+    iron: 0,
+    crystal: 0,
+    items: 0,
+    hardest: 0,
+    hardestBy: '',
+    wiped: false,
+    lost: 0,
+  };
+}
+
+/** The day the contracts belong to, in UTC so it turns over everywhere at once. */
+export function contractDay(at = Date.now()): string {
+  return new Date(at).toISOString().slice(0, 10);
 }
 
 function emptyHarvest(): Harvest {
@@ -90,7 +130,15 @@ export function freshState(): GameState {
     stash: [],
     buildings: { smithy: 0, armoury: 0, infirmary: 0, drillyard: 0, ropewright: 0, cartographer: 0 },
     relics: { deepmark: 0, looteye: 0, knot: 0, guidestone: 0, wakingcamp: 0, lampoil: 0 },
-    policy: { autoDive: true, startFloor: 1, targetFloor: 8, retreatHealth: 0.35, satchelLimit: 0 },
+    policy: {
+      autoDive: true,
+      startFloor: 1,
+      targetFloor: 8,
+      retreatHealth: 0.35,
+      satchelLimit: 0,
+      risk: 0,
+      eventChoice: 'ask',
+    },
     run: {
       phase: 'camp',
       manual: false,
@@ -104,6 +152,10 @@ export function freshState(): GameState {
       party: [],
       foes: [],
       seed: Math.floor(Math.random() * 0xffffffff),
+      risk: 0,
+      event: null,
+      boon: null,
+      report: emptyReport(),
     },
     deepestFloor: 0,
     deepestBanked: 1,
@@ -117,6 +169,12 @@ export function freshState(): GameState {
     nextUid: 1,
     tutorialSeen: false,
     shareMetrics: true,
+    contracts: { day: '', goals: [], streak: 0, best: 0 },
+    achievements: {},
+    bestiary: {},
+    milestones: 0,
+    lastDive: null,
+    diveHistory: [],
   };
 }
 
@@ -130,10 +188,16 @@ export class Game {
   private logId = 1;
   private quiet = false;
   private woundRest = 0;
+  /** Extra danger the next encounter carries, from an ambush or a hoard. */
+  private surge = 0;
+  private surgeElite = false;
+  /** Extra loot the next pile is worth, from a hoard or a warband. */
+  private windfall = 0;
 
   constructor(state?: GameState) {
     this.state = state ?? freshState();
     this.rng = Rng.restore(this.state.run.seed);
+    this.rollContracts();
   }
 
   // ---------------------------------------------------------------- logging
@@ -186,12 +250,38 @@ export class Game {
     this.run.manual = manual;
     this.run.phase = 'descending';
     this.run.phaseTimer = this.descendSeconds();
+    this.run.risk = Math.max(0, Math.min(RISK.steps, Math.round(this.state.policy.risk)));
+    this.run.event = null;
+    this.run.boon = null;
+    this.surge = 0;
+    this.surgeElite = false;
+    this.windfall = 0;
+
+    this.run.report = emptyReport();
+    this.run.report.at = Date.now();
+    this.run.report.from = this.run.floor;
+    this.run.report.deepest = this.run.floor;
+    this.run.report.risk = this.run.risk;
+
     this.state.totalDives += 1;
+    this.progressContract('dives', 1);
     this.note('log.dive.start', { floor: this.run.floor }, 'loud');
+  }
+
+  /** What the dial and any ambush are doing to the fight in front of the party. */
+  private danger(): number {
+    return 1 + this.run.risk * RISK.foe + this.surge;
+  }
+
+  /** What the dial and any blessing are doing to what the satchel picks up. */
+  private fortune(): number {
+    const boon = this.run.boon?.kind === 'loot' ? this.run.boon.power : 0;
+    return (1 + this.run.risk * RISK.loot + boon) * (1 + this.windfall);
   }
 
   extract(): void {
     if (this.run.phase === 'camp' || this.run.phase === 'climbing' || this.run.phase === 'wiped') return;
+    this.run.event = null;
     this.run.climbFrom = this.run.floor;
     this.run.phase = 'climbing';
     this.run.phaseTimer = this.climbSeconds();
@@ -200,7 +290,9 @@ export class Game {
 
   private startEncounter(): void {
     this.run.encounter += 1;
-    this.run.foes = buildFoes(this.run.floor, this.run.encounter, this.rng);
+    this.run.foes = buildFoes(this.run.floor, this.run.encounter, this.rng, this.danger(), this.surgeElite);
+    this.surge = 0;
+    this.surgeElite = false;
     this.run.phase = 'fighting';
     this.syncPartyHealth();
     if (isBossFloor(this.run.floor) && this.run.encounter === BALANCE.encountersPerFloor) {
@@ -209,10 +301,12 @@ export class Game {
   }
 
   private syncPartyHealth(): void {
+    const blessing = this.run.boon?.kind === 'attack' ? 1 + this.run.boon.power : 1;
     for (const fighter of this.run.party) {
       if (!fighter.hero) continue;
       const hero = this.state.heroes[fighter.hero];
       fighter.stats = heroStats(this.state, hero);
+      if (blessing !== 1) fighter.stats = { ...fighter.stats, attack: Math.round(fighter.stats.attack * blessing * 10) / 10 };
       fighter.hp = Math.min(fighter.stats.maxHp, Math.max(0, Math.round(hero.hp)));
       fighter.alive = fighter.hp > 0;
       if (!fighter.alive) fighter.action = 'down';
@@ -231,7 +325,8 @@ export class Game {
   private rollLoot(): void {
     const floor = this.run.floor;
     const zone = zoneForFloor(floor);
-    const boost = 1 + this.state.relics.looteye * RELIC_EFFECT.looteye;
+    const boost = (1 + this.state.relics.looteye * RELIC_EFFECT.looteye) * this.fortune();
+    this.windfall = 0;
     const rank = isBossFloor(floor) ? 3.1 : isEliteFloor(floor) ? 1.7 : 1;
 
     const coin = Math.round(
@@ -255,11 +350,9 @@ export class Game {
     this.run.satchel.iron += iron;
     this.run.satchel.crystal += crystal;
 
-    const dropChance = BALANCE.loot.itemChance * rank;
+    const dropChance = BALANCE.loot.itemChance * rank * (1 + this.run.risk * RISK.loot * 0.5);
     if (this.rng.chance(Math.min(0.85, dropChance))) {
-      const item = this.rollItem(floor);
-      this.run.satchel.items.push(item);
-      this.note('log.loot.item', { rarity: `rarity.${item.rarity}`, kind: `kind.${item.kind}`, power: item.power }, 'good');
+      this.findItem(floor);
     }
 
     for (const fighter of this.run.party) {
@@ -269,6 +362,16 @@ export class Game {
       const levels = grantXp(this.state, hero, xp);
       if (levels > 0) this.note('log.level', { name: `hero.${hero.id}.name`, level: hero.level }, 'good');
     }
+  }
+
+  /** Rolls one piece into the satchel and says so. */
+  private findItem(floor: number): Item {
+    const item = this.rollItem(floor);
+    this.run.satchel.items.push(item);
+    if (RARITY_ORDER.indexOf(item.rarity) >= 2) this.progressContract('loot', 1);
+    if (item.rarity === 'fabled') this.award('fabled');
+    this.note('log.loot.item', { rarity: `rarity.${item.rarity}`, kind: `kind.${item.kind}`, power: item.power }, 'good');
+    return item;
   }
 
   private rollItem(floor: number): Item {
@@ -282,6 +385,213 @@ export class Game {
       ),
     );
     return { uid: this.state.nextUid++, slot, kind, rarity, power, floor };
+  }
+
+  // ----------------------------------------------------------------- events
+
+  /**
+   * Some floors hold something other than three fights. The party stops, and
+   * either the player answers or the standing order does, so a shaft left
+   * running overnight never waits on anybody.
+   */
+  private rollEvent(): boolean {
+    if (this.run.floor < EVENT_FIRST_FLOOR) return false;
+    if (!this.rng.chance(EVENT_CHANCE)) return false;
+
+    const id = this.rng.pick(EVENT_ORDER);
+    this.run.event = { id, floor: this.run.floor, timer: EVENT_SECONDS };
+    this.run.phase = 'event';
+    this.note(`log.event.${id}`, { floor: this.run.floor }, 'loud');
+
+    const standing = this.state.policy.eventChoice;
+    // Nobody is watching a replayed night, so the careful answer stands.
+    if (this.quiet || standing !== 'ask') this.answerEvent(standing === 'bold' ? 'bold' : 'safe');
+    return true;
+  }
+
+  answerEvent(choice: EventChoice): void {
+    const event = this.run.event;
+    if (!event || this.run.phase !== 'event') return;
+    this.run.event = null;
+
+    const floor = this.run.floor;
+    const satchel = this.run.satchel;
+    const scaled = (multiplier: number) =>
+      Math.round(BALANCE.loot.coin.base * BALANCE.loot.coin.growth ** (floor - 1) * multiplier);
+
+    switch (event.id) {
+      case 'altar': {
+        if (choice === 'bold') {
+          const paid = Math.round(satchel.coin * BOON.altarCoinShare);
+          satchel.coin -= paid;
+          healParty(this.state, 1);
+          this.run.boon = { kind: 'attack', power: BOON.altarAttack, floorsLeft: BOON.altarFloors };
+          this.note('log.event.altar.bold', { coin: paid }, 'good');
+        } else {
+          healParty(this.state, 0.15);
+          this.note('log.event.altar.safe', {});
+        }
+        break;
+      }
+
+      case 'trap': {
+        if (choice === 'bold') {
+          for (const hero of partyOf(this.state)) {
+            hero.hp = Math.max(1, hero.hp - heroStats(this.state, hero).maxHp * BOON.trapDamage);
+          }
+          const crystal = Math.max(1, Math.round(floor / 6));
+          satchel.crystal += crystal;
+          this.findItem(floor);
+          this.note('log.event.trap.bold', { crystal }, 'good');
+        } else {
+          const iron = Math.max(2, Math.round(floor * 1.4));
+          satchel.iron += iron;
+          this.note('log.event.trap.safe', { iron });
+        }
+        break;
+      }
+
+      case 'hoard': {
+        if (choice === 'bold') {
+          this.surge = 0.35;
+          this.surgeElite = true;
+          this.windfall = BOON.hoardLoot;
+          this.note('log.event.hoard.bold', {}, 'loud');
+        } else {
+          const coin = scaled(2.5);
+          satchel.coin += coin;
+          this.note('log.event.hoard.safe', { coin });
+        }
+        break;
+      }
+
+      case 'warband': {
+        if (choice === 'bold') {
+          this.surge = BOON.warbandFoe;
+          this.windfall = BOON.warbandLoot;
+          this.note('log.event.warband.bold', {}, 'loud');
+        } else {
+          const lost = Math.round(satchel.coin * BOON.warbandFlightLoss);
+          satchel.coin -= lost;
+          this.note('log.event.warband.safe', { coin: lost }, 'bad');
+          // Running means the whole floor is behind them.
+          this.run.phase = 'descending';
+          this.run.floor += 1;
+          this.run.phaseTimer = this.descendSeconds();
+          this.syncPartyHealth();
+          return;
+        }
+        break;
+      }
+    }
+
+    this.run.encounter = 0;
+    this.startEncounter();
+  }
+
+  // -------------------------------------------------------------- contracts
+
+  /** Three goals a day, sized against how deep this player has actually been. */
+  rollContracts(): void {
+    const today = contractDay();
+    const contracts = this.state.contracts;
+    if (contracts.day === today && contracts.goals.length === 3) return;
+
+    // Anything finished but never collected is paid out before the day turns.
+    for (const goal of contracts.goals) {
+      if (!goal.claimed && goal.progress >= goal.target) this.claimContract(goal.id);
+    }
+
+    if (contracts.day !== '') {
+      const done = contracts.goals.length > 0 && contracts.goals.every((goal) => goal.claimed);
+      contracts.streak = done && contracts.day === contractDay(Date.now() - 86400000) ? contracts.streak + 1 : 0;
+      contracts.best = Math.max(contracts.best, contracts.streak);
+    }
+
+    const deepest = Math.max(1, this.state.deepestBanked, this.state.deepestFloor);
+    const pool = [...CONTRACT_ORDER];
+    const goals: Contract[] = [];
+    for (let index = 0; index < 3 && pool.length > 0; index += 1) {
+      const [id] = pool.splice(Math.floor(this.rng.next() * pool.length), 1);
+      goals.push({ id, target: contractTarget(id, deepest), progress: 0, claimed: false });
+    }
+
+    contracts.day = today;
+    contracts.goals = goals;
+  }
+
+  private progressContract(id: ContractId, amount: number): void {
+    for (const goal of this.state.contracts.goals) {
+      if (goal.id !== id || goal.claimed) continue;
+      goal.progress = Math.min(goal.target, goal.progress + amount);
+    }
+  }
+
+  /** Depth is a high water mark rather than a running total. */
+  private markContract(id: ContractId, value: number): void {
+    for (const goal of this.state.contracts.goals) {
+      if (goal.id !== id || goal.claimed) continue;
+      goal.progress = Math.min(goal.target, Math.max(goal.progress, value));
+    }
+  }
+
+  claimContract(id: string): boolean {
+    const goal = this.state.contracts.goals.find((entry) => entry.id === id);
+    if (!goal || goal.claimed || goal.progress < goal.target) return false;
+    goal.claimed = true;
+
+    const deepest = Math.max(1, this.state.deepestBanked, this.state.deepestFloor);
+    const reward = contractReward(goal.id as ContractId, deepest);
+    this.state.bank.coin += reward.coin;
+    this.state.bank.iron += reward.iron;
+    this.state.lifetimeCoin += reward.coin;
+    this.note('log.contract', { name: `contract.${goal.id}.name`, coin: reward.coin, iron: reward.iron }, 'good');
+
+    if (this.state.contracts.goals.every((entry) => entry.claimed)) {
+      this.state.bank.relic += 1;
+      this.note('log.contract.all', { relics: 1 }, 'loud');
+    }
+    return true;
+  }
+
+  // ----------------------------------------------------------- achievements
+
+  private award(id: string): void {
+    if (this.state.achievements[id]) return;
+    this.state.achievements[id] = Date.now();
+    this.note('log.achievement', { name: `achievement.${id}.name` }, 'loud');
+  }
+
+  /** Everything that can be read straight off the state, checked in one place. */
+  private checkAchievements(): void {
+    const state = this.state;
+    if (state.deepestFloor >= 10) this.award('floor10');
+    if (state.deepestFloor >= 25) this.award('floor25');
+    if (state.deepestFloor >= 50) this.award('floor50');
+    if (state.deepestFloor >= 75) this.award('floor75');
+    if (state.lifetimeCoin >= 100000) this.award('coin100k');
+    if (state.prestiges >= 1) this.award('prestige');
+    if (HERO_ORDER.every((id) => state.heroes[id].unlocked)) this.award('fullparty');
+    if (ALL_FOES.every((kind) => (state.bestiary[kind] ?? 0) > 0)) this.award('bestiary');
+  }
+
+  private updateMilestones(): void {
+    const marks = Math.min(MILESTONE.maxSteps, Math.floor(this.state.deepestBanked / MILESTONE.everyFloors));
+    if (marks <= this.state.milestones) return;
+    this.state.milestones = marks;
+    this.note('log.milestone', { floor: marks * MILESTONE.everyFloors }, 'loud');
+  }
+
+  // ------------------------------------------------------------ dive report
+
+  private closeReport(wiped: boolean, lost: number): void {
+    const report = this.run.report;
+    report.wiped = wiped;
+    report.lost = lost;
+    report.deepest = Math.max(report.deepest, this.run.deepestThisRun);
+    this.state.lastDive = { ...report };
+    this.state.diveHistory.unshift({ ...report });
+    if (this.state.diveHistory.length > 8) this.state.diveHistory.length = 8;
   }
 
   private bankSatchel(): void {
@@ -298,12 +608,27 @@ export class Game {
     for (const item of satchel.items) this.absorbItem(item);
     this.state.deepestBanked = Math.max(this.state.deepestBanked, this.run.deepestThisRun);
 
+    const report = this.run.report;
+    report.coin += satchel.coin;
+    report.iron += satchel.iron;
+    report.crystal += satchel.crystal;
+    report.items += satchel.items.length;
+
+    this.progressContract('bank', satchel.coin);
+    this.markContract('depth', this.run.deepestThisRun);
+    this.updateMilestones();
+    this.award('firstclimb');
+    if (this.run.deepestThisRun >= 20 && !report.wiped && report.fights > 0) this.award('clean20');
+    if (this.run.risk >= RISK.steps && this.run.deepestThisRun >= 10) this.award('daring');
+    this.checkAchievements();
+
     this.note(
       'log.bank',
       { coin: satchel.coin, iron: satchel.iron, crystal: satchel.crystal, floor: this.run.deepestThisRun },
       'good',
     );
     this.run.satchel = emptySatchel();
+    this.closeReport(false, 0);
   }
 
   /** Equips an item when it beats what a hero carries, otherwise it waits in the stash. */
@@ -364,10 +689,14 @@ export class Game {
 
     this.state.totalWipes += 1;
     this.harvest.wipes += 1;
-    this.note('log.wipe', { floor: this.run.floor, lost: Math.round(satchel.coin * (1 - kept)) }, 'bad');
+    const lost = Math.round(satchel.coin * (1 - kept));
+    this.note('log.wipe', { floor: this.run.floor, lost }, 'bad');
     this.run.satchel = emptySatchel();
     this.run.phase = 'wiped';
     this.run.phaseTimer = BALANCE.wipePauseSeconds;
+    this.run.boon = null;
+    this.run.event = null;
+    this.closeReport(true, lost);
   }
 
   /** Time in camp closes wounds without a healer's fee. */
@@ -415,6 +744,7 @@ export class Game {
     const run = this.run;
     this.state.playedSeconds += dt;
     this.harvest.seconds += dt;
+    if (run.phase !== 'camp') run.report.seconds += dt;
 
     switch (run.phase) {
       case 'camp': {
@@ -435,23 +765,45 @@ export class Game {
         if (run.phaseTimer <= 0) {
           this.state.descents += 1;
           this.harvest.floors += 1;
+          run.report.floors += 1;
           run.deepestThisRun = Math.max(run.deepestThisRun, run.floor);
+          run.report.deepest = Math.max(run.report.deepest, run.floor);
           this.state.deepestFloor = Math.max(this.state.deepestFloor, run.floor);
           this.harvest.deepest = Math.max(this.harvest.deepest, run.floor);
+          this.checkAchievements();
+
+          if (run.boon && run.boon.floorsLeft > 0) {
+            run.boon.floorsLeft -= 1;
+            if (run.boon.floorsLeft <= 0) run.boon = null;
+          }
+
           run.encounter = 0;
-          this.startEncounter();
+          if (!this.rollEvent()) this.startEncounter();
         }
+        break;
+      }
+
+      case 'event': {
+        if (!run.event) {
+          this.startEncounter();
+          break;
+        }
+        run.event.timer -= dt;
+        // Waiting forever is not an option for a game that runs unattended.
+        if (run.event.timer <= 0) this.answerEvent('safe');
         break;
       }
 
       case 'fighting': {
         const events = stepCombat(run.party, run.foes, dt, this.rng);
         if (!this.quiet && events.length > 0) this.events.push(...events);
+        this.readFight(events);
         this.writeBackHealth();
 
         const outcome = encounterOver(run.party, run.foes);
         if (outcome === 'won') {
           this.harvest.fights += 1;
+          run.report.fights += 1;
           run.phase = 'looting';
           run.phaseTimer = BALANCE.lootSeconds;
           this.rollLoot();
@@ -505,6 +857,32 @@ export class Game {
     }
 
     this.state.run.seed = this.rng.serialise();
+  }
+
+  /**
+   * Reads a round of combat for everything the ledger cares about: what was
+   * put down, and the hardest single blow anybody in the party landed.
+   */
+  private readFight(events: CombatEvent[]): void {
+    for (const event of events) {
+      if (event.kind === 'down' && event.key.startsWith('foe:')) {
+        const kind = event.key.split(':')[2] ?? '';
+        if (!kind) continue;
+        this.state.bestiary[kind] = (this.state.bestiary[kind] ?? 0) + 1;
+        const foe = this.run.foes.find((one) => one.key === event.key);
+        if (foe?.rank === 'boss') {
+          this.award('keeper');
+          this.progressContract('keepers', 1);
+        }
+        continue;
+      }
+      if ((event.kind === 'hit' || event.kind === 'crit') && event.from?.startsWith('hero:')) {
+        if (event.amount > this.run.report.hardest) {
+          this.run.report.hardest = event.amount;
+          this.run.report.hardestBy = event.from.slice(5);
+        }
+      }
+    }
   }
 
   /** Replays the shaft while the tab was closed. */
@@ -636,6 +1014,13 @@ export class Game {
       lifetimeCoin: this.state.lifetimeCoin,
       playedSeconds: this.state.playedSeconds,
       deepestFloor: this.state.deepestFloor,
+      // A record of what has been seen and done outlives the shaft itself.
+      achievements: this.state.achievements,
+      bestiary: this.state.bestiary,
+      contracts: this.state.contracts,
+      milestones: this.state.milestones,
+      lastDive: this.state.lastDive,
+      diveHistory: this.state.diveHistory,
     };
 
     const fresh = freshState();
@@ -652,6 +1037,7 @@ export class Game {
 
     this.state = fresh;
     this.rng = Rng.restore(fresh.run.seed);
+    this.award('prestige');
     this.note('log.prestige', { relics: gain }, 'loud');
     return true;
   }

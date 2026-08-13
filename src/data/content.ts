@@ -38,6 +38,117 @@ export const BALANCE = {
   prestige: { minFloor: 25, divisor: 9, exponent: 1.4 },
 } as const;
 
+/**
+ * The risk dial. One lever moves what the shaft is worth and what it costs, so
+ * a rout is the player's own decision rather than the depth curve's.
+ */
+export const RISK = {
+  steps: 5,
+  /** Added to foe health and attack per step. */
+  foe: 0.2,
+  /** Added to everything the satchel picks up per step. */
+  loot: 0.34,
+} as const;
+
+/** Every fifth floor holds something other than three fights. */
+export const EVENT_CHANCE = 0.2;
+export const EVENT_SECONDS = 14;
+export const EVENT_FIRST_FLOOR = 3;
+
+export type EventId = 'altar' | 'trap' | 'hoard' | 'warband';
+
+export const EVENT_ORDER: EventId[] = ['altar', 'trap', 'hoard', 'warband'];
+
+export const EVENTS: Record<EventId, { icon: string; bold: string; safe: string }> = {
+  altar: { icon: 'faith', bold: 'faith', safe: 'gate' },
+  trap: { icon: 'fang', bold: 'pick', safe: 'gate' },
+  hoard: { icon: 'hoard', bold: 'swords', safe: 'coin' },
+  warband: { icon: 'tusk', bold: 'swords', safe: 'ascend' },
+};
+
+/** A blessing or a curse that rides along for the next few floors. */
+export const BOON = {
+  altarAttack: 0.28,
+  altarFloors: 3,
+  altarCoinShare: 0.3,
+  trapDamage: 0.14,
+  hoardLoot: 3,
+  warbandFoe: 0.5,
+  warbandLoot: 2,
+  warbandFlightLoss: 0.2,
+} as const;
+
+/** Ten floors banked is worth keeping, whatever happens after it. */
+export const MILESTONE = { everyFloors: 10, attack: 0.02, health: 0.02, maxSteps: 20 } as const;
+
+export type ContractId = 'depth' | 'bank' | 'keepers' | 'dives' | 'loot';
+
+export const CONTRACT_ORDER: ContractId[] = ['depth', 'bank', 'keepers', 'dives', 'loot'];
+
+export const CONTRACTS: Record<ContractId, { icon: string }> = {
+  depth: { icon: 'descend' },
+  bank: { icon: 'coin' },
+  keepers: { icon: 'keeper' },
+  dives: { icon: 'gate' },
+  loot: { icon: 'satchel' },
+};
+
+/** Three a day, sized against how deep the player has actually been. */
+export function contractTarget(id: ContractId, deepest: number): number {
+  const depth = Math.max(1, deepest);
+  switch (id) {
+    case 'depth':
+      return Math.max(3, Math.round(depth * 0.85));
+    case 'bank':
+      return Math.max(200, Math.round(BALANCE.loot.coin.base * BALANCE.loot.coin.growth ** depth * 22));
+    case 'keepers':
+      return 2 + Math.floor(depth / 25);
+    case 'dives':
+      return 4 + Math.floor(depth / 18);
+    case 'loot':
+      return 3 + Math.floor(depth / 30);
+  }
+}
+
+export function contractReward(id: ContractId, deepest: number): { coin: number; iron: number } {
+  const depth = Math.max(1, deepest);
+  const coin = Math.round(BALANCE.loot.coin.base * BALANCE.loot.coin.growth ** depth * 14);
+  const iron = Math.round(BALANCE.loot.iron.base * BALANCE.loot.iron.growth ** depth * 12);
+  const weight = id === 'depth' || id === 'keepers' ? 1.4 : 1;
+  return { coin: Math.round(coin * weight), iron: Math.round(iron * weight) };
+}
+
+export type AchievementId =
+  | 'firstclimb'
+  | 'keeper'
+  | 'floor10'
+  | 'floor25'
+  | 'floor50'
+  | 'floor75'
+  | 'fullparty'
+  | 'fabled'
+  | 'coin100k'
+  | 'clean20'
+  | 'daring'
+  | 'prestige'
+  | 'bestiary';
+
+export const ACHIEVEMENTS: { id: AchievementId; icon: string }[] = [
+  { id: 'firstclimb', icon: 'ascend' },
+  { id: 'keeper', icon: 'keeper' },
+  { id: 'floor10', icon: 'descend' },
+  { id: 'floor25', icon: 'descend' },
+  { id: 'floor50', icon: 'descend' },
+  { id: 'floor75', icon: 'descend' },
+  { id: 'fullparty', icon: 'swords' },
+  { id: 'fabled', icon: 'relic' },
+  { id: 'coin100k', icon: 'coin' },
+  { id: 'clean20', icon: 'guard' },
+  { id: 'daring', icon: 'wound' },
+  { id: 'prestige', icon: 'relic' },
+  { id: 'bestiary', icon: 'ledger' },
+];
+
 export const ZONES = [
   { id: 'cellars', tiles: 'cellars', foes: ['rat', 'goblin', 'cutthroat', 'ambusher'], boss: 'boarman', drop: 'iron' },
   {
@@ -304,3 +415,15 @@ export function isBossFloor(floor: number): boolean {
 export function isEliteFloor(floor: number): boolean {
   return floor % 5 === 0 && !isBossFloor(floor);
 }
+
+/** Every foe the shaft can produce, which is the bestiary's denominator. */
+export const ALL_FOES: string[] = [...new Set(ZONES.flatMap((zone) => [...zone.foes, zone.boss]))];
+
+/** Where a foe is first met, so the bestiary can be read in shaft order. */
+export const FOE_ORDER: string[] = ALL_FOES.slice().sort((a, b) => {
+  const depth = (kind: string) => {
+    const index = ZONES.findIndex((zone) => (zone.foes as readonly string[]).includes(kind) || zone.boss === kind);
+    return index < 0 ? ZONES.length : index;
+  };
+  return depth(a) - depth(b) || a.localeCompare(b);
+});

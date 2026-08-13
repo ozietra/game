@@ -512,6 +512,291 @@ h3 {
   gap: 14px;
 }
 
+.boon-line {
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.card-sub {
+  font-size: 17px;
+  color: var(--gold);
+  margin: 16px 0 6px;
+  border-top: 1px solid var(--edge);
+  padding-top: 10px;
+}
+
+/* A short label riding along in a card title, saying how far along it is. */
+.tagline {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.tagline.good {
+  color: var(--moss);
+}
+
+.tagline.bad {
+  color: var(--blood);
+}
+
+/* ------------------------------------------------------------ floor events */
+
+.event-box {
+  border: 1px solid var(--edge-lit);
+  border-left: 3px solid var(--gold);
+  background: var(--panel-raised);
+  padding: 14px 16px 16px;
+  margin: 12px 0;
+}
+
+.event-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.event-icon .icon {
+  width: 34px;
+  height: 34px;
+  fill: var(--gold);
+}
+
+.event-title {
+  font-size: 21px;
+  color: var(--gold);
+}
+
+.event-line {
+  color: var(--muted);
+  margin: 2px 0 0;
+  max-width: 62ch;
+}
+
+.event-clock {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.event-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.event-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.event-choice .button {
+  width: 100%;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------- contracts */
+
+.contract {
+  border-top: 1px solid var(--edge);
+  padding: 10px 0 2px;
+}
+
+.contract.is-done {
+  opacity: 0.55;
+}
+
+.contract-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.contract-icon .icon {
+  width: 22px;
+  height: 22px;
+  fill: var(--gold);
+}
+
+.contract-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.contract-name {
+  color: var(--text);
+}
+
+.contract-line,
+.contract-meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.contract-meta {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.contract-head .button {
+  flex: 0 0 auto;
+}
+
+/* ------------------------------------------------------------ dive records */
+
+.record-grid.tight {
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+}
+
+.dive-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dive-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--edge);
+  padding: 8px 0;
+}
+
+.dive-row:first-child {
+  border-top: none;
+}
+
+.dive-icon .icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--moss);
+}
+
+.dive-row.bad .dive-icon .icon {
+  fill: var(--blood);
+}
+
+.dive-depth {
+  min-width: 120px;
+}
+
+.dive-take {
+  font-family: var(--mono);
+  color: var(--gold);
+  min-width: 110px;
+}
+
+.dive-meta {
+  color: var(--muted);
+  font-size: 14px;
+  min-width: 90px;
+}
+
+.dive-tag {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.dive-tag.bad {
+  color: var(--blood);
+}
+
+/* ------------------------------------------------------ badges and beasts */
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge.is-locked {
+  opacity: 0.42;
+}
+
+.badge-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.badge.is-locked .badge-title {
+  color: var(--muted);
+}
+
+.badge-title .icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.badge-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: auto;
+}
+
+.bestiary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 10px;
+}
+
+.beast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  background: var(--panel-raised);
+  padding: 8px 6px 9px;
+  text-align: center;
+}
+
+.beast-portrait {
+  width: 72px;
+  height: 96px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.beast.is-unseen .beast-portrait {
+  filter: brightness(0) saturate(0);
+  opacity: 0.35;
+}
+
+.beast-name {
+  font-size: 15px;
+}
+
+.beast.is-unseen .beast-name {
+  color: var(--muted);
+}
+
+.beast-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
 .log-card {
   padding: 8px 12px;
 }

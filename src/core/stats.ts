@@ -4,6 +4,7 @@ import {
   HEROES,
   ITEM_KINDS,
   KINDS_BY_SLOT,
+  MILESTONE,
   RARITY_ORDER,
   RELIC_EFFECT,
   SLOTS,
@@ -64,9 +65,11 @@ export function heroStats(state: GameState, hero: Hero): Stats {
   const armoury = 1 + state.buildings.armoury * BUILDING_EFFECT.armoury;
   const deepmark = 1 + state.relics.deepmark * RELIC_EFFECT.deepmark;
   const wounds = Math.max(0.4, 1 - hero.wounds * BALANCE.woundPenalty);
+  // Ten floor marks are knowledge of the shaft, kept through every reset.
+  const marks = state.milestones ?? 0;
 
-  maxHp = maxHp * mastery * armoury * deepmark * wounds;
-  attack = attack * mastery * smithy * deepmark;
+  maxHp = maxHp * mastery * armoury * deepmark * wounds * (1 + marks * MILESTONE.health);
+  attack = attack * mastery * smithy * deepmark * (1 + marks * MILESTONE.attack);
   defence = defence * mastery * armoury * deepmark;
 
   return {
