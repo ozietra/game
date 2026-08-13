@@ -10,7 +10,7 @@ export const BALANCE = {
   campRestSeconds: 6,
   wipePauseSeconds: 5,
   betweenFightHealing: 0.1,
-  woundRecoverySeconds: 45,
+  woundRecoverySeconds: 110,
   restHealPerSecond: 0.09,
   offlineHoursBase: 4,
   offlineHoursPerRelic: 2,
@@ -249,7 +249,7 @@ export const BUILDING_EFFECT = {
   infirmary: 0.03,
   drillyard: 0.06,
   ropewright: 0.035,
-  cartographer: 2,
+  cartographer: 0.06,
 } as const;
 
 export interface RelicDefinition {

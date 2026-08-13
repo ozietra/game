@@ -2,7 +2,9 @@ import { KINDS_BY_SLOT } from '../data/content';
 import { SAVE_VERSION, freshState } from './game';
 import type { GameState, Item } from './types';
 
-const KEY = 'alacakuyu.save.v1';
+const KEY = 'hollowdeep.save.v1';
+/** The game was called Alacakuyu until the rename; those saves still load. */
+const OLD_KEYS = ['alacakuyu.save.v1'];
 
 export function writeSave(state: GameState): void {
   state.lastSeen = Date.now();
@@ -17,6 +19,10 @@ export function readSave(): GameState | null {
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(KEY);
+    for (const old of OLD_KEYS) {
+      if (raw) break;
+      raw = localStorage.getItem(old);
+    }
   } catch {
     return null;
   }
@@ -34,6 +40,7 @@ export function readSave(): GameState | null {
 export function clearSave(): void {
   try {
     localStorage.removeItem(KEY);
+    for (const old of OLD_KEYS) localStorage.removeItem(old);
   } catch {
     // ignored
   }

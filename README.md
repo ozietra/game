@@ -1,7 +1,7 @@
-# Alacakuyu
+# Hollowdeep
 
-An idle dungeon crawler about knowing when to turn back. A party climbs down a
-shaft, fights on its own, and fills a satchel. Nothing in that satchel counts
+An idle RPG about knowing when to turn back. A party climbs down a shaft,
+fights on its own, and fills a satchel. Nothing in that satchel counts
 until they climb back out; a rout leaves all of it on the floor they died on.
 
 Two languages (Turkish and English), no accounts, no server. The whole game runs
@@ -39,17 +39,22 @@ Open the address Vite prints. `npm run build` produces a static `dist/` that can
 be served from any file host, including a subdirectory, since every asset path
 is relative.
 
-The first descent is manual. After that, standing orders take over: pick the
-floor to start from, the floor to stop at, the health level that sends the party
-home early, and a satchel value that does the same. Switching the automatic
-descent off tells them to finish the fight in front of them and climb out. The
-party works while the tab is closed too, up to the offline window that Waking
-Camp relics extend.
+There are two ways to run the shaft. Press Descend and the party keeps going
+down until you press Turn back, whatever the orders say. Leave the automatic
+descent on instead and the standing orders drive: the floor to start from, the
+floor to stop at, the health level that sends them home early, and a satchel
+value that does the same. Either way they keep working while the tab is closed,
+up to the offline window that Waking Camp relics extend.
+
+The floor they start from can be any floor they have climbed out of before.
 
 Gear is picked up mid dive and sorted out on the way home: whoever gains most
-puts it on, the rest waits in the store where it can be handed to somebody else
-or melted down for iron, one piece or all of it. Every piece states plainly what
-it adds, because "Fabled Axe" means nothing next to "+192 attack, -19 speed".
+puts it on, the rest waits in the store, filtered by rarity, where it can be
+handed to somebody else or melted down for iron, one piece or a whole tab at a
+time. Every piece states plainly what it adds, because "Fabled Axe" means
+nothing next to "+192 attack, -19 speed". Better gear also shows: each hero is
+drawn in one of three kits depending on what they carry, and the best of it
+catches the light.
 
 ## How the game is put together
 

@@ -20,8 +20,9 @@ Composited from the Liberated Pixel Cup character libraries via the Universal LP
 - **cape/solid/female/black.png** - bluecarrot16, JaidynReiman - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more>
 - **cape/solid_behind/black.png** - Nila122, JaidynReiman - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more>
 - **feet/boots/female/black.png** - bluecarrot16, Nila122 - OGA-BY 3.0, CC-BY-SA 3.0, GPL 2.0, GPL 3.0 - <https://opengameart.org/content/lpc-clothes-and-hair>
-- **feet/boots_plating/universal/male/steel.png** - JaidynReiman - OGA-BY 3.0+, CC-BY 3.0+, GPL 3.0 - <https://opengameart.org/content/lpc-relm-outfit-pieces-2-kimonos-2-sleeves-2-boots-tabi-socks>
-- **hair/ponytail/female/black.png** - Manuel Riecke (MrBeast) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles>
+- **feet/boots_plating/universal/male/gold.png** - JaidynReiman - OGA-BY 3.0+, CC-BY 3.0+, GPL 3.0 - <https://opengameart.org/content/lpc-relm-outfit-pieces-2-kimonos-2-sleeves-2-boots-tabi-socks>
+- **hair/messy1/female/dark_brown.png** - Manuel Riecke (MrBeast) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles>
+- **hair/plain/male/ash.png** - Manuel Riecke (MrBeast), Joe White - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles>
 - **hat/cloth/hood/adult/charcoal.png** - Johannes Sjölund (wulax), JaidynReiman - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **hat/helmet/close/male/iron.png** - bluecarrot16 - OGA-BY 3.0, CC-BY 3.0, CC-BY 4.0, GPL 2.0, GPL 3.0 - <https://opengameart.org/content/lpc-helmets>
 - **head/heads/boarman/adult/fur_brown.png** - Benjamin K. Smith (BenCreating), Daniel Eddeland (daneeklu) - CC-BY 3.0, GPL 2.0 - <https://opengameart.org/content/lpc-style-farm-animals>
@@ -46,18 +47,20 @@ Composited from the Liberated Pixel Cup character libraries via the Universal LP
 - **quiver/quiver.png** - Johannes Sjölund (wulax) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **shadow/adult/shadow.png** - drjamgo@hotmail.com - CC0 - <https://opengameart.org/content/shadow-for-lpc-sprite>
 - **shield/heater/original/wood/bg/coffee.png** - bluecarrot16, Sander Frenken (castelonia), ElizaWy - OGA-BY 3.0 - <https://opengameart.org/content/lpc-shields>
-- **shield/male/round_silver.png** - Johannes Sjölund (wulax), Michael Whitlock (bigbeargames), DarkwallLKE, Tuomo Untinen (reemax) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
+- **shield/male/round_gold.png** - Johannes Sjölund (wulax), Michael Whitlock (bigbeargames), DarkwallLKE, Tuomo Untinen (reemax) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **shoulders/plate/male/bronze.png** - bluecarrot16, Johannes Sjölund (wulax) - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **torso/armour/plate/male/gold.png** - recolor by bigbeargames -  - <run/jump/sit/climb/revised combat by JaidynReiman>
 - **torso/chainmail/male/gray.png** - Johannes Sjölund (wulax) - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
-- **torso/clothes/longsleeve/longsleeve/female/charcoal.png** - bluecarrot16, ElizaWy, Stephen Challener (Redshrike) - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles>
+- **torso/clothes/longsleeve/longsleeve/female/black.png** - bluecarrot16, ElizaWy, Stephen Challener (Redshrike) - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles>
 - **torso/clothes/longsleeve/longsleeve/male/black.png** - JaidynReiman, Johannes Sjölund (wulax) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **torso/clothes/robe/female/blue.png** - Luke Mehl - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/female-mage-clothing-set>
 - **weapon/blunt/mace/mace.png** - Johannes Sjölund (wulax), bluecarrot16 - OGA-BY 3.0, CC-BY-SA 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 - **weapon/blunt/waraxe/behind/waraxe.png** - Benjamin K. Smith (BenCreating), bluecarrot16, Sander Frenken (castelonia) - CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-weapons>
-- **weapon/magic/diamond/universal/background/silver.png** - bluecarrot16 - OGA-BY 3.0+, GPL 3.0, CC-BY 4.0 - <https://opengameart.org/content/lpc-more-weapons>
+- **weapon/magic/diamond/universal/background/gold.png** - bluecarrot16 - OGA-BY 3.0+, GPL 3.0, CC-BY 4.0 - <https://opengameart.org/content/lpc-more-weapons>
+- **weapon/magic/simple/background/simple.png** - bluecarrot16, Dr. Jamgo - CC0 - <https://opengameart.org/content/lpc-simple-staff>
 - **weapon/polearm/spear/background/dark.png** - walk animations redone by pvigier -  - <Pierre Vigier (pvigier)>
 - **weapon/ranged/bow/normal/universal/background/dark.png** - walk animations by pvigier -  - <Johannes Sjölund (wulax)>
+- **weapon/ranged/bow/recurve/universal/background/gold.png** - Daniel Eddeland (daneeklu), gr3yh47, Johannes Sjölund (wulax), Pierre Vigier (pvigier) - CC-BY-SA 3.0 - <https://opengameart.org/content/lpc-weapons-two-bows-a-spear-and-a-trident>
 - **weapon/sword/arming/universal/bg/iron.png** - ElizaWy; walk and down by JaidynReiman - OGA-BY 3.0 - <https://github.com/ElizaWy/LPC/tree/main/Characters/Props/Sword%2001%20-%20Arming%20Sword>
 - **weapon/sword/dagger/behind/dagger.png** - bluecarrot16, Johannes Sjölund (wulax), Matthew Krohn (makrohn) - OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 - <https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>
 

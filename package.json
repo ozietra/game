@@ -1,7 +1,7 @@
 {
-  "name": "alacakuyu",
+  "name": "hollowdeep",
   "version": "1.0.0",
-  "description": "An idle dungeon crawler where loot only counts once your party climbs back out.",
+  "description": "An idle RPG where loot only counts once your party climbs back out.",
   "type": "module",
   "license": "MIT",
   "scripts": {

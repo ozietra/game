@@ -17,7 +17,8 @@
   ],
   "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -39,6 +40,27 @@
   "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
   "usedBy": [
    "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "arms/armour/plate/male/silver.png",
+  "authors": [
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors by bigbeargames; adapted to v3 bases and further recolors by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -724,7 +746,29 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:cutpurse"
+  ]
+ },
+ {
+  "source": "cape/solid/female/forest.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
   ]
  },
  {
@@ -749,6 +793,27 @@
   ]
  },
  {
+  "source": "cape/solid/female/lavender.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
   "source": "cape/solid/female/maroon.png",
   "authors": [
    "bluecarrot16",
@@ -766,7 +831,29 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:vampire"
+   "enemy:vampire",
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "cape/solid/female/white.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -786,7 +873,28 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:cutpurse"
+  ]
+ },
+ {
+  "source": "cape/solid_behind/forest.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:ranger"
   ]
  },
  {
@@ -810,6 +918,26 @@
   ]
  },
  {
+  "source": "cape/solid_behind/lavender.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
   "source": "cape/solid_behind/maroon.png",
   "authors": [
    "Nila122",
@@ -826,7 +954,28 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:vampire"
+   "enemy:vampire",
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "cape/solid_behind/white.png",
+  "authors": [
+   "Nila122",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+   "https://opengameart.org/content/lpc-roman-armor"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -1441,7 +1590,9 @@
   ],
   "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
   "usedBy": [
-   "hero:cutpurse"
+   "hero:cutpurse",
+   "hero:ranger",
+   "hero:magus"
   ]
  },
  {
@@ -1461,7 +1612,8 @@
   ],
   "notes": "original by Nila122, edited for v3 bases by bluecarrot16",
   "usedBy": [
-   "hero:ranger"
+   "hero:ranger",
+   "hero:magus"
   ]
  },
  {
@@ -1523,7 +1675,8 @@
   "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16",
   "usedBy": [
    "hero:preacher",
-   "enemy:ambusher"
+   "enemy:ambusher",
+   "hero:warden"
   ]
  },
  {
@@ -1542,6 +1695,25 @@
    "https://opengameart.org/content/lpc-clothes-and-hair"
   ],
   "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:warden",
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "feet/boots_plating/universal/male/gold.png",
+  "authors": [
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "CC-BY 3.0+",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-relm-outfit-pieces-2-kimonos-2-sleeves-2-boots-tabi-socks"
+  ],
+  "notes": "",
   "usedBy": [
    "hero:warden"
   ]
@@ -2208,6 +2380,61 @@
   ]
  },
  {
+  "source": "hair/messy1/female/dark_brown.png",
+  "authors": [
+   "Manuel Riecke (MrBeast)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "hair/plain/male/ash.png",
+  "authors": [
+   "Manuel Riecke (MrBeast)",
+   "Joe White"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/ponytail-and-plain-hairstyles"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
+  "source": "hair/plain/male/dark_brown.png",
+  "authors": [
+   "Manuel Riecke (MrBeast)",
+   "Joe White"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/ponytail-and-plain-hairstyles"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
   "source": "hair/ponytail/female/black.png",
   "authors": [
    "Manuel Riecke (MrBeast)"
@@ -2378,7 +2605,28 @@
   ],
   "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
   "usedBy": [
-   "enemy:hag"
+   "enemy:hag",
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "hat/cloth/hood/adultpurple.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "JaidynReiman"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+  "usedBy": [
+   "hero:magus"
   ]
  },
  {
@@ -2403,6 +2651,27 @@
   ]
  },
  {
+  "source": "hat/helmet/close/male/silver.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY 3.0",
+   "CC-BY 4.0",
+   "GPL 2.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-helmets",
+   "https://opengameart.org/content/expanded-ulpc-head-accessories-facial-assets-hats-helmets"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
   "source": "hat/helmet/greathelm/male/gold.png",
   "authors": [
    "bluecarrot16"
@@ -2420,7 +2689,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3328,7 +3598,8 @@
   ],
   "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3350,6 +3621,27 @@
   "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
   "usedBy": [
    "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "legs/armour/plate/male/silver.png",
+  "authors": [
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Matthew Krohn (makrohn)",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "reduced to 7 colors an adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -3375,6 +3667,52 @@
  },
  {
   "source": "legs/leggings/thin/black.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "Mandi Paugh",
+   "Stephen Challener (Redshrike)",
+   "William.Thompsonj",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "http://opengameart.org/content/sara-wizard",
+   "https://opengameart.org/content/lpc-sara",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "adapted from sara's leggings to v3 bases by bluecarrot16, jump/run/sit by JaidynReiman based on ElizaWy's and modified to match",
+  "usedBy": [
+   "hero:cutpurse"
+  ]
+ },
+ {
+  "source": "legs/leggings/thin/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "JaidynReiman",
+   "Mandi Paugh",
+   "Stephen Challener (Redshrike)",
+   "William.Thompsonj",
+   "ElizaWy"
+  ],
+  "licenses": [
+   "OGA-BY 3.0"
+  ],
+  "urls": [
+   "http://opengameart.org/content/sara-wizard",
+   "https://opengameart.org/content/lpc-sara",
+   "https://opengameart.org/content/lpc-expanded-pants"
+  ],
+  "notes": "adapted from sara's leggings to v3 bases by bluecarrot16, jump/run/sit by JaidynReiman based on ElizaWy's and modified to match",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "legs/leggings/thin/charcoal.png",
   "authors": [
    "bluecarrot16",
    "JaidynReiman",
@@ -3469,7 +3807,8 @@
    "enemy:orc",
    "enemy:boarman",
    "enemy:wolfman",
-   "enemy:troll"
+   "enemy:troll",
+   "hero:warden"
   ]
  },
  {
@@ -3639,7 +3978,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3675,7 +4015,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3694,6 +4035,44 @@
   "notes": "",
   "usedBy": [
    "hero:warden"
+  ]
+ },
+ {
+  "source": "shield/male/round_brown.png",
+  "authors": [
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:warden"
+  ]
+ },
+ {
+  "source": "shield/male/round_gold.png",
+  "authors": [
+   "Johannes Sjölund (wulax)",
+   "Michael Whitlock (bigbeargames)",
+   "DarkwallLKE",
+   "Tuomo Untinen (reemax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-shields-pack"
+  ],
+  "notes": "?",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -3754,7 +4133,8 @@
   ],
   "notes": "recolors, adapted to v3 bases by bluecarrot16",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3775,6 +4155,26 @@
   "notes": "recolors, adapted to v3 bases by bluecarrot16",
   "usedBy": [
    "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "shoulders/plate/male/silver.png",
+  "authors": [
+   "bluecarrot16",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "recolors, adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -3817,7 +4217,8 @@
   ],
   "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
   "usedBy": [
-   "enemy:bone_knight"
+   "enemy:bone_knight",
+   "hero:warden"
   ]
  },
  {
@@ -3841,6 +4242,29 @@
   "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
   "usedBy": [
    "enemy:gravewarden"
+  ]
+ },
+ {
+  "source": "torso/armour/plate/male/silver.png",
+  "authors": [
+   "recolor by bigbeargames"
+  ],
+  "licenses": [],
+  "urls": [
+   "run/jump/sit/climb/revised combat by JaidynReiman",
+   "JaidynReiman",
+   "bluecarrot16",
+   "Michael Whitlock (bigbeargames)",
+   "Johannes Sjölund (wulax)",
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0",
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "https://opengameart.org/content/lpc-combat-armor-for-women"
+  ],
+  "notes": "original by wulax; color reduced to 7 colors and adapted to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
   ]
  },
  {
@@ -3882,6 +4306,28 @@
   "notes": "minor edits by bluecarrot16",
   "usedBy": [
    "hero:preacher"
+  ]
+ },
+ {
+  "source": "torso/clothes/longsleeve/longsleeve/female/black.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:cutpurse"
   ]
  },
  {
@@ -3963,7 +4409,8 @@
   ],
   "notes": "original by wulax, recolors and cleanup by JaidynReiman, further recolors by bluecarrot16",
   "usedBy": [
-   "enemy:revenant"
+   "enemy:revenant",
+   "hero:warden"
   ]
  },
  {
@@ -4005,7 +4452,43 @@
   ]
  },
  {
+  "source": "torso/clothes/longsleeve/longsleeve/male/white.png",
+  "authors": [
+   "JaidynReiman",
+   "Johannes Sjölund (wulax)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by wulax, recolors and cleanup by JaidynReiman, further recolors by bluecarrot16",
+  "usedBy": [
+   "hero:preacher"
+  ]
+ },
+ {
   "source": "torso/clothes/robe/female/blue.png",
+  "authors": [
+   "Luke Mehl"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/female-mage-clothing-set"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "torso/clothes/robe/female/brown.png",
   "authors": [
    "Luke Mehl"
   ],
@@ -4052,7 +4535,54 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:warlock"
+   "enemy:warlock",
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "torso/clothes/shortsleeve/shortsleeve/female/brown.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-revised-character-basics",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy walkcycle only; extended to all animations by adapting from longsleeve, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "torso/clothes/shortsleeve/shortsleeve/female/charcoal.png",
+  "authors": [
+   "bluecarrot16",
+   "ElizaWy",
+   "Stephen Challener (Redshrike)"
+  ],
+  "licenses": [
+   "OGA-BY 3.0",
+   "CC-BY-SA 3.0",
+   "GPL 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+   "https://opengameart.org/content/lpc-7-womens-shirts",
+   "http://opengameart.org/content/lpc-revised-character-basics",
+   "http://opengameart.org/content/lpc-clothing-updates"
+  ],
+  "notes": "original by ElizaWy walkcycle only; extended to all animations by adapting from longsleeve, edited to v3 bases by bluecarrot16",
+  "usedBy": [
+   "hero:cutpurse"
   ]
  },
  {
@@ -4158,7 +4688,43 @@
   ]
  },
  {
+  "source": "weapon/magic/diamond/universal/background/gold.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
   "source": "weapon/magic/diamond/universal/background/silver.png",
+  "authors": [
+   "bluecarrot16"
+  ],
+  "licenses": [
+   "OGA-BY 3.0+",
+   "GPL 3.0",
+   "CC-BY 4.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-more-weapons"
+  ],
+  "notes": "",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "weapon/magic/diamond/universal/foreground/gold.png",
   "authors": [
    "bluecarrot16"
   ],
@@ -4263,6 +4829,40 @@
   "notes": "",
   "usedBy": [
    "enemy:warlock"
+  ]
+ },
+ {
+  "source": "weapon/magic/simple/background/simple.png",
+  "authors": [
+   "bluecarrot16",
+   "Dr. Jamgo"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-simple-staff"
+  ],
+  "notes": "original by DrJamgo, hands switched and split into to layers by bluecarrot16",
+  "usedBy": [
+   "hero:magus"
+  ]
+ },
+ {
+  "source": "weapon/magic/simple/foreground/simple.png",
+  "authors": [
+   "bluecarrot16",
+   "Dr. Jamgo"
+  ],
+  "licenses": [
+   "CC0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-simple-staff"
+  ],
+  "notes": "original by DrJamgo, hands switched and split into to layers by bluecarrot16",
+  "usedBy": [
+   "hero:magus"
   ]
  },
  {
@@ -4401,7 +5001,8 @@
   ],
   "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16. pvigier has agreed to license this sheet as OGA-BY 3.0+.",
   "usedBy": [
-   "enemy:ambusher"
+   "enemy:ambusher",
+   "hero:ranger"
   ]
  },
  {
@@ -4442,7 +5043,48 @@
   ],
   "notes": "original by wulax; split into layers and tweaked for v3 character bases by bluecarrot16. pvigier has agreed to license this sheet as OGA-BY 3.0+.",
   "usedBy": [
-   "enemy:ambusher"
+   "enemy:ambusher",
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/ranged/bow/recurve/universal/background/gold.png",
+  "authors": [
+   "Daniel Eddeland (daneeklu)",
+   "gr3yh47",
+   "Johannes Sjölund (wulax)",
+   "Pierre Vigier (pvigier)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-weapons-two-bows-a-spear-and-a-trident",
+   "https://opengameart.org/content/lpc-walk-animations-for-bows"
+  ],
+  "notes": "modified by daneeklu, from ",
+  "usedBy": [
+   "hero:ranger"
+  ]
+ },
+ {
+  "source": "weapon/ranged/bow/recurve/universal/foreground/gold.png",
+  "authors": [
+   "Daniel Eddeland (daneeklu)",
+   "gr3yh47",
+   "Johannes Sjölund (wulax)",
+   "Pierre Vigier (pvigier)"
+  ],
+  "licenses": [
+   "CC-BY-SA 3.0"
+  ],
+  "urls": [
+   "https://opengameart.org/content/lpc-weapons-two-bows-a-spear-and-a-trident",
+   "https://opengameart.org/content/lpc-walk-animations-for-bows"
+  ],
+  "notes": "modified by daneeklu, from ",
+  "usedBy": [
+   "hero:ranger"
   ]
  },
  {
@@ -4459,7 +5101,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:skeleton"
+   "enemy:skeleton",
+   "hero:warden"
   ]
  },
  {
@@ -4476,7 +5119,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:skeleton"
+   "enemy:skeleton",
+   "hero:warden"
   ]
  },
  {
@@ -4581,7 +5225,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:vampire"
+   "enemy:vampire",
+   "hero:cutpurse"
   ]
  },
  {
@@ -4600,7 +5245,8 @@
   ],
   "notes": "",
   "usedBy": [
-   "enemy:vampire"
+   "enemy:vampire",
+   "hero:cutpurse"
   ]
  }
 ]

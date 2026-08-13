@@ -4,6 +4,7 @@ import type { Game } from '../core/game';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, setLanguage, t, type Language, type StringKey } from '../i18n';
 import { sound } from './audio';
+import { heroLook } from '../core/stats';
 import { icon, portraitStyle } from './assets';
 import { clear, el, on } from './dom';
 
@@ -46,11 +47,12 @@ export class Menu {
         el('div', { class: 'menu-plate' }, [
           el('h1', { class: 'menu-title', text: t('app.title') }),
           el('p', { class: 'menu-line', text: t('app.subtitle') }),
+          el('p', { class: 'menu-genre', text: t('app.genre') }),
           el('div', { class: 'menu-party' }, HERO_ORDER.map((id) => {
             const hero = this.game.state.heroes[id];
             return el('span', {
               class: `menu-portrait${hero.unlocked ? '' : ' dim'}`,
-              style: portraitStyle(id),
+              style: portraitStyle(heroLook(hero).sprite),
               title: t(`hero.${id}.name` as StringKey),
             });
           })),

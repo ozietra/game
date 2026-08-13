@@ -1,6 +1,7 @@
 export const tr = {
-  'app.title': 'ALACAKUYU',
+  'app.title': 'HOLLOWDEEP',
   'app.subtitle': 'Dönüşü olmayan iniş',
+  'app.genre': 'Idle RPG',
 
   'tab.shaft': 'Kuyu',
   'tab.roster': 'Kadro',
@@ -145,6 +146,12 @@ export const tr = {
   'menu.first': 'Kuyunun ağzında kimse seni beklemiyor.',
   'menu.open': 'Menü',
 
+  'policy.upTo': 'en fazla',
+  'roster.filterAll': 'Hepsi',
+  'action.scrapShown': 'Görünenleri hurdaya ayır',
+  'camp.woundNote': 'Yaralar kampta kendiliğinden de geçer; şifahane hem bunu hızlandırır hem de bedelle anında sarar.',
+  'shaft.manual': 'Elle iniş: emirler işlemez, dönüş kararı sende.',
+
   'policy.title': 'İniş emri',
   'policy.start': 'Başlangıç katı',
   'policy.target': 'Hedef kat',
@@ -180,7 +187,7 @@ export const tr = {
   'building.infirmary.line': 'Kampta iyileşme kademe başına {value} hızlanır.',
   'building.drillyard.line': 'Kazanılan deneyim kademe başına {value} artar.',
   'building.ropewright.line': 'Tırmanış kademe başına {value} hızlanır.',
-  'building.cartographer.line': 'İnişe kademe başına {value} kat aşağıdan başlanır.',
+  'building.cartographer.line': 'Katlar arası iniş kademe başına {value} hızlanır.',
 
   'relics.title': 'Kalıntılar',
   'relics.note': 'Kuyuya bıraktığın her şey kalıntıya dönüşür. Kalıntılar hiç kaybolmaz.',

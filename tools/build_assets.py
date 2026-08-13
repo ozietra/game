@@ -113,71 +113,80 @@ def build_sprites() -> dict:
     manifest = {}
     missing = []
 
-    for kind, roster in (("hero", HEROES), ("enemy", ENEMIES)):
-        for name, definition in roster.items():
-            body = definition["body"]
-            facing = definition["facing"]
+    # Heroes are built once per gear tier; foes have a single look.
+    jobs = []
+    for owner, definition in HEROES.items():
+        for tier, parts in enumerate(definition["tiers"]):
+            jobs.append(("hero", owner if tier == 0 else f"{owner}_t{tier}", definition, parts, owner, tier))
+    for owner, definition in ENEMIES.items():
+        jobs.append(("enemy", owner, definition, definition["parts"], owner, 0))
 
-            stack = []
-            # Every fighter stands on the LPC drop shadow so they sit on the floor
-            # rather than float over it.
-            for part_id in ["shadow-Shadow_shadow", *definition["parts"]]:
-                entry = catalogue.get(part_id)
-                if entry is None:
-                    missing.append(f"{name}: {part_id}")
-                    continue
-                for layer in lpc.layers(entry, body):
-                    stack.append((layer["z"], layer["order"], part_id, layer))
-            stack.sort(key=lambda item: (item[0], item[1]))
+    for kind, name, definition, parts, owner, tier in jobs:
+        body = definition["body"]
+        facing = definition["facing"]
 
-            full = Image.new("RGBA", (lpc.SHEET_COLUMNS * lpc.FRAME, 21 * lpc.FRAME))
-            for _z, _order, part_id, layer in stack:
-                path = layer["path"]
-                try:
-                    sheet = Image.open(lpc.sprite_file(path)).convert("RGBA")
-                except Exception as error:  # noqa: BLE001 - report and carry on
-                    missing.append(f"{name}: {path} ({error})")
-                    continue
-                # Animation-specific sheets use their own geometry; the classic
-                # 21-row universal sheets are the ones that line up here.
-                if sheet.width != lpc.SHEET_COLUMNS * lpc.FRAME or sheet.height < 21 * lpc.FRAME:
-                    continue
-                full.alpha_composite(sheet.crop((0, 0, full.width, full.height)))
-                record(path, layer["authors"], layer["licenses"], layer["urls"], f"{kind}:{name}", layer["notes"])
+        stack = []
+        # Every fighter stands on the LPC drop shadow so they sit on the floor
+        # rather than float over it.
+        for part_id in ["shadow-Shadow_shadow", *parts]:
+            entry = catalogue.get(part_id)
+            if entry is None:
+                missing.append(f"{name}: {part_id}")
+                continue
+            for layer in lpc.layers(entry, body):
+                stack.append((layer["z"], layer["order"], part_id, layer))
+        stack.sort(key=lambda item: (item[0], item[1]))
 
-            animations = {"idle": "walk", "walk": "walk", "attack": definition["attack"], "collapse": "collapse"}
-            animations.update(definition.get("extra_anims", {}))
+        full = Image.new("RGBA", (lpc.SHEET_COLUMNS * lpc.FRAME, 21 * lpc.FRAME))
+        for _z, _order, part_id, layer in stack:
+            path = layer["path"]
+            try:
+                sheet = Image.open(lpc.sprite_file(path)).convert("RGBA")
+            except Exception as error:  # noqa: BLE001 - report and carry on
+                missing.append(f"{name}: {path} ({error})")
+                continue
+            # Animation-specific sheets use their own geometry; the classic
+            # 21-row universal sheets are the ones that line up here.
+            if sheet.width != lpc.SHEET_COLUMNS * lpc.FRAME or sheet.height < 21 * lpc.FRAME:
+                continue
+            full.alpha_composite(sheet.crop((0, 0, full.width, full.height)))
+            record(path, layer["authors"], layer["licenses"], layer["urls"], f"{kind}:{owner}", layer["notes"])
 
-            rows = []
-            meta = {}
-            for label, source_animation in animations.items():
-                if label == "idle":
-                    continue
-                row = lpc.ANIMATION_ROWS[source_animation][facing]
-                meta[label] = {
-                    "row": len(rows),
-                    "frames": lpc.ANIMATION_FRAMES[source_animation],
-                }
-                rows.append(row)
+        animations = {"idle": "walk", "walk": "walk", "attack": definition["attack"], "collapse": "collapse"}
+        animations.update(definition.get("extra_anims", {}))
 
-            sheet_out = Image.new("RGBA", (lpc.SHEET_COLUMNS * lpc.FRAME, len(rows) * lpc.FRAME))
-            for index, row in enumerate(rows):
-                strip = full.crop((0, row * lpc.FRAME, full.width, row * lpc.FRAME + lpc.FRAME))
-                sheet_out.paste(strip, (0, index * lpc.FRAME))
-
-            file_name = f"{name}.png"
-            sheet_out.save(os.path.join(out_dir, file_name))
-            manifest[name] = {
-                "kind": kind,
-                "file": f"assets/sprites/{file_name}",
-                "frame": lpc.FRAME,
-                "facing": facing,
-                # The renderer needs to know whether a swing, a shot or a cast is
-                # coming so it can throw the matching effect.
-                "attackKind": definition["attack"],
-                "animations": meta,
+        rows = []
+        meta = {}
+        for label, source_animation in animations.items():
+            if label == "idle":
+                continue
+            row = lpc.ANIMATION_ROWS[source_animation][facing]
+            meta[label] = {
+                "row": len(rows),
+                "frames": lpc.ANIMATION_FRAMES[source_animation],
             }
-            print(f"  sprite {name:<12} layers={len(stack):<3} rows={len(rows)}")
+            rows.append(row)
+
+        sheet_out = Image.new("RGBA", (lpc.SHEET_COLUMNS * lpc.FRAME, len(rows) * lpc.FRAME))
+        for index, row in enumerate(rows):
+            strip = full.crop((0, row * lpc.FRAME, full.width, row * lpc.FRAME + lpc.FRAME))
+            sheet_out.paste(strip, (0, index * lpc.FRAME))
+
+        file_name = f"{name}.png"
+        sheet_out.save(os.path.join(out_dir, file_name))
+        manifest[name] = {
+            "kind": kind,
+            "owner": owner,
+            "tier": tier,
+            "file": f"assets/sprites/{file_name}",
+            "frame": lpc.FRAME,
+            "facing": facing,
+            # The renderer needs to know whether a swing, a shot or a cast is
+            # coming so it can throw the matching effect.
+            "attackKind": definition["attack"],
+            "animations": meta,
+        }
+        print(f"  sprite {name:<12} layers={len(stack):<3} rows={len(rows)}")
 
     if missing:
         print("\n  unresolved parts:")

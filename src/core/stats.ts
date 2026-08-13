@@ -4,6 +4,7 @@ import {
   HEROES,
   ITEM_KINDS,
   KINDS_BY_SLOT,
+  RARITY_ORDER,
   RELIC_EFFECT,
   SLOTS,
   type ItemKindId,
@@ -12,6 +13,17 @@ import {
 import type { GameState, Hero, Item, Stats } from './types';
 
 /** What a single item adds, already multiplied by its power. */
+/** The sheet a hero is drawn from, and whether their kit is worth a glint. */
+export function heroLook(hero: Hero): { sprite: string; gleam: boolean } {
+  let best = -1;
+  for (const slot of SLOTS) {
+    const item = hero.gear[slot];
+    if (item) best = Math.max(best, RARITY_ORDER.indexOf(item.rarity));
+  }
+  const tier = best >= 3 ? 2 : best >= 2 ? 1 : 0;
+  return { sprite: tier === 0 ? hero.id : `${hero.id}_t${tier}`, gleam: best >= 4 };
+}
+
 export function itemGain(item: Item): StatGain {
   const kind = ITEM_KINDS[item.kind as ItemKindId] ?? ITEM_KINDS[KINDS_BY_SLOT[item.slot][0]];
   const gain: StatGain = {};
@@ -113,12 +125,14 @@ export function healParty(state: GameState, fraction: number): void {
   }
 }
 
+/**
+ * Any floor the party has climbed back out of can be reached again, and relics
+ * are knowledge they keep for good, so the shaft stays open that far down even
+ * after everything else is left behind.
+ */
 export function maxStartFloor(state: GameState): number {
-  // Relics are knowledge the party keeps for good, so the shaft is always open
-  // that far down. Maps drawn this run only reach as deep as this run has been.
   const fromRelic = state.relics.guidestone * RELIC_EFFECT.guidestone;
-  const fromMap = Math.min(state.buildings.cartographer * BUILDING_EFFECT.cartographer, Math.max(0, state.deepestBanked - 1));
-  return Math.max(1, fromRelic + fromMap);
+  return Math.max(1, state.deepestBanked, fromRelic);
 }
 
 export function offlineCapSeconds(state: GameState): number {

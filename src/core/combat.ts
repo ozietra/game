@@ -12,7 +12,7 @@ import {
   zoneForFloor,
 } from '../data/content';
 import { Rng } from './rng';
-import { heroStats } from './stats';
+import { heroLook, heroStats } from './stats';
 import type { Combatant, GameState, Hero, Stats } from './types';
 
 export interface CombatEvent {
@@ -24,10 +24,13 @@ export interface CombatEvent {
 
 export function heroCombatant(state: GameState, hero: Hero): Combatant {
   const stats = heroStats(state, hero);
+  const look = heroLook(hero);
   return {
     key: `hero:${hero.id}`,
     side: 'party',
     sprite: hero.id,
+    look: look.sprite,
+    gleam: look.gleam,
     nameKey: `hero.${hero.id}.name`,
     hero: hero.id,
     stats,

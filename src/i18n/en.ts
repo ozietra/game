@@ -1,8 +1,9 @@
 import type { StringKey } from './tr';
 
 export const en: Record<StringKey, string> = {
-  'app.title': 'ALACAKUYU',
+  'app.title': 'HOLLOWDEEP',
   'app.subtitle': 'The descent with no return',
+  'app.genre': 'Idle RPG',
 
   'tab.shaft': 'Shaft',
   'tab.roster': 'Party',
@@ -147,6 +148,12 @@ export const en: Record<StringKey, string> = {
   'menu.first': 'Nobody is waiting for you at the mouth of the shaft.',
   'menu.open': 'Menu',
 
+  'policy.upTo': 'up to',
+  'roster.filterAll': 'All',
+  'action.scrapShown': 'Melt down what is shown',
+  'camp.woundNote': 'Wounds also close on their own in camp; the infirmary both speeds that up and dresses them at once for a price.',
+  'shaft.manual': 'Manual descent: the orders are off, turning back is your call.',
+
   'policy.title': 'Standing orders',
   'policy.start': 'Starting floor',
   'policy.target': 'Target floor',
@@ -182,7 +189,7 @@ export const en: Record<StringKey, string> = {
   'building.infirmary.line': 'Camp healing is {value} faster per tier.',
   'building.drillyard.line': 'Experience gained rises {value} per tier.',
   'building.ropewright.line': 'The climb is {value} faster per tier.',
-  'building.cartographer.line': 'Each descent starts {value} floors lower per tier.',
+  'building.cartographer.line': 'The walk between floors is {value} faster per tier.',
 
   'relics.title': 'Relics',
   'relics.note': 'Everything you leave to the shaft comes back as relics. Relics are never lost.',

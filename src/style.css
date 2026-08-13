@@ -164,6 +164,16 @@ h3 {
   font-size: 16px;
 }
 
+.menu-genre {
+  margin: 6px 0 0;
+  text-align: center;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
 .menu-party {
   display: flex;
   justify-content: center;
@@ -803,6 +813,40 @@ input[type='checkbox'] {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--edge);
+}
+
+.chip-button {
+  background: #100d0a;
+  border: 1px solid var(--edge-lit);
+  border-bottom: 2px solid var(--rarity, var(--edge-lit));
+  color: var(--muted);
+  padding: 4px 10px;
+  font-size: 13px;
+  font-family: var(--mono);
+  cursor: pointer;
+}
+
+.chip-button:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.chip-button.is-active {
+  background: var(--panel-raised);
+  color: #f0e4cc;
+}
+
+.chip-button:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 /* ----------------------------------------------------------------- records */

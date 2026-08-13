@@ -46,6 +46,9 @@ export interface Combatant {
   nameKey: string;
   hero?: HeroId;
   rank?: 'common' | 'elite' | 'boss';
+  /** Sheet to draw, when better gear has changed how a hero looks. */
+  look?: string;
+  gleam?: boolean;
   stats: Stats;
   hp: number;
   timer: number;
@@ -68,6 +71,8 @@ export type RunPhase = 'camp' | 'descending' | 'fighting' | 'looting' | 'climbin
 
 export interface RunState {
   phase: RunPhase;
+  /** A descent the player started by hand ignores the standing orders. */
+  manual: boolean;
   floor: number;
   deepestThisRun: number;
   encounter: number;

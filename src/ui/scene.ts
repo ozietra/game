@@ -1,5 +1,5 @@
 import { zoneForFloor } from '../data/content';
-import { heroStats, partyOf } from '../core/stats';
+import { heroLook, heroStats, partyOf } from '../core/stats';
 import type { Combatant, GameState } from '../core/types';
 import { effectImage, spriteImage, spriteMeta, zoneTiles } from './assets';
 
@@ -174,10 +174,13 @@ export class Scene {
   private campParty(state: GameState): Combatant[] {
     return partyOf(state).map((hero) => {
       const stats = heroStats(state, hero);
+      const look = heroLook(hero);
       return {
         key: `camp:${hero.id}`,
         side: 'party' as const,
         sprite: hero.id,
+        look: look.sprite,
+        gleam: look.gleam,
         nameKey: `hero.${hero.id}.name`,
         hero: hero.id,
         stats,
@@ -331,8 +334,9 @@ export class Scene {
     const count = Math.max(1, fighters.length);
     for (let index = 0; index < fighters.length; index += 1) {
       const fighter = fighters[index];
-      const meta = spriteMeta(fighter.sprite);
-      const image = spriteImage(fighter.sprite);
+      const sprite = fighter.look ?? fighter.sprite;
+      const meta = spriteMeta(sprite) ?? spriteMeta(fighter.sprite);
+      const image = spriteImage(sprite) ?? spriteImage(fighter.sprite);
       if (!meta || !image || !image.complete) continue;
 
       const depth = index / Math.max(1, count - 1 || 1);
@@ -346,7 +350,7 @@ export class Scene {
       const wanted = this.clipFor(fighter, phase);
       const state = this.advance(fighter.key, wanted, meta, dt);
       const clip = meta.animations[state.clip] ?? meta.animations.walk;
-      const frame = Math.min(state.frame, clip.frames - 1);
+      const frame = state.clip === 'idle' ? 0 : Math.min(state.frame, clip.frames - 1);
 
       // Standing still is not standing frozen: a slow breath keeps them alive.
       const breathing = fighter.alive && state.clip === 'idle';
@@ -354,6 +358,9 @@ export class Scene {
 
       const drawX = Math.round(x - SPRITE / 2);
       const drawY = Math.round(y - SPRITE + FOOT_INSET) + bob;
+
+      // The very best gear catches what little light there is down here.
+      if (fighter.gleam && fighter.alive) this.drawGleam(image, frame, clip.row, drawX, drawY);
 
       this.ctx.save();
       if (!fighter.alive) this.ctx.globalAlpha = 0.55;
@@ -382,15 +389,17 @@ export class Scene {
       this.anim.set(key, state);
     }
 
-    const resolved = meta.animations[wanted.clip] ? wanted.clip : 'walk';
+    // 'idle' has no row of its own: it is the first frame of the walk cycle,
+    // which in LPC sheets is a fighter standing with the weapon ready.
+    const resolved = wanted.clip === 'idle' || !meta.animations[wanted.clip] ? wanted.clip : wanted.clip;
     if (state.clip !== resolved) {
       state.clip = resolved;
-      state.frame = resolved === 'idle' ? 0 : 0;
+      state.frame = 0;
       state.clock = 0;
       state.once = wanted.once;
     }
 
-    const clip = meta.animations[resolved === 'idle' ? 'walk' : resolved];
+    const clip = meta.animations[resolved] ?? meta.animations.walk;
     const frames = clip?.frames ?? 1;
     const rate = resolved === 'attack' ? 13 : resolved === 'collapse' ? 7 : 9;
 
@@ -406,6 +415,33 @@ export class Scene {
       state.frame = (state.frame + 1) % frames;
     }
     return state;
+  }
+
+  private drawGleam(image: CanvasImageSource, frame: number, row: number, x: number, y: number): void {
+    const tint = this.tintCanvas.getContext('2d');
+    if (!tint) return;
+
+    tint.clearRect(0, 0, SPRITE, SPRITE);
+    tint.drawImage(image, frame * SPRITE, row * SPRITE, SPRITE, SPRITE, 0, 0, SPRITE, SPRITE);
+    // The drop shadow lives in the bottom band of the frame and must stay dark.
+    tint.clearRect(0, SPRITE - 12, SPRITE, 12);
+    tint.globalCompositeOperation = 'source-atop';
+    tint.fillStyle = '#f6d27a';
+    tint.fillRect(0, 0, SPRITE, SPRITE);
+    tint.globalCompositeOperation = 'source-over';
+
+    const pulse = 0.16 + Math.sin(this.clock * 2.4) * 0.06;
+    this.ctx.save();
+    this.ctx.globalAlpha = pulse;
+    for (const [dx, dy] of [
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1],
+    ]) {
+      this.ctx.drawImage(this.tintCanvas, x + dx, y + dy);
+    }
+    this.ctx.restore();
   }
 
   /** Paints the struck frame in flat colour for a couple of frames. */

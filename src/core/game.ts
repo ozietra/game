@@ -93,6 +93,7 @@ export function freshState(): GameState {
     policy: { autoDive: true, startFloor: 1, targetFloor: 8, retreatHealth: 0.35, satchelLimit: 0 },
     run: {
       phase: 'camp',
+      manual: false,
       floor: 0,
       deepestThisRun: 0,
       encounter: 0,
@@ -155,6 +156,12 @@ export class Game {
     return Math.round(value);
   }
 
+  /** Maps shorten the walk between floors. */
+  descendSeconds(): number {
+    const shortcut = 1 + this.state.buildings.cartographer * BUILDING_EFFECT.cartographer;
+    return Math.max(0.5, BALANCE.descendSeconds / shortcut);
+  }
+
   climbSeconds(): number {
     const speed = 1 + this.state.buildings.ropewright * BUILDING_EFFECT.ropewright;
     return (this.run.climbFrom * BALANCE.climbSecondsPerFloor) / speed;
@@ -162,7 +169,7 @@ export class Game {
 
   // -------------------------------------------------------------- run control
 
-  beginDive(): void {
+  beginDive(manual = false): void {
     if (this.run.phase !== 'camp') return;
     const party = partyOf(this.state);
     if (party.length === 0) return;
@@ -175,8 +182,9 @@ export class Game {
     this.run.satchel = emptySatchel();
     this.run.party = party.map((hero) => heroCombatant(this.state, hero));
     this.run.foes = [];
+    this.run.manual = manual;
     this.run.phase = 'descending';
-    this.run.phaseTimer = BALANCE.descendSeconds;
+    this.run.phaseTimer = this.descendSeconds();
     this.state.totalDives += 1;
     this.note('log.dive.start', { floor: this.run.floor }, 'loud');
   }
@@ -377,7 +385,8 @@ export class Game {
 
   private shouldTurnBack(): boolean {
     const policy = this.state.policy;
-    // Switching the orders off means stop, not finish the errand first.
+    // A descent the player started by hand keeps going until they say stop.
+    if (this.run.manual) return false;
     if (!policy.autoDive) return true;
     if (this.run.floor >= policy.targetFloor) return true;
 
@@ -464,7 +473,7 @@ export class Game {
           } else {
             run.floor += 1;
             run.phase = 'descending';
-            run.phaseTimer = BALANCE.descendSeconds;
+            run.phaseTimer = this.descendSeconds();
           }
         }
         break;

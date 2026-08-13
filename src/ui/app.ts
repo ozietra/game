@@ -6,6 +6,7 @@ import {
   HEROES,
   HERO_ORDER,
   RARITIES,
+  RARITY_ORDER,
   RELICS,
   RELIC_EFFECT,
   RELIC_ORDER,
@@ -13,8 +14,8 @@ import {
   zoneForFloor,
 } from '../data/content';
 import type { Game, Harvest } from '../core/game';
-import { itemGain, masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
-import type { BuildingId, Item, RelicId } from '../core/types';
+import { heroLook, itemGain, masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
+import type { BuildingId, Item, RarityId, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { sound } from './audio';
@@ -43,6 +44,7 @@ export class App {
   private saveTimer = 0;
   private panelTimer = 0;
   private panelState = new Map<TabId, string>();
+  private stashFilter: RarityId | 'all' = 'all';
   private floatSeen = 0;
   private view: 'menu' | 'game' = 'menu';
   private menu!: Menu;
@@ -200,7 +202,7 @@ export class App {
     const dive = el('button', { class: 'button primary', type: 'button', html: `${icon('descend')}<span>${t('action.dive')}</span>` });
     on(dive, 'click', () => {
       sound.play('click', { gain: 0.5 });
-      this.game.beginDive();
+      this.game.beginDive(true);
     });
     const back = el('button', { class: 'button', type: 'button', html: `${icon('ascend')}<span>${t('action.extract')}</span>` });
     on(back, 'click', () => {
@@ -299,7 +301,7 @@ export class App {
       field.max = String(allowed);
       if (document.activeElement !== field) field.value = String(state.policy.startFloor);
     }
-    setText(this.refs.get('startHint') ?? null, `/ ${allowed}`);
+    setText(this.refs.get('startHint') ?? null, `${t('policy.upTo')} ${allowed}`);
   }
 
   // ------------------------------------------------------------------- loop
@@ -325,6 +327,8 @@ export class App {
       this.spawnFloats();
       this.renderPurse();
       this.renderShaft();
+
+      if (this.tab === 'roster') this.refreshExperience();
 
       this.panelTimer += elapsed;
       if (this.panelTimer > 0.4) {
@@ -419,6 +423,8 @@ export class App {
 
     let note = '';
     if (run.phase === 'camp') note = t('shaft.idle');
+    else if (run.manual && (run.phase === 'descending' || run.phase === 'fighting' || run.phase === 'looting'))
+      note = t('shaft.manual');
     else if (run.phase === 'wiped') note = t('shaft.wiped');
     else if (run.phase === 'fighting') note = `${t('shaft.foes')}: ${run.foes.filter((foe) => foe.alive).length}`;
     else if (run.phase === 'climbing') note = `${Math.max(0, Math.ceil(run.phaseTimer))}s`;
@@ -593,6 +599,17 @@ export class App {
     else this.scene.resize(this.ref('stage'));
   }
 
+  /** Experience ticks constantly, so it is written in place, never rebuilt. */
+  private refreshExperience(): void {
+    for (const hero of partyOf(this.game.state)) {
+      setWidth(this.refs.get(`xp:${hero.id}`) ?? null, this.game.progressToNextLevel(hero));
+      setText(
+        this.refs.get(`xpText:${hero.id}`) ?? null,
+        `${formatNumber(hero.xp)} / ${formatNumber(xpForLevel(hero.level))}`,
+      );
+    }
+  }
+
   /** A cheap fingerprint of what a panel shows, so it only rebuilds on change. */
   private panelSignature(id: TabId): string {
     const state = this.game.state;
@@ -601,9 +618,9 @@ export class App {
       const heroes = HERO_ORDER.map((hero) => {
         const one = state.heroes[hero];
         const gear = SLOTS.map((slot) => one.gear[slot]?.uid ?? 0).join('.');
-        return `${one.unlocked ? 1 : 0}${one.level}:${Math.round(one.xp)}:${one.mastery}:${one.wounds}:${gear}`;
+        return `${one.unlocked ? 1 : 0}${one.level}:${one.mastery}:${one.wounds}:${gear}`;
       }).join('|');
-      return `${purse}|${heroes}|${state.stash.map((item) => item.uid).join('.')}`;
+      return `${purse}|${heroes}|${this.stashFilter}|${state.stash.map((item) => item.uid).join('.')}`;
     }
     if (id === 'camp') return `${purse}|${Object.values(state.buildings).join('.')}|${this.game.mendCost()}`;
     if (id === 'relics') return `${purse}|${Object.values(state.relics).join('.')}|${relicYield(state)}`;
@@ -652,7 +669,7 @@ export class App {
       const stats = heroStats(state, hero);
 
       const header = el('div', { class: 'hero-head' }, [
-        el('span', { class: 'portrait', style: portraitStyle(id) }),
+        el('span', { class: 'portrait', style: portraitStyle(heroLook(hero).sprite) }),
         el('div', {}, [
           el('h3', { class: 'hero-name', text: t(`hero.${id}.name` as StringKey) }),
           el('p', { class: 'note', text: t(`hero.${id}.line` as StringKey) }),
@@ -687,13 +704,17 @@ export class App {
           this.renderPanel('roster', true);
         });
 
-        const xpBar = el('span', { class: 'bar-fill' });
+        const xpBar = this.keep(`xp:${id}`, el('span', { class: 'bar-fill' }));
         xpBar.style.width = `${this.game.progressToNextLevel(hero) * 100}%`;
+        const xpText = this.keep(
+          `xpText:${id}`,
+          el('span', { class: 'muted', text: `${formatNumber(hero.xp)} / ${formatNumber(xpForLevel(hero.level))}` }),
+        );
 
         body.push(
           el('div', { class: 'stat-line' }, [
             el('span', { text: `${t('roster.level')} ${hero.level}` }),
-            el('span', { class: 'muted', text: `${formatNumber(hero.xp)} / ${formatNumber(xpForLevel(hero.level))}` }),
+            xpText,
           ]),
           el('div', { class: 'bar thin' }, [xpBar]),
           el('p', {
@@ -729,24 +750,51 @@ export class App {
       cards.append(el('article', { class: `card hero-card${hero.unlocked ? '' : ' locked'}` }, [header, ...body]));
     }
 
-    const stash = el('div', { class: 'stash' });
-    if (state.stash.length === 0) {
-      stash.append(el('p', { class: 'muted', text: t('roster.stashEmpty') }));
-    } else {
-      const sorted = [...state.stash].sort((a, b) => b.power - a.power);
-      for (const item of sorted) stash.append(this.stashRow(item));
+    const counts = new Map<RarityId, number>();
+    for (const item of state.stash) counts.set(item.rarity, (counts.get(item.rarity) ?? 0) + 1);
+    if (this.stashFilter !== 'all' && !counts.has(this.stashFilter)) this.stashFilter = 'all';
+
+    const filters = el('div', { class: 'filter-row' });
+    const options: (RarityId | 'all')[] = ['all', ...RARITY_ORDER];
+    for (const option of options) {
+      const count = option === 'all' ? state.stash.length : counts.get(option) ?? 0;
+      const button = el('button', {
+        class: `chip-button${this.stashFilter === option ? ' is-active' : ''}`,
+        type: 'button',
+        disabled: count === 0 && option !== 'all',
+        text: `${option === 'all' ? t('roster.filterAll') : t(`rarity.${option}` as StringKey)} ${count}`,
+      });
+      if (option !== 'all') button.style.setProperty('--rarity', RARITIES[option].shade);
+      on(button, 'click', () => {
+        sound.play('click', { gain: 0.4 });
+        this.stashFilter = option;
+        this.renderPanel('roster', true);
+      });
+      filters.append(button);
     }
 
-    const scrapTotal = state.stash.reduce((sum, item) => sum + this.game.scrapValue(item), 0);
+    const shown = state.stash
+      .filter((item) => this.stashFilter === 'all' || item.rarity === this.stashFilter)
+      .sort((a, b) => b.power - a.power);
+
+    const stash = el('div', { class: 'stash' });
+    if (shown.length === 0) {
+      stash.append(el('p', { class: 'muted', text: t('roster.stashEmpty') }));
+    } else {
+      for (const item of shown) stash.append(this.stashRow(item));
+    }
+
+    const scrapTotal = shown.reduce((sum, item) => sum + this.game.scrapValue(item), 0);
+    const label = this.stashFilter === 'all' ? t('action.scrapAll') : t('action.scrapShown');
     const scrap = el('button', {
       class: 'button',
       type: 'button',
-      disabled: state.stash.length === 0,
-      html: `${icon('pick')}<span>${t('action.scrapAll')} · ${formatNumber(scrapTotal)} ${t('res.iron')}</span>`,
+      disabled: shown.length === 0,
+      html: `${icon('pick')}<span>${label} · ${formatNumber(scrapTotal)} ${t('res.iron')}</span>`,
     });
     on(scrap, 'click', () => {
       sound.play('buy', { gain: 0.6 });
-      this.game.scrapStash();
+      for (const item of shown) this.game.scrapItem(item.uid);
       this.renderPanel('roster', true);
     });
 
@@ -754,6 +802,7 @@ export class App {
       cards,
       el('div', { class: 'card' }, [
         el('h2', { class: 'card-title', html: `${icon('hoard')}<span>${t('roster.stash')}</span>` }),
+        filters,
         stash,
         scrap,
       ]),
@@ -841,7 +890,7 @@ export class App {
       const cost = this.game.buildingCost(id);
       const maxed = level >= definition.maxLevel;
       const effect = BUILDING_EFFECT[id];
-      const value = id === 'cartographer' ? `${effect}` : formatPercent(effect as number);
+      const value = formatPercent(effect as number);
 
       const button = el('button', {
         class: 'button',
@@ -887,6 +936,7 @@ export class App {
       el('div', { class: 'card wide' }, [
         el('h2', { class: 'card-title', html: `${icon('vitals')}<span>${t('camp.mend')}</span>` }),
         el('p', { class: 'note', text: t('roster.woundNote', { value: formatPercent(BALANCE.woundPenalty) }) }),
+        el('p', { class: 'note', text: t('camp.woundNote') }),
         mend,
       ]),
       grid,
