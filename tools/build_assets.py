@@ -172,6 +172,9 @@ def build_sprites() -> dict:
                 "file": f"assets/sprites/{file_name}",
                 "frame": lpc.FRAME,
                 "facing": facing,
+                # The renderer needs to know whether a swing, a shot or a cast is
+                # coming so it can throw the matching effect.
+                "attackKind": definition["attack"],
                 "animations": meta,
             }
             print(f"  sprite {name:<12} layers={len(stack):<3} rows={len(rows)}")
@@ -222,13 +225,16 @@ TILE_CREDIT = {
 }
 
 
-def build_tiles() -> dict:
+def read_exclusions() -> set:
     excluded = set()
     for line in fetch_text(CRAWL_EXCLUSIONS).splitlines():
         match = re.match(r"-\s+(\S+\.png)", line.strip())
         if match:
             excluded.add(match.group(1))
+    return excluded
 
+
+def build_tiles(excluded: set) -> dict:
     out_dir = os.path.join(PUBLIC, "tiles")
     os.makedirs(out_dir, exist_ok=True)
     manifest = {}
@@ -266,6 +272,51 @@ def build_tiles() -> dict:
 
 
 # --------------------------------------------------------------------------
+# battle effects
+# --------------------------------------------------------------------------
+
+# The right facing arrow is one of the tiles crawl/tiles lists under unclear
+# licence, so the renderer mirrors the left facing one instead.
+EFFECT_TILES = {
+    "arrow_left": "effect/arrow6.png",
+    "orb_frost": "effect/cloud_cold0.png",
+    "orb_flame": "effect/cloud_fire0.png",
+    "dust_0": "effect/cloud_dust0.png",
+    "dust_1": "effect/cloud_dust1.png",
+}
+
+
+def build_effects(excluded: set) -> dict:
+    out_dir = os.path.join(PUBLIC, "effects")
+    os.makedirs(out_dir, exist_ok=True)
+    manifest = {}
+
+    for name, path in EFFECT_TILES.items():
+        base = os.path.basename(path)
+        if base in excluded:
+            print(f"  skipped {base}: listed under unclear licence")
+            continue
+        try:
+            cached = download(CRAWL_TILES + path, os.path.join(CACHE, "crawl", path))
+        except Exception as error:  # noqa: BLE001
+            print(f"  missing effect {path}: {error}")
+            continue
+        Image.open(cached).convert("RGBA").save(os.path.join(out_dir, f"{name}.png"))
+        manifest[name] = f"assets/effects/{name}.png"
+        record(
+            f"crawl/{path}",
+            TILE_CREDIT["authors"],
+            TILE_CREDIT["licenses"],
+            TILE_CREDIT["urls"],
+            f"effect:{name}",
+            TILE_CREDIT["notes"],
+        )
+
+    print(f"  effects {len(manifest)}")
+    return manifest
+
+
+# --------------------------------------------------------------------------
 # sound
 # --------------------------------------------------------------------------
 
@@ -283,7 +334,9 @@ KENNEY_CREDIT = {
 # random, so repeated hits do not sound like a loop.
 SOUNDS = {
     "strike": [(KENNEY_RPG, "chop.ogg"), (KENNEY_RPG, "knife_slice.ogg"), (KENNEY_RPG, "knife_slice_2.ogg")],
-    "clank": [(KENNEY_RPG, "metal_pot_1.ogg"), (KENNEY_RPG, "metal_pot_2.ogg"), (KENNEY_RPG, "metal_pot_3.ogg")],
+    # A blow landing on the party is a dull thud in cloth and leather rather
+    # than the tin can rattle the metal pots gave.
+    "thud": [(KENNEY_RPG, "cloth_1.ogg"), (KENNEY_RPG, "cloth_3.ogg"), (KENNEY_RPG, "drop_leather.ogg")],
     "draw": [(KENNEY_RPG, "draw_knife_1.ogg"), (KENNEY_RPG, "draw_knife_2.ogg"), (KENNEY_RPG, "draw_knife_3.ogg")],
     "step": [(KENNEY_RPG, "footstep_2.ogg"), (KENNEY_RPG, "footstep_5.ogg"), (KENNEY_RPG, "footstep_8.ogg")],
     "loot": [(KENNEY_RPG, "handle_small_leather.ogg"), (KENNEY_RPG, "handle_small_leather_2.ogg")],
@@ -551,7 +604,7 @@ def write_credits() -> None:
 
 
 def main() -> None:
-    all_stages = ["sprites", "tiles", "sounds", "icons", "fonts"]
+    all_stages = ["sprites", "tiles", "effects", "sounds", "icons", "fonts"]
     stages = sys.argv[1:] or all_stages
     manifest_path = os.path.join(DATA, "assets.json")
     credits_path = os.path.join(DATA, "credits.json")
@@ -570,9 +623,14 @@ def main() -> None:
     if "sprites" in stages:
         print("sprites")
         manifest["sprites"] = build_sprites()
-    if "tiles" in stages:
-        print("tiles")
-        manifest["zones"] = build_tiles()
+    if "tiles" in stages or "effects" in stages:
+        excluded = read_exclusions()
+        if "tiles" in stages:
+            print("tiles")
+            manifest["zones"] = build_tiles(excluded)
+        if "effects" in stages:
+            print("effects")
+            manifest["effects"] = build_effects(excluded)
     if "sounds" in stages:
         print("sounds")
         manifest["sounds"] = build_sounds()

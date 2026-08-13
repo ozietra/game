@@ -1,4 +1,4 @@
-export type HeroId = 'warden' | 'ranger' | 'magus' | 'preacher';
+export type HeroId = 'warden' | 'ranger' | 'magus' | 'preacher' | 'cutpurse';
 
 export type SlotId = 'weapon' | 'armour' | 'charm';
 
@@ -13,6 +13,7 @@ export type RelicId = 'deepmark' | 'looteye' | 'knot' | 'guidestone' | 'wakingca
 export interface Item {
   uid: number;
   slot: SlotId;
+  kind: string;
   rarity: RarityId;
   power: number;
   floor: number;

@@ -2,11 +2,24 @@ import {
   BALANCE,
   BUILDING_EFFECT,
   HEROES,
+  ITEM_KINDS,
+  KINDS_BY_SLOT,
   RELIC_EFFECT,
   SLOTS,
-  SLOT_EFFECT,
+  type ItemKindId,
+  type StatGain,
 } from '../data/content';
 import type { GameState, Hero, Item, Stats } from './types';
+
+/** What a single item adds, already multiplied by its power. */
+export function itemGain(item: Item): StatGain {
+  const kind = ITEM_KINDS[item.kind as ItemKindId] ?? ITEM_KINDS[KINDS_BY_SLOT[item.slot][0]];
+  const gain: StatGain = {};
+  for (const [stat, per] of Object.entries(kind.gain) as [keyof StatGain, number][]) {
+    gain[stat] = per * item.power;
+  }
+  return gain;
+}
 
 export function itemScore(item: Item | null): number {
   if (!item) return 0;
@@ -26,12 +39,12 @@ export function heroStats(state: GameState, hero: Hero): Stats {
   for (const slot of SLOTS) {
     const item = hero.gear[slot];
     if (!item) continue;
-    const effect = SLOT_EFFECT[slot] as Partial<Record<keyof Stats, number>>;
-    maxHp += (effect.maxHp ?? 0) * item.power;
-    attack += (effect.attack ?? 0) * item.power;
-    defence += (effect.defence ?? 0) * item.power;
-    speed += (effect.speed ?? 0) * item.power;
-    crit += (effect.crit ?? 0) * item.power;
+    const gain = itemGain(item);
+    maxHp += gain.maxHp ?? 0;
+    attack += gain.attack ?? 0;
+    defence += gain.defence ?? 0;
+    speed += gain.speed ?? 0;
+    crit += gain.crit ?? 0;
   }
 
   const mastery = 1 + hero.mastery * 0.04;

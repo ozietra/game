@@ -76,6 +76,23 @@ HEROES = {
     },
 }
 
+HEROES["cutpurse"] = {
+    "body": "female",
+    "facing": "right",
+    "attack": "slash",
+    "parts": [
+        "body-Body_color_light",
+        "head-Human_female_light",
+        "hair-Ponytail_black",
+        "legs-Leggings_black",
+        "clothes-Longsleeve_charcoal",
+        "shoes-Boots_black",
+        "hat-Hood_black",
+        "bauldron-Bauldron_charcoal",
+        "weapon-Dagger_dagger",
+    ],
+}
+
 ENEMIES = {
     # cellars
     "rat": {
@@ -110,7 +127,46 @@ ENEMIES = {
             "weapon-Dagger_dagger",
         ],
     },
+    "ambusher": {
+        "body": "male",
+        "facing": "left",
+        "attack": "shoot",
+        "parts": [
+            "body-Body_color_light",
+            "head-Human_male_light",
+            "legs-Pants_forest",
+            "clothes-Longsleeve_forest",
+            "shoes-Boots_brown",
+            "hat-Hood_forest",
+            "quiver-Quiver_quiver",
+            "weapon-Normal_light",
+            "ammo-Ammo_arrow",
+        ],
+    },
     # catacombs
+    "skeleton_archer": {
+        "body": "male",
+        "facing": "left",
+        "attack": "shoot",
+        "parts": [
+            "body-Skeleton_skeleton",
+            "head-Skeleton_skeleton",
+            "quiver-Quiver_quiver",
+            "weapon-Normal_dark",
+            "ammo-Ammo_arrow",
+        ],
+    },
+    "stitched": {
+        "body": "muscular",
+        "facing": "left",
+        "attack": "slash",
+        "parts": [
+            "body-Body_color_zombie_green",
+            "head-Frankenstein_zombie_green",
+            "legs-Pants_charcoal",
+            "weapon-Club_club",
+        ],
+    },
     "skeleton": {
         "body": "male",
         "facing": "left",
@@ -181,7 +237,31 @@ ENEMIES = {
             "legs-Pants_brown",
         ],
     },
+    "orc_spear": {
+        "body": "muscular",
+        "facing": "left",
+        "attack": "thrust",
+        "parts": [
+            "body-Body_color_dark_green",
+            "head-Orc_male_dark_green",
+            "legs-Pants_charcoal",
+            "bauldron-Bauldron_charcoal",
+            "weapon-Spear_dark",
+        ],
+    },
     # crystal seam
+    "hag": {
+        "body": "female",
+        "facing": "left",
+        "attack": "cast",
+        "parts": [
+            "body-Body_color_pale_green",
+            "head-Human_female_elderly_pale_green",
+            "clothes-Robe_forest_green",
+            "hat-Hood_forest",
+            "weapon-Gnarled_staff_bronze",
+        ],
+    },
     "lizard": {
         "body": "male",
         "facing": "left",
@@ -240,6 +320,18 @@ ENEMIES = {
             "cape-Solid_maroon",
             "shoes-Boots_black",
             "weapon-Rapier_rapier",
+        ],
+    },
+    "wartotaur": {
+        "body": "muscular",
+        "facing": "left",
+        "attack": "slash",
+        "parts": [
+            "body-Body_color_fur_copper",
+            "head-Wartotaur_fur_copper",
+            "legs-Pants_black",
+            "shoulders-Plate_bronze",
+            "weapon-Waraxe_waraxe",
         ],
     },
     "bone_knight": {

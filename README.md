@@ -41,8 +41,15 @@ is relative.
 
 The first descent is manual. After that, standing orders take over: pick the
 floor to start from, the floor to stop at, the health level that sends the party
-home early, and a satchel value that does the same. The party then works while
-the tab is closed, up to the offline window that Waking Camp relics extend.
+home early, and a satchel value that does the same. Switching the automatic
+descent off tells them to finish the fight in front of them and climb out. The
+party works while the tab is closed too, up to the offline window that Waking
+Camp relics extend.
+
+Gear is picked up mid dive and sorted out on the way home: whoever gains most
+puts it on, the rest waits in the store where it can be handed to somebody else
+or melted down for iron, one piece or all of it. Every piece states plainly what
+it adds, because "Fabled Axe" means nothing next to "+192 attack, -19 speed".
 
 ## How the game is put together
 

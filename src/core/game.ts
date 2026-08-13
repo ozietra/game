@@ -4,6 +4,7 @@ import {
   BUILDING_EFFECT,
   HEROES,
   HERO_ORDER,
+  KINDS_BY_SLOT,
   RARITIES,
   RARITY_ORDER,
   RELICS,
@@ -249,7 +250,7 @@ export class Game {
     if (this.rng.chance(Math.min(0.85, dropChance))) {
       const item = this.rollItem(floor);
       this.run.satchel.items.push(item);
-      this.note('log.loot.item', { rarity: `rarity.${item.rarity}`, slot: `slot.${item.slot}`, power: item.power }, 'good');
+      this.note('log.loot.item', { rarity: `rarity.${item.rarity}`, kind: `kind.${item.kind}`, power: item.power }, 'good');
     }
 
     for (const fighter of this.run.party) {
@@ -264,13 +265,14 @@ export class Game {
   private rollItem(floor: number): Item {
     const rarity = this.rng.weighted(RARITY_ORDER, (id) => RARITIES[id].weight);
     const slot = this.rng.pick(SLOTS) as SlotId;
+    const kind = this.rng.pick(KINDS_BY_SLOT[slot]);
     const power = Math.max(
       1,
       Math.round(
         BALANCE.loot.itemPower.base * BALANCE.loot.itemPower.growth ** floor * RARITIES[rarity].multiplier * this.rng.range(0.9, 1.1),
       ),
     );
-    return { uid: this.state.nextUid++, slot, rarity, power, floor };
+    return { uid: this.state.nextUid++, slot, kind, rarity, power, floor };
   }
 
   private bankSatchel(): void {
@@ -309,10 +311,16 @@ export class Game {
     if (bestHero) {
       const replaced = bestHero.gear[item.slot];
       bestHero.gear[item.slot] = item;
+      this.note(
+        'log.equip',
+        { name: `hero.${bestHero.id}.name`, kind: `kind.${item.kind}`, rarity: `rarity.${item.rarity}`, power: item.power },
+        'good',
+      );
       if (replaced) this.stow(replaced);
       return;
     }
     this.stow(item);
+    this.note('log.stow', { kind: `kind.${item.kind}`, rarity: `rarity.${item.rarity}`, power: item.power });
   }
 
   /** The stash holds spare gear; anything past the shelf space is melted down. */
@@ -327,7 +335,7 @@ export class Game {
   }
 
   private salvage(item: Item): void {
-    const iron = Math.max(1, Math.round(item.power * 0.35));
+    const iron = this.scrapValue(item);
     this.state.bank.iron += iron;
     this.harvest.iron += iron;
   }
@@ -369,6 +377,8 @@ export class Game {
 
   private shouldTurnBack(): boolean {
     const policy = this.state.policy;
+    // Switching the orders off means stop, not finish the errand first.
+    if (!policy.autoDive) return true;
     if (this.run.floor >= policy.targetFloor) return true;
 
     let current = 0;
@@ -645,9 +655,23 @@ export class Game {
     if (replaced) this.state.stash.push(replaced);
   }
 
+  /** Iron a single piece is worth once melted down. */
+  scrapValue(item: Item): number {
+    return Math.max(1, Math.round(item.power * 0.35));
+  }
+
+  scrapItem(uid: number): number {
+    const item = this.state.stash.find((entry) => entry.uid === uid);
+    if (!item) return 0;
+    this.state.stash = this.state.stash.filter((entry) => entry.uid !== uid);
+    const iron = this.scrapValue(item);
+    this.state.bank.iron += iron;
+    return iron;
+  }
+
   scrapStash(): number {
     let iron = 0;
-    for (const item of this.state.stash) iron += Math.max(1, Math.round(item.power * 0.35));
+    for (const item of this.state.stash) iron += this.scrapValue(item);
     this.state.bank.iron += iron;
     this.state.stash = [];
     return iron;

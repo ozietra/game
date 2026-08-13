@@ -39,11 +39,23 @@ export const BALANCE = {
 } as const;
 
 export const ZONES = [
-  { id: 'cellars', tiles: 'cellars', foes: ['rat', 'goblin', 'cutthroat'], boss: 'boarman', drop: 'iron' },
-  { id: 'catacombs', tiles: 'catacombs', foes: ['skeleton', 'revenant', 'gravewarden'], boss: 'bone_knight', drop: 'iron' },
-  { id: 'warrens', tiles: 'warrens', foes: ['orc', 'boarman', 'wolfman'], boss: 'troll', drop: 'iron' },
-  { id: 'seam', tiles: 'seam', foes: ['lizard', 'warlock', 'troll'], boss: 'minotaur', drop: 'crystal' },
-  { id: 'maw', tiles: 'maw', foes: ['minotaur', 'vampire', 'bone_knight'], boss: 'vampire', drop: 'crystal' },
+  { id: 'cellars', tiles: 'cellars', foes: ['rat', 'goblin', 'cutthroat', 'ambusher'], boss: 'boarman', drop: 'iron' },
+  {
+    id: 'catacombs',
+    tiles: 'catacombs',
+    foes: ['skeleton', 'revenant', 'gravewarden', 'skeleton_archer', 'stitched'],
+    boss: 'bone_knight',
+    drop: 'iron',
+  },
+  { id: 'warrens', tiles: 'warrens', foes: ['orc', 'boarman', 'wolfman', 'orc_spear'], boss: 'troll', drop: 'iron' },
+  { id: 'seam', tiles: 'seam', foes: ['lizard', 'warlock', 'troll', 'hag'], boss: 'minotaur', drop: 'crystal' },
+  {
+    id: 'maw',
+    tiles: 'maw',
+    foes: ['minotaur', 'vampire', 'bone_knight', 'wartotaur'],
+    boss: 'vampire',
+    drop: 'crystal',
+  },
 ] as const;
 
 export type ZoneId = (typeof ZONES)[number]['id'];
@@ -53,6 +65,12 @@ export const FOES: Record<string, { health: number; attack: number; defence: num
   rat: { health: 0.6, attack: 0.75, defence: 0.6, speed: 128 },
   goblin: { health: 0.8, attack: 0.95, defence: 0.8, speed: 110 },
   cutthroat: { health: 0.9, attack: 1.15, defence: 0.9, speed: 118 },
+  ambusher: { health: 0.85, attack: 1.25, defence: 0.7, speed: 124 },
+  skeleton_archer: { health: 0.9, attack: 1.35, defence: 0.8, speed: 112 },
+  stitched: { health: 1.7, attack: 1.1, defence: 1, speed: 78 },
+  orc_spear: { health: 1.25, attack: 1.3, defence: 1.15, speed: 100 },
+  hag: { health: 1, attack: 1.45, defence: 0.8, speed: 104 },
+  wartotaur: { health: 2.3, attack: 1.55, defence: 1.4, speed: 92 },
   skeleton: { health: 1, attack: 1, defence: 1.1, speed: 100 },
   revenant: { health: 1.35, attack: 0.9, defence: 0.9, speed: 84 },
   gravewarden: { health: 1.2, attack: 1.2, defence: 1.4, speed: 92 },
@@ -83,7 +101,7 @@ export interface HeroDefinition {
   base: { maxHp: number; attack: number; defence: number; speed: number; crit: number };
   growth: { maxHp: number; attack: number; defence: number };
   ability: {
-    kind: 'bulwark' | 'pierce' | 'volley' | 'mend';
+    kind: 'bulwark' | 'pierce' | 'volley' | 'mend' | 'backstab';
     cooldown: number;
     power: number;
     unlockLevel: number;
@@ -118,6 +136,15 @@ export const HEROES: Record<HeroId, HeroDefinition> = {
     growth: { maxHp: 1.08, attack: 1.088, defence: 1.055 },
     ability: { kind: 'volley', cooldown: 12, power: 1.35, unlockLevel: 1 },
   },
+  cutpurse: {
+    id: 'cutpurse',
+    icon: 'wound',
+    cost: 9000,
+    taunt: 1,
+    base: { maxHp: 78, attack: 19, defence: 4, speed: 130, crit: 0.2 },
+    growth: { maxHp: 1.082, attack: 1.088, defence: 1.06 },
+    ability: { kind: 'backstab', cooldown: 11, power: 3.4, unlockLevel: 1 },
+  },
   preacher: {
     id: 'preacher',
     icon: 'faith',
@@ -129,7 +156,7 @@ export const HEROES: Record<HeroId, HeroDefinition> = {
   },
 };
 
-export const HERO_ORDER: HeroId[] = ['warden', 'ranger', 'magus', 'preacher'];
+export const HERO_ORDER: HeroId[] = ['warden', 'ranger', 'magus', 'preacher', 'cutpurse'];
 
 export const SLOTS: SlotId[] = ['weapon', 'armour', 'charm'];
 
@@ -143,12 +170,52 @@ export const RARITIES: Record<RarityId, { weight: number; multiplier: number; sh
 
 export const RARITY_ORDER: RarityId[] = ['worn', 'sound', 'master', 'ancient', 'fabled'];
 
-/** How one point of item power translates per slot. */
-export const SLOT_EFFECT = {
-  weapon: { attack: 1 },
-  armour: { maxHp: 2.6, defence: 0.55 },
-  charm: { speed: 0.55, crit: 0.0022, attack: 0.28 },
-} as const;
+export type ItemKindId =
+  | 'blade'
+  | 'axe'
+  | 'spear'
+  | 'bow'
+  | 'rod'
+  | 'leather'
+  | 'mail'
+  | 'plate'
+  | 'robe'
+  | 'amulet'
+  | 'ring'
+  | 'talisman';
+
+export interface StatGain {
+  maxHp?: number;
+  attack?: number;
+  defence?: number;
+  speed?: number;
+  crit?: number;
+}
+
+/**
+ * What one point of item power is worth, per kind of gear. Every kind adds up
+ * to roughly the same total, so the choice is about shape rather than size.
+ */
+export const ITEM_KINDS: Record<ItemKindId, { slot: SlotId; gain: StatGain }> = {
+  blade: { slot: 'weapon', gain: { attack: 1, crit: 0.0006 } },
+  axe: { slot: 'weapon', gain: { attack: 1.22, speed: -0.12 } },
+  spear: { slot: 'weapon', gain: { attack: 0.95, defence: 0.22 } },
+  bow: { slot: 'weapon', gain: { attack: 0.9, crit: 0.0018 } },
+  rod: { slot: 'weapon', gain: { attack: 0.85, maxHp: 0.9 } },
+  leather: { slot: 'armour', gain: { maxHp: 2.2, defence: 0.45, speed: 0.12 } },
+  mail: { slot: 'armour', gain: { maxHp: 2.6, defence: 0.62 } },
+  plate: { slot: 'armour', gain: { maxHp: 3, defence: 0.85, speed: -0.14 } },
+  robe: { slot: 'armour', gain: { maxHp: 2, defence: 0.35, crit: 0.0009 } },
+  amulet: { slot: 'charm', gain: { speed: 0.5, crit: 0.002, attack: 0.25 } },
+  ring: { slot: 'charm', gain: { crit: 0.0032, attack: 0.3 } },
+  talisman: { slot: 'charm', gain: { maxHp: 1.1, defence: 0.3, speed: 0.3 } },
+};
+
+export const KINDS_BY_SLOT: Record<SlotId, ItemKindId[]> = {
+  weapon: ['blade', 'axe', 'spear', 'bow', 'rod'],
+  armour: ['leather', 'mail', 'plate', 'robe'],
+  charm: ['amulet', 'ring', 'talisman'],
+};
 
 export interface BuildingDefinition {
   id: BuildingId;

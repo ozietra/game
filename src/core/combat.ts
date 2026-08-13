@@ -143,6 +143,15 @@ function useAbility(actor: Combatant, allies: Combatant[], foes: Combatant[], rn
       events.push({ kind: 'guard', key: actor.key, amount: BALANCE.guardWindow });
       break;
     }
+    case 'backstab': {
+      // Finds whoever is closest to dropping and puts them down.
+      const wounded = foes
+        .filter((foe) => foe.alive)
+        .sort((a, b) => a.hp / a.stats.maxHp - b.hp / b.stats.maxHp)[0];
+      if (!wounded) return false;
+      strike(actor, wounded, ability.power, rng, events);
+      break;
+    }
     case 'pierce': {
       const target = pickTarget(foes, rng, false);
       if (!target) return false;

@@ -1,5 +1,6 @@
+import { KINDS_BY_SLOT } from '../data/content';
 import { SAVE_VERSION, freshState } from './game';
-import type { GameState } from './types';
+import type { GameState, Item } from './types';
 
 const KEY = 'alacakuyu.save.v1';
 
@@ -38,6 +39,11 @@ export function clearSave(): void {
   }
 }
 
+/** Gear predates item kinds, so anything without one takes the plain kind. */
+function withKind(item: Item): Item {
+  return item.kind ? item : { ...item, kind: KINDS_BY_SLOT[item.slot][0] };
+}
+
 /** Fills in anything a newer build expects but an older save never wrote. */
 function migrate(state: GameState): GameState {
   const base = freshState();
@@ -58,7 +64,13 @@ function migrate(state: GameState): GameState {
     merged.heroes[id] = stored ? { ...base.heroes[id], ...stored, gear: { ...base.heroes[id].gear, ...stored.gear } } : base.heroes[id];
   }
 
-  merged.stash = Array.isArray(state.stash) ? state.stash : [];
+  merged.stash = (Array.isArray(state.stash) ? state.stash : []).map(withKind);
+  for (const hero of Object.values(merged.heroes)) {
+    for (const slot of Object.keys(hero.gear) as (keyof typeof hero.gear)[]) {
+      const item = hero.gear[slot];
+      if (item) hero.gear[slot] = withKind(item);
+    }
+  }
   merged.version = SAVE_VERSION;
 
   // A dive cannot be resumed mid-swing from a cold start; the party waits in camp.

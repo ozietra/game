@@ -5,6 +5,7 @@
    "file": "assets/sprites/warden.png",
    "frame": 64,
    "facing": "right",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -25,6 +26,7 @@
    "file": "assets/sprites/ranger.png",
    "frame": 64,
    "facing": "right",
+   "attackKind": "shoot",
    "animations": {
     "walk": {
      "row": 0,
@@ -45,6 +47,7 @@
    "file": "assets/sprites/magus.png",
    "frame": 64,
    "facing": "right",
+   "attackKind": "cast",
    "animations": {
     "walk": {
      "row": 0,
@@ -65,6 +68,7 @@
    "file": "assets/sprites/preacher.png",
    "frame": 64,
    "facing": "right",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -84,11 +88,33 @@
     }
    }
   },
+  "cutpurse": {
+   "kind": "hero",
+   "file": "assets/sprites/cutpurse.png",
+   "frame": 64,
+   "facing": "right",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
   "rat": {
    "kind": "enemy",
    "file": "assets/sprites/rat.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -109,6 +135,7 @@
    "file": "assets/sprites/goblin.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -129,6 +156,70 @@
    "file": "assets/sprites/cutthroat.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "ambusher": {
+   "kind": "enemy",
+   "file": "assets/sprites/ambusher.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "shoot",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "skeleton_archer": {
+   "kind": "enemy",
+   "file": "assets/sprites/skeleton_archer.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "shoot",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 13
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "stitched": {
+   "kind": "enemy",
+   "file": "assets/sprites/stitched.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -149,6 +240,7 @@
    "file": "assets/sprites/skeleton.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -169,6 +261,7 @@
    "file": "assets/sprites/revenant.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -189,6 +282,7 @@
    "file": "assets/sprites/gravewarden.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "thrust",
    "animations": {
     "walk": {
      "row": 0,
@@ -209,6 +303,7 @@
    "file": "assets/sprites/orc.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -229,6 +324,7 @@
    "file": "assets/sprites/boarman.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -249,6 +345,7 @@
    "file": "assets/sprites/wolfman.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -264,11 +361,54 @@
     }
    }
   },
+  "orc_spear": {
+   "kind": "enemy",
+   "file": "assets/sprites/orc_spear.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "thrust",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 8
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "hag": {
+   "kind": "enemy",
+   "file": "assets/sprites/hag.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "cast",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 7
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
   "lizard": {
    "kind": "enemy",
    "file": "assets/sprites/lizard.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "thrust",
    "animations": {
     "walk": {
      "row": 0,
@@ -289,6 +429,7 @@
    "file": "assets/sprites/troll.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -309,6 +450,7 @@
    "file": "assets/sprites/warlock.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "cast",
    "animations": {
     "walk": {
      "row": 0,
@@ -329,6 +471,7 @@
    "file": "assets/sprites/minotaur.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -349,6 +492,28 @@
    "file": "assets/sprites/vampire.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
+   "animations": {
+    "walk": {
+     "row": 0,
+     "frames": 9
+    },
+    "attack": {
+     "row": 1,
+     "frames": 6
+    },
+    "collapse": {
+     "row": 2,
+     "frames": 6
+    }
+   }
+  },
+  "wartotaur": {
+   "kind": "enemy",
+   "file": "assets/sprites/wartotaur.png",
+   "frame": 64,
+   "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -369,6 +534,7 @@
    "file": "assets/sprites/bone_knight.png",
    "frame": 64,
    "facing": "left",
+   "attackKind": "slash",
    "animations": {
     "walk": {
      "row": 0,
@@ -490,10 +656,10 @@
    "assets/sound/strike_1.ogg",
    "assets/sound/strike_2.ogg"
   ],
-  "clank": [
-   "assets/sound/clank_0.ogg",
-   "assets/sound/clank_1.ogg",
-   "assets/sound/clank_2.ogg"
+  "thud": [
+   "assets/sound/thud_0.ogg",
+   "assets/sound/thud_1.ogg",
+   "assets/sound/thud_2.ogg"
   ],
   "draw": [
    "assets/sound/draw_0.ogg",
@@ -537,5 +703,12 @@
   "click": [
    "assets/sound/click_0.wav"
   ]
+ },
+ "effects": {
+  "arrow_left": "assets/effects/arrow_left.png",
+  "orb_frost": "assets/effects/orb_frost.png",
+  "orb_flame": "assets/effects/orb_flame.png",
+  "dust_0": "assets/effects/dust_0.png",
+  "dust_1": "assets/effects/dust_1.png"
  }
 }

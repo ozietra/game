@@ -13,15 +13,15 @@ import {
   zoneForFloor,
 } from '../data/content';
 import type { Game, Harvest } from '../core/game';
-import { masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
+import { itemGain, masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
 import type { BuildingId, Item, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { sound } from './audio';
-import { icon, portraitStyle, preload } from './assets';
+import { icon, portraitStyle, preload, spriteMeta } from './assets';
 import { clear, el, on, setText, setWidth } from './dom';
 import { Menu } from './menu';
-import { Scene } from './scene';
+import { Scene, type AttackStyle } from './scene';
 
 type TabId = 'shaft' | 'roster' | 'camp' | 'relics';
 
@@ -42,6 +42,7 @@ export class App {
   private carry = 0;
   private saveTimer = 0;
   private panelTimer = 0;
+  private panelState = new Map<TabId, string>();
   private floatSeen = 0;
   private view: 'menu' | 'game' = 'menu';
   private menu!: Menu;
@@ -236,7 +237,7 @@ export class App {
   private buildOrders(): HTMLElement {
     const state = this.game.state;
 
-    const auto = el('input', { type: 'checkbox', id: 'auto-dive' });
+    const auto = this.keep('autoDive', el('input', { type: 'checkbox', id: 'auto-dive' }));
     (auto as HTMLInputElement).checked = state.policy.autoDive;
     on(auto, 'change', () => {
       state.policy.autoDive = (auto as HTMLInputElement).checked;
@@ -290,6 +291,9 @@ export class App {
     const state = this.game.state;
     const allowed = maxStartFloor(state);
     state.policy.startFloor = Math.max(1, Math.min(state.policy.startFloor, allowed));
+    const auto = this.refs.get('autoDive') as HTMLInputElement | undefined;
+    if (auto && auto.checked !== state.policy.autoDive) auto.checked = state.policy.autoDive;
+
     const field = this.refs.get('startFloor') as HTMLInputElement | undefined;
     if (field) {
       field.max = String(allowed);
@@ -542,10 +546,13 @@ export class App {
     for (const event of events) {
       const onParty = event.key.startsWith('hero:');
       if (event.kind === 'hit' || event.kind === 'crit') {
-        // Blows landing on the party ring off armour; the party's own hits cut.
-        sound.play(onParty ? 'clank' : 'strike', { gain: event.kind === 'crit' ? 0.85 : 0.5 });
+        this.scene.flash(event.key);
+        if (event.from) this.scene.spawnAttack(event.from, event.key, this.styleOf(event.from));
+        // Ordinary blows land often, so only some of them are heard at all.
+        if (event.kind === 'crit') sound.play('strike', { gain: 0.5 });
+        else if (Math.random() < 0.5) sound.play(onParty ? 'thud' : 'strike', { gain: onParty ? 0.3 : 0.26 });
       } else if (event.kind === 'heal') {
-        sound.play('leaf', { gain: 0.5 });
+        sound.play('leaf', { gain: 0.45 });
       }
 
       const spot = spots.get(event.key);
@@ -564,6 +571,16 @@ export class App {
     events.length = 0;
   }
 
+  /** Which effect a fighter throws, taken from the animation it attacks with. */
+  private styleOf(key: string): AttackStyle {
+    const sprite = key.startsWith('hero:') ? key.slice(5) : key.split(':')[2];
+    const meta = spriteMeta(sprite);
+    if (!meta) return 'melee';
+    if (meta.attackKind === 'shoot') return 'shoot';
+    if (meta.attackKind === 'cast') return sprite === 'magus' ? 'frost' : 'flame';
+    return 'melee';
+  }
+
   // ------------------------------------------------------------------ tabs
 
   private selectTab(id: TabId): void {
@@ -572,11 +589,36 @@ export class App {
       this.ref(`tab:${key}`).classList.toggle('is-active', key === id);
       (this.ref(`panel:${key}`) as HTMLElement).hidden = key !== id;
     }
-    if (id !== 'shaft') this.renderPanel(id);
+    if (id !== 'shaft') this.renderPanel(id, true);
     else this.scene.resize(this.ref('stage'));
   }
 
-  private renderPanel(id: TabId): void {
+  /** A cheap fingerprint of what a panel shows, so it only rebuilds on change. */
+  private panelSignature(id: TabId): string {
+    const state = this.game.state;
+    const purse = `${Math.round(state.bank.coin)}/${Math.round(state.bank.iron)}/${Math.round(state.bank.crystal)}/${state.bank.relic}`;
+    if (id === 'roster') {
+      const heroes = HERO_ORDER.map((hero) => {
+        const one = state.heroes[hero];
+        const gear = SLOTS.map((slot) => one.gear[slot]?.uid ?? 0).join('.');
+        return `${one.unlocked ? 1 : 0}${one.level}:${Math.round(one.xp)}:${one.mastery}:${one.wounds}:${gear}`;
+      }).join('|');
+      return `${purse}|${heroes}|${state.stash.map((item) => item.uid).join('.')}`;
+    }
+    if (id === 'camp') return `${purse}|${Object.values(state.buildings).join('.')}|${this.game.mendCost()}`;
+    if (id === 'relics') return `${purse}|${Object.values(state.relics).join('.')}|${relicYield(state)}`;
+    return purse;
+  }
+
+  private renderPanel(id: TabId, force = false): void {
+    const signature = this.panelSignature(id);
+    if (!force && this.panelState.get(id) === signature) return;
+    this.panelState.set(id, signature);
+
+    // Rebuilding throws away the scroll position, so put it back afterwards.
+    const scrollers = Array.from(this.ref(`panel:${id}`).querySelectorAll<HTMLElement>('.stash, .credit-list'));
+    const offsets = scrollers.map((node) => node.scrollTop);
+
     switch (id) {
       case 'roster':
         this.renderRoster();
@@ -590,6 +632,12 @@ export class App {
       default:
         break;
     }
+
+    const restored = Array.from(this.ref(`panel:${id}`).querySelectorAll<HTMLElement>('.stash, .credit-list'));
+    restored.forEach((node, index) => {
+      const offset = offsets[index];
+      if (offset) node.scrollTop = offset;
+    });
   }
 
   private renderRoster(): void {
@@ -622,7 +670,7 @@ export class App {
         on(hire, 'click', () => {
           sound.play('buy', { gain: 0.8 });
           this.game.recruit(id);
-          this.renderRoster();
+          this.renderPanel('roster', true);
         });
         body.push(el('p', { class: 'muted', text: t('roster.locked') }), hire);
       } else {
@@ -636,7 +684,7 @@ export class App {
         on(train, 'click', () => {
           sound.play('buy', { gain: 0.8 });
           this.game.train(id);
-          this.renderRoster();
+          this.renderPanel('roster', true);
         });
 
         const xpBar = el('span', { class: 'bar-fill' });
@@ -689,15 +737,17 @@ export class App {
       for (const item of sorted) stash.append(this.stashRow(item));
     }
 
+    const scrapTotal = state.stash.reduce((sum, item) => sum + this.game.scrapValue(item), 0);
     const scrap = el('button', {
       class: 'button',
       type: 'button',
       disabled: state.stash.length === 0,
-      html: `${icon('pick')}<span>${t('action.scrap')}</span>`,
+      html: `${icon('pick')}<span>${t('action.scrapAll')} · ${formatNumber(scrapTotal)} ${t('res.iron')}</span>`,
     });
     on(scrap, 'click', () => {
+      sound.play('buy', { gain: 0.6 });
       this.game.scrapStash();
-      this.renderRoster();
+      this.renderPanel('roster', true);
     });
 
     panel.append(
@@ -710,6 +760,23 @@ export class App {
     );
   }
 
+  /** Plain reading of what a piece of gear is worth: "+128 attack, +0.4% crit". */
+  private gearGainText(item: Item): string {
+    const gain = itemGain(item);
+    const parts: string[] = [];
+    const add = (value: number | undefined, label: StringKey, percent = false) => {
+      if (!value) return;
+      const shown = percent ? formatPercent(Math.abs(value), 1) : formatNumber(Math.abs(Math.round(value)));
+      parts.push(`${value < 0 ? '-' : '+'}${shown} ${t(label)}`);
+    };
+    add(gain.attack, 'stat.attack');
+    add(gain.maxHp, 'stat.health');
+    add(gain.defence, 'stat.defence');
+    add(gain.speed, 'stat.speed');
+    add(gain.crit, 'stat.crit', true);
+    return parts.join('  ');
+  }
+
   private gearChip(item: Item | null, slot: string): HTMLElement {
     if (!item) {
       return el('div', { class: 'gear-chip empty' }, [
@@ -719,8 +786,8 @@ export class App {
     }
     const chip = el('div', { class: 'gear-chip' }, [
       el('span', { class: 'gear-slot', text: t(`slot.${item.slot}` as StringKey) }),
-      el('span', { class: 'gear-name', text: t(`rarity.${item.rarity}` as StringKey) }),
-      el('span', { class: 'gear-power', text: formatNumber(item.power) }),
+      el('span', { class: 'gear-name', text: `${t(`rarity.${item.rarity}` as StringKey)} ${t(`kind.${item.kind}` as StringKey)}` }),
+      el('span', { class: 'gear-gain', text: this.gearGainText(item) }),
     ]);
     chip.style.setProperty('--rarity', RARITIES[item.rarity].shade);
     return chip;
@@ -729,22 +796,37 @@ export class App {
   private stashRow(item: Item): HTMLElement {
     const buttons = partyOf(this.game.state).map((hero) => {
       const current = hero.gear[item.slot];
-      const better = item.power > (current?.power ?? 0);
+      const change = item.power - (current?.power ?? 0);
       const button = el('button', {
-        class: `button tiny${better ? ' primary' : ''}`,
+        class: `button tiny${change > 0 ? ' primary' : ''}`,
         type: 'button',
-        html: `${icon(HEROES[hero.id].icon)}<span>${t(`hero.${hero.id}.name` as StringKey)}</span>`,
+        title: t(`hero.${hero.id}.name` as StringKey),
+        html: `${icon(HEROES[hero.id].icon)}<span>${t(`hero.${hero.id}.name` as StringKey)} ${change >= 0 ? '+' : ''}${formatNumber(change)}</span>`,
       });
       on(button, 'click', () => {
         sound.play('loot', { gain: 0.7 });
         this.game.equip(hero.id, item);
-        this.renderRoster();
+        this.renderPanel('roster', true);
       });
       return button;
     });
 
-    const row = el('div', { class: 'stash-row' }, [this.gearChip(item, item.slot), el('div', { class: 'stash-actions' }, buttons)]);
-    return row;
+    const melt = el('button', {
+      class: 'button tiny',
+      type: 'button',
+      html: `${icon('pick')}<span>${formatNumber(this.game.scrapValue(item))} ${t('res.iron')}</span>`,
+      title: t('action.scrap'),
+    });
+    on(melt, 'click', () => {
+      sound.play('buy', { gain: 0.6 });
+      this.game.scrapItem(item.uid);
+      this.renderPanel('roster', true);
+    });
+
+    return el('div', { class: 'stash-row' }, [
+      this.gearChip(item, item.slot),
+      el('div', { class: 'stash-actions' }, [...buttons, melt]),
+    ]);
   }
 
   private renderCamp(): void {
@@ -772,7 +854,7 @@ export class App {
       on(button, 'click', () => {
         sound.play('buy', { gain: 0.8 });
         this.game.upgrade(id as BuildingId);
-        this.renderCamp();
+        this.renderPanel('camp', true);
       });
 
       grid.append(
@@ -798,7 +880,7 @@ export class App {
     on(mend, 'click', () => {
       sound.play('buy', { gain: 0.8 });
       this.game.mend();
-      this.renderCamp();
+      this.renderPanel('camp', true);
     });
 
     panel.append(
@@ -869,7 +951,7 @@ export class App {
       on(button, 'click', () => {
         sound.play('buy', { gain: 0.8 });
         this.game.buyRelic(id as RelicId);
-        this.renderRelics();
+        this.renderPanel('relics', true);
       });
 
       grid.append(

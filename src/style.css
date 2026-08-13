@@ -764,9 +764,12 @@ input[type='checkbox'] {
   color: var(--rarity, var(--text));
 }
 
-.gear-power {
+.gear-gain {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .stash {
@@ -787,7 +790,13 @@ input[type='checkbox'] {
 }
 
 .stash-row .gear-chip {
-  min-width: 160px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.stash-actions .button.tiny {
+  font-family: var(--mono);
+  font-size: 12px;
 }
 
 .stash-actions {

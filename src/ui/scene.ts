@@ -1,7 +1,7 @@
 import { zoneForFloor } from '../data/content';
 import { heroStats, partyOf } from '../core/stats';
 import type { Combatant, GameState } from '../core/types';
-import { spriteImage, spriteMeta, zoneTiles } from './assets';
+import { effectImage, spriteImage, spriteMeta, zoneTiles } from './assets';
 
 const TILE = 32;
 const SPRITE = 64;
@@ -23,6 +23,23 @@ export interface SpotOnScreen {
   key: string;
   x: number;
   y: number;
+  /** Middle of the body, where projectiles are aimed. */
+  midY: number;
+}
+
+export type AttackStyle = 'melee' | 'shoot' | 'frost' | 'flame';
+
+interface Effect {
+  image: string;
+  mirror: boolean;
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+  age: number;
+  life: number;
+  travelling: boolean;
+  scale: number;
 }
 
 export class Scene {
@@ -35,6 +52,10 @@ export class Scene {
   private scale = 1;
   private width = 512;
   private height = 288;
+  private clock = 0;
+  private effects: Effect[] = [];
+  private flashes = new Map<string, number>();
+  private readonly tintCanvas = document.createElement('canvas');
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -44,6 +65,54 @@ export class Scene {
     if (!context) throw new Error('canvas 2d context unavailable');
     this.ctx = context;
     this.ctx.imageSmoothingEnabled = false;
+    this.tintCanvas.width = SPRITE;
+    this.tintCanvas.height = SPRITE;
+  }
+
+  /** A blow landed: the sprite flashes for a moment. */
+  flash(key: string): void {
+    this.flashes.set(key, 0.16);
+  }
+
+  /**
+   * Throws whatever the attack looks like from one fighter to another. Arrows
+   * and orbs fly across; a swing just kicks up dust where it lands.
+   */
+  spawnAttack(fromKey: string, toKey: string, style: AttackStyle): void {
+    const from = this.spots.find((spot) => spot.key === fromKey);
+    const to = this.spots.find((spot) => spot.key === toKey);
+    if (!to) return;
+
+    if (style === 'melee' || !from) {
+      this.effects.push({
+        image: Math.random() < 0.5 ? 'dust_0' : 'dust_1',
+        mirror: false,
+        fromX: to.x,
+        fromY: to.midY,
+        toX: to.x,
+        toY: to.midY,
+        age: 0,
+        life: 0.28,
+        travelling: false,
+        scale: 0.8,
+      });
+      return;
+    }
+
+    const image = style === 'shoot' ? 'arrow_left' : style === 'frost' ? 'orb_frost' : 'orb_flame';
+    this.effects.push({
+      image,
+      // The cleared arrow tile points left, so shots to the right are mirrored.
+      mirror: style === 'shoot' && to.x > from.x,
+      fromX: from.x,
+      fromY: from.midY,
+      toX: to.x,
+      toY: to.midY,
+      age: 0,
+      life: 0.22,
+      travelling: true,
+      scale: style === 'shoot' ? 1 : 0.75,
+    });
   }
 
   /** Screen position of each fighter, used to place floating numbers. */
@@ -82,12 +151,22 @@ export class Scene {
     this.drawFloor(zone.tiles);
     this.drawLight(floor);
 
+    this.clock += dt;
+    for (const [key, left] of this.flashes) {
+      const next = left - dt;
+      if (next <= 0) this.flashes.delete(key);
+      else this.flashes.set(key, next);
+    }
+
     this.spots = [];
     const resting = run.party.length === 0;
     const party = resting ? this.campParty(state) : run.party;
     this.drawSide(party, dt, 'party', run.phase);
-    if (!resting) this.drawSide(run.foes, dt, 'foe', run.phase);
+    // Between floors there is nobody to face; the last fight's dead stay behind.
+    const facing = run.phase === 'fighting' || run.phase === 'looting';
+    if (!resting && facing) this.drawSide(run.foes, dt, 'foe', run.phase);
 
+    this.drawEffects(dt);
     this.drawEdges();
   }
 
@@ -183,6 +262,48 @@ export class Scene {
     }
   }
 
+  private drawEffects(dt: number): void {
+    const ctx = this.ctx;
+    const alive: Effect[] = [];
+
+    for (const effect of this.effects) {
+      effect.age += dt;
+      const image = effectImage(effect.image);
+      if (!image || !image.complete || effect.age >= effect.life) {
+        if (effect.age >= effect.life && effect.travelling) {
+          // A shot that reaches its mark bursts where it lands.
+          alive.push({
+            ...effect,
+            travelling: false,
+            age: 0,
+            life: 0.26,
+            fromX: effect.toX,
+            fromY: effect.toY,
+            scale: effect.image === 'arrow_left' ? 0.7 : 1.1,
+            image: effect.image === 'arrow_left' ? 'dust_0' : effect.image,
+          });
+        }
+        continue;
+      }
+
+      const progress = effect.age / effect.life;
+      const x = effect.travelling ? effect.fromX + (effect.toX - effect.fromX) * progress : effect.fromX;
+      const y = effect.travelling ? effect.fromY + (effect.toY - effect.fromY) * progress : effect.fromY;
+      const size = image.width * effect.scale * (effect.travelling ? 1 : 0.75 + progress * 0.7);
+
+      ctx.save();
+      ctx.globalAlpha = effect.travelling ? 1 : Math.max(0, 1 - progress);
+      ctx.translate(Math.round(x), Math.round(y));
+      if (effect.mirror) ctx.scale(-1, 1);
+      ctx.drawImage(image, Math.round(-size / 2), Math.round(-size / 2), Math.round(size), Math.round(size));
+      ctx.restore();
+
+      alive.push(effect);
+    }
+
+    this.effects = alive.slice(-40);
+  }
+
   private drawEdges(): void {
     const ctx = this.ctx;
     const vignette = ctx.createRadialGradient(
@@ -227,18 +348,25 @@ export class Scene {
       const clip = meta.animations[state.clip] ?? meta.animations.walk;
       const frame = Math.min(state.frame, clip.frames - 1);
 
+      // Standing still is not standing frozen: a slow breath keeps them alive.
+      const breathing = fighter.alive && state.clip === 'idle';
+      const bob = breathing ? Math.round(Math.sin(this.clock * 1.9 + index * 1.7)) : 0;
+
       const drawX = Math.round(x - SPRITE / 2);
-      const drawY = Math.round(y - SPRITE + FOOT_INSET);
+      const drawY = Math.round(y - SPRITE + FOOT_INSET) + bob;
 
       this.ctx.save();
       if (!fighter.alive) this.ctx.globalAlpha = 0.55;
       this.ctx.drawImage(image, frame * SPRITE, clip.row * SPRITE, SPRITE, SPRITE, drawX, drawY, SPRITE, SPRITE);
       this.ctx.restore();
 
+      const flash = this.flashes.get(fighter.key);
+      if (flash) this.drawFlash(image, frame, clip.row, drawX, drawY, flash, fighter.side);
+
       if (fighter.alive) this.drawBar(fighter, drawX + SPRITE / 2, drawY + 12);
       if (fighter.guard > 0) this.drawGuard(drawX + SPRITE / 2, drawY + SPRITE - 10);
 
-      this.spots.push({ key: fighter.key, x: drawX + SPRITE / 2, y: drawY + 8 });
+      this.spots.push({ key: fighter.key, x: drawX + SPRITE / 2, y: drawY + 8, midY: drawY + SPRITE - 26 });
     }
   }
 
@@ -278,6 +406,32 @@ export class Scene {
       state.frame = (state.frame + 1) % frames;
     }
     return state;
+  }
+
+  /** Paints the struck frame in flat colour for a couple of frames. */
+  private drawFlash(
+    image: CanvasImageSource,
+    frame: number,
+    row: number,
+    x: number,
+    y: number,
+    left: number,
+    side: 'party' | 'foe',
+  ): void {
+    const tint = this.tintCanvas.getContext('2d');
+    if (!tint) return;
+
+    tint.clearRect(0, 0, SPRITE, SPRITE);
+    tint.drawImage(image, frame * SPRITE, row * SPRITE, SPRITE, SPRITE, 0, 0, SPRITE, SPRITE);
+    tint.globalCompositeOperation = 'source-atop';
+    tint.fillStyle = side === 'party' ? '#c8534a' : '#fff4dc';
+    tint.fillRect(0, 0, SPRITE, SPRITE);
+    tint.globalCompositeOperation = 'source-over';
+
+    this.ctx.save();
+    this.ctx.globalAlpha = Math.min(0.7, left * 4);
+    this.ctx.drawImage(this.tintCanvas, x, y);
+    this.ctx.restore();
   }
 
   private drawBar(fighter: Combatant, centreX: number, y: number): void {

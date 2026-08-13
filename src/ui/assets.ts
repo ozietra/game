@@ -6,11 +6,13 @@ type SpriteEntry = {
   file: string;
   frame: number;
   facing: string;
+  attackKind: string;
   animations: Record<string, { row: number; frames: number }>;
 };
 
 const SPRITES = manifest.sprites as Record<string, SpriteEntry>;
 const ZONES = manifest.zones as Record<string, { wall: string[]; floor: string[] }>;
+const EFFECTS = (manifest as { effects?: Record<string, string> }).effects ?? {};
 const GLYPHS = glyphs as Record<string, string>;
 
 const images = new Map<string, HTMLImageElement>();
@@ -47,6 +49,11 @@ export function zoneTiles(zone: string): { wall: HTMLImageElement[]; floor: HTML
   };
 }
 
+export function effectImage(name: string): HTMLImageElement | null {
+  const path = EFFECTS[name];
+  return path ? load(path) : null;
+}
+
 /** Inline SVG so icons inherit the surrounding text colour. */
 export function icon(name: string, className = ''): string {
   const glyph = GLYPHS[name];
@@ -77,6 +84,10 @@ export function preload(): Promise<void> {
   const pending: Promise<unknown>[] = [];
   for (const name of Object.keys(SPRITES)) {
     const image = spriteImage(name);
+    if (image && !image.complete) pending.push(image.decode().catch(() => undefined));
+  }
+  for (const name of Object.keys(EFFECTS)) {
+    const image = effectImage(name);
     if (image && !image.complete) pending.push(image.decode().catch(() => undefined));
   }
   for (const zone of Object.keys(ZONES)) {
