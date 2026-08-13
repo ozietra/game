@@ -47,6 +47,19 @@ A crude stand-in for a player spends the vault, pushes the target floor after a
 clean dive, pulls it back after a rout, and gives up the run once the shaft
 stops giving ground. It is what the depth curve was tuned against.
 
+### Browser pass
+
+`tools/smoke.cjs` seeds one of those dumped saves, lets the shaft run, walks
+every panel in both languages, shrinks the window and reports any console error
+or failed request:
+
+```sh
+npm run build
+npx vite preview --port 4173 &
+npm install --no-save playwright
+npm run smoke -- tools/.cache/save.json tools/.cache
+```
+
 ## Art and typefaces
 
 Nothing here was drawn for this project and nothing was generated. Character

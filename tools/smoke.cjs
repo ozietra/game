@@ -22,10 +22,18 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
   const browser = await chromium.launch({ ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) });
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
 
+  // Requests cancelled by the seeding reload are noise, so collection starts
+  // once the game is loaded for real.
+  let watching = false;
   const problems = [];
-  page.on('console', (m) => { if (m.type() === 'error') problems.push(`console: ${m.text()}`); });
-  page.on('pageerror', (e) => problems.push(`pageerror: ${e.message}`));
-  page.on('requestfailed', (r) => problems.push(`request failed: ${r.url()} ${r.failure()?.errorText}`));
+  page.on('console', (m) => { if (watching && m.type() === 'error') problems.push(`console: ${m.text()}`); });
+  page.on('pageerror', (e) => { if (watching) problems.push(`pageerror: ${e.message}`); });
+  page.on('requestfailed', (r) => {
+    const reason = r.failure()?.errorText ?? '';
+    // A reload cancels whatever the previous page was still fetching; that is a
+    // cancellation, not a broken asset.
+    if (watching && reason !== 'net::ERR_ABORTED') problems.push(`request failed: ${r.url()} ${reason}`);
+  });
 
   // seed a mid game save, pretending the tab was closed two hours ago
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
@@ -34,6 +42,7 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
     save.tutorialSeen = true;
     localStorage.setItem('alacakuyu.save.v1', JSON.stringify(save));
   }, SAVE);
+  watching = true;
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForTimeout(2500);
 
