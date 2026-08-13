@@ -53,12 +53,14 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
   // title screen: credits live here now
   await page.waitForTimeout(600);
   await page.screenshot({ path: `${OUT}/mid-menu.png` });
-  await page.locator('.menu-buttons .button').nth(2).click();
+  // Menu entries are found by what they read, so adding one does not silently
+  // break the pass.
+  await page.locator('.menu-buttons .button').filter({ hasText: /Künye|Credits/ }).first().click();
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${OUT}/mid-credits.png` });
   await page.locator('.menu-buttons .button').last().click();
   await page.waitForTimeout(300);
-  await page.locator('.menu-buttons .button').nth(1).click();
+  await page.locator('.menu-buttons .button').filter({ hasText: /Ayarlar|Settings/ }).first().click();
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${OUT}/mid-settings.png` });
   await page.locator('.menu-buttons .button').last().click();
@@ -68,10 +70,10 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
   await page.waitForTimeout(6000);
   await page.screenshot({ path: `${OUT}/mid-shaft.png` });
 
-  for (const tab of ['roster', 'camp', 'relics']) {
+  for (const tab of ['roster', 'stash', 'camp', 'relics']) {
     await page.click(`[data-tab="${tab}"]`);
     await page.waitForTimeout(700);
-    await page.screenshot({ path: `${OUT}/mid-${tab}.png`, fullPage: tab === 'roster' });
+    await page.screenshot({ path: `${OUT}/mid-${tab}.png`, fullPage: tab === 'roster' || tab === 'relics' });
   }
 
   // english pass, switched from the title screen

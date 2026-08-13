@@ -129,6 +129,57 @@ h3 {
   justify-content: flex-end;
 }
 
+/*
+ * On a phone the header stops trying to be one line: the name keeps the top
+ * row with the menu button, and the purse lays out underneath in even columns
+ * instead of stacking into a tall ladder down the right edge.
+ */
+@media (max-width: 720px) {
+  .topbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .brand {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .brand-name {
+    font-size: 30px;
+  }
+
+  .topbar-right {
+    display: contents;
+  }
+
+  .topbar-right > .button {
+    order: 2;
+  }
+
+  /* One row, equal shares, whatever the purse happens to be holding. */
+  .purse {
+    order: 3;
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .chip {
+    min-width: 0;
+    gap: 5px;
+    padding: 5px 7px;
+  }
+
+  .chip-value {
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* -------------------------------------------------------------------- menu */
 
 .menu {
@@ -251,8 +302,11 @@ h3 {
 
 /* -------------------------------------------------------------------- tabs */
 
+/* Wraps rather than running off the edge, so all seven stay reachable on a
+ * phone without a sideways swipe nobody would think to try. */
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   margin: 14px 0 18px;
   border-bottom: 1px solid var(--edge);
@@ -264,9 +318,9 @@ h3 {
   gap: 8px;
   background: transparent;
   border: 1px solid transparent;
-  border-bottom: none;
+  border-bottom: 2px solid transparent;
   color: var(--muted);
-  padding: 9px 16px 8px;
+  padding: 9px 16px 7px;
   cursor: pointer;
   font-family: var(--display);
   font-size: 19px;
@@ -280,8 +334,16 @@ h3 {
 .tab.is-active {
   color: var(--gold);
   border-color: var(--edge);
+  border-bottom-color: var(--gold);
   background: var(--panel);
-  margin-bottom: -1px;
+}
+
+@media (max-width: 720px) {
+  .tab {
+    padding: 8px 11px 6px;
+    font-size: 17px;
+    gap: 6px;
+  }
 }
 
 /* ------------------------------------------------------------------ panels */
@@ -397,7 +459,7 @@ h3 {
 }
 
 .label {
-  font-size: 12px;
+  font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
@@ -424,7 +486,8 @@ h3 {
 .muted,
 .note {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .note {
@@ -487,6 +550,43 @@ h3 {
   font-size: 14px;
 }
 
+/* Fills the card it closes, with the price on a second line of its own. */
+.button.wide {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, max-content);
+  justify-content: center;
+  align-items: center;
+  column-gap: 9px;
+  row-gap: 1px;
+  text-align: left;
+  padding: 9px 14px 10px;
+}
+
+.button.wide > .icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.button.wide > span {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.button.wide > .button-cost {
+  grid-row: 2;
+}
+
+.button-cost {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.button:hover:not(:disabled) .button-cost {
+  color: var(--text);
+}
+
 /* ------------------------------------------------------------------- cards */
 
 .card {
@@ -507,7 +607,46 @@ h3 {
 }
 
 .card.wide {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+/*
+ * A card that ends in a price. The description takes the slack so the rank
+ * line and the button land on the same row across the whole grid, however
+ * many lines of text each one happens to carry.
+ */
+.card.tile {
+  display: flex;
+  flex-direction: column;
+}
+
+.card.tile > .note {
+  flex: 1;
+}
+
+.card.tile > .stat-line {
+  margin: 12px 0 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--edge);
+}
+
+/*
+ * A banner card that follows a grid needs air, otherwise its top border lands
+ * flush against the cards above it and the two read as one rule.
+ */
+.grid + .card.wide,
+.grid + .grid {
+  margin-top: 22px;
+}
+
+/* One line of guidance above a whole screen of cards. */
+.panel-note {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 14px;
+  border-left: 2px solid var(--edge-lit);
+  padding-left: 11px;
 }
 
 .grid {
@@ -547,7 +686,7 @@ h3 {
 .tagline {
   margin-left: auto;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 12.5px;
   letter-spacing: 0.1em;
   color: var(--muted);
   text-transform: uppercase;
@@ -1061,10 +1200,36 @@ input[type='checkbox'] {
   height: 15px;
 }
 
-/* -------------------------------------------------------------------- gear */
+/* ------------------------------------------------------------- hero cards */
+
+/*
+ * Every hero card is a column: head, body, foot. The body takes the slack so
+ * the button at the bottom sits on the same line across the whole row, no
+ * matter how much gear or how many talents a given hero has.
+ */
+.roster-grid {
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+}
+
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+}
+
+.hero-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-foot {
+  margin-top: 14px;
+}
 
 .hero-card.locked {
-  opacity: 0.78;
+  opacity: 0.82;
 }
 
 .hero-card.locked .portrait {
@@ -1073,15 +1238,20 @@ input[type='checkbox'] {
 
 .hero-head {
   display: flex;
-  gap: 11px;
-  align-items: center;
-  margin-bottom: 10px;
+  gap: 13px;
+  align-items: flex-start;
+  margin-bottom: 13px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--edge);
   text-align: left;
 }
 
-.hero-head > div {
+.hero-titles {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .portrait {
@@ -1101,7 +1271,137 @@ input[type='checkbox'] {
 }
 
 .hero-name {
-  font-size: 22px;
+  font-size: 23px;
+  line-height: 1.15;
+}
+
+.hero-role {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.hero-marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.hero-mark {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  border: 1px solid var(--edge-lit);
+  background: #100d0a;
+  padding: 2px 7px;
+}
+
+.hero-mark.is-bad {
+  color: var(--blood);
+  border-color: rgba(150, 58, 46, 0.7);
+}
+
+.hero-mark.is-idle {
+  color: var(--muted);
+}
+
+.hero-xp-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.hero-xp-count {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* A small caption over a block of a card. */
+.block-label {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.block-title {
+  font-size: 16.5px;
+  color: var(--gold);
+  margin: 0;
+}
+
+.hero-block {
+  border-top: 1px solid var(--edge);
+  padding-top: 11px;
+}
+
+/* Six boxes, three across, so the numbers line up card to card. */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+}
+
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: #100d0a;
+  padding: 6px 8px 7px;
+  min-width: 0;
+}
+
+.stat-cell-label {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-cell-value {
+  font-family: var(--mono);
+  font-size: 17px;
+  color: var(--text);
+}
+
+.hero-ability {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 3px solid var(--gold);
+  background: #16110b;
+  padding: 7px 11px 8px;
+}
+
+.hero-ability-name {
+  font-family: var(--display);
+  font-size: 17px;
+  color: var(--gold);
+}
+
+.hero-ability-line {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .stat-line {
@@ -1113,29 +1413,30 @@ input[type='checkbox'] {
   font-size: 15px;
 }
 
-.stats {
-  font-family: var(--mono);
-  font-size: 12.5px;
-  color: var(--muted);
-  margin: 9px 0 0;
-  line-height: 1.6;
-}
+/* -------------------------------------------------------------------- gear */
 
 .gear-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
 }
 
+/*
+ * Slot name down the left, item and what it is worth to the right. Stacked
+ * rather than three abreast, so a long name gets the whole card width instead
+ * of wrapping over four lines in a narrow column.
+ */
 .gear-chip {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 1px;
+  align-items: center;
   border: 1px solid var(--edge-lit);
   border-left: 3px solid var(--rarity, var(--edge-lit));
   background: #100d0a;
-  padding: 5px 7px;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  padding: 6px 9px 7px;
+  min-height: 44px;
   min-width: 0;
 }
 
@@ -1144,22 +1445,35 @@ input[type='checkbox'] {
 }
 
 .gear-slot {
-  font-size: 11px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 11.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
 .gear-name {
-  font-size: 14px;
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 15px;
   color: var(--rarity, var(--text));
+  line-height: 1.35;
+}
+
+.gear-name.is-empty {
+  grid-row: 1 / span 2;
+  color: var(--muted);
 }
 
 .gear-gain {
+  grid-column: 2;
+  grid-row: 2;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
@@ -1167,33 +1481,76 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 320px;
+  max-height: min(560px, 62vh);
   overflow-y: auto;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
+/* Piece on the left, who could wear it in even columns, melt price on the end. */
 .stash-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(190px, 250px) minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  gap: 10px 14px;
+  border-bottom: 1px solid rgba(70, 58, 42, 0.35);
+  padding-bottom: 9px;
+}
+
+.stash-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .stash-row .gear-chip {
-  min-width: 200px;
-  flex: 1;
-}
-
-.stash-actions .button.tiny {
-  font-family: var(--mono);
-  font-size: 12px;
+  min-width: 0;
 }
 
 .stash-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   gap: 5px;
-  flex-wrap: wrap;
+}
+
+/* Icon, name, then the swing in power hard against the right edge, so the
+ * numbers read down the column instead of drifting with the name lengths. */
+.button.tiny.pick {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 13px;
+  min-width: 0;
+}
+
+.pick-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.pick-change.is-up {
+  color: var(--moss);
+}
+
+.pick-change.is-down {
+  color: var(--muted);
+}
+
+.stash-melt {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+@media (max-width: 780px) {
+  .stash-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stash-melt {
+    justify-self: start;
+  }
 }
 
 .filter-row {
@@ -1210,8 +1567,8 @@ input[type='checkbox'] {
   border: 1px solid var(--edge-lit);
   border-bottom: 2px solid var(--rarity, var(--edge-lit));
   color: var(--muted);
-  padding: 4px 10px;
-  font-size: 13px;
+  padding: 5px 11px;
+  font-size: 13.5px;
   font-family: var(--mono);
   cursor: pointer;
 }
@@ -1367,30 +1724,22 @@ input[type='checkbox'] {
 
 /* ---------------------------------------------------------------- talents */
 
-.talent-tree {
-  border-top: 1px solid var(--edge);
-  margin-top: 10px;
-  padding-top: 8px;
-}
-
-.talent-title {
-  font-size: 16px;
-  color: var(--gold);
-  margin-bottom: 6px;
-}
-
 .talent-fork {
-  margin-bottom: 8px;
+  margin-bottom: 9px;
+}
+
+.talent-fork:last-child {
+  margin-bottom: 0;
 }
 
 .talent-tier {
   display: block;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .talent-options {
@@ -1402,12 +1751,12 @@ input[type='checkbox'] {
 .talent {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   text-align: left;
   border: 1px solid var(--edge-lit);
   background: var(--panel-raised);
   color: var(--text);
-  padding: 6px 8px 7px;
+  padding: 7px 9px 8px;
   cursor: pointer;
   font: inherit;
 }
@@ -1442,25 +1791,15 @@ input[type='checkbox'] {
 }
 
 .talent-name {
-  font-size: 15px;
+  font-size: 15.5px;
+  line-height: 1.25;
 }
 
 .talent-gain {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--muted);
-}
-
-.talent-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.talent-header .talent-title {
-  margin: 0;
+  line-height: 1.4;
 }
 
 /* --------------------------------------------------------------- guide */

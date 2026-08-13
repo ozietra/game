@@ -56,16 +56,25 @@ import { clear, el, on, setText, setWidth } from './dom';
 import { Menu } from './menu';
 import { Scene, type AttackStyle } from './scene';
 
-type TabId = 'shaft' | 'roster' | 'camp' | 'relics' | 'records' | 'ladder';
+type TabId = 'shaft' | 'roster' | 'stash' | 'camp' | 'relics' | 'records' | 'ladder';
 
 const TAB_ICONS: Record<TabId, string> = {
   shaft: 'descend',
   roster: 'swords',
+  stash: 'hoard',
   camp: 'camp',
   relics: 'relic',
   records: 'ledger',
   ladder: 'rank',
 };
+
+/** One box in a hero's number grid: what it is over what it reads. */
+function statCell(label: string, value: string): HTMLElement {
+  return el('div', { class: 'stat-cell' }, [
+    el('span', { class: 'stat-cell-label', text: label }),
+    el('span', { class: 'stat-cell-value', text: value }),
+  ]);
+}
 
 export class App {
   private readonly game: Game;
@@ -210,6 +219,7 @@ export class App {
     const panels = el('main', { class: 'panels' }, [
       this.keep('panel:shaft', this.buildShaft()),
       this.keep('panel:roster', el('section', { class: 'panel', hidden: true })),
+      this.keep('panel:stash', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:camp', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:relics', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:records', el('section', { class: 'panel', hidden: true })),
@@ -989,6 +999,11 @@ export class App {
       }).join('|');
       return `${purse}|${heroes}|${this.stashFilter}|${state.stash.map((item) => item.uid).join('.')}`;
     }
+    if (id === 'stash') {
+      return `${purse}|${this.stashFilter}|${state.stash.map((item) => item.uid).join('.')}|${HERO_ORDER.map(
+        (hero) => SLOTS.map((slot) => state.heroes[hero].gear[slot]?.uid ?? 0).join('.'),
+      ).join('|')}`;
+    }
     if (id === 'camp') return `${purse}|${Object.values(state.buildings).join('.')}|${this.game.mendCost()}`;
     if (id === 'relics') {
       return `${purse}|${state.bank.echo}|${Object.values(state.relics).join('.')}|${Object.values(
@@ -1025,6 +1040,9 @@ export class App {
       case 'roster':
         this.renderRoster();
         break;
+      case 'stash':
+        this.renderStash();
+        break;
       case 'camp':
         this.renderCamp();
         break;
@@ -1048,29 +1066,63 @@ export class App {
     });
   }
 
+  /**
+   * One card per hero, every card laid out the same way: head, numbers, gear,
+   * talents, and the button that costs money pinned to the bottom edge so the
+   * eight of them line up whatever each hero happens to be carrying.
+   */
   private renderRoster(): void {
     const panel = this.ref('panel:roster');
     const state = this.game.state;
     clear(panel);
 
-    const cards = el('div', { class: 'grid' });
+    const cards = el('div', { class: 'grid roster-grid' });
     for (const id of HERO_ORDER) {
       const hero = state.heroes[id];
       const definition = HEROES[id];
       const stats = heroStats(state, hero);
 
+      const marks = el('div', { class: 'hero-marks' });
+      if (hero.unlocked) {
+        marks.append(
+          el('span', { class: 'hero-mark', text: `${t('roster.level')} ${hero.level}` }),
+          el('span', {
+            class: `hero-mark${hero.wounds > 0 ? ' is-bad' : ''}`,
+            text: `${t('roster.wounds')} ${hero.wounds}`,
+          }),
+        );
+      } else {
+        marks.append(el('span', { class: 'hero-mark is-idle', text: t('roster.locked') }));
+      }
+
       const header = el('div', { class: 'hero-head' }, [
         el('span', { class: 'portrait', style: portraitStyle(heroLook(hero).sprite) }),
-        el('div', {}, [
+        el('div', { class: 'hero-titles' }, [
           el('h3', { class: 'hero-name', text: t(`hero.${id}.name` as StringKey) }),
-          el('p', { class: 'note', text: t(`hero.${id}.line` as StringKey) }),
+          el('p', { class: 'hero-role', text: t(`hero.${id}.line` as StringKey) }),
+          marks,
         ]),
       ]);
 
-      const body: HTMLElement[] = [];
+      const ability = el('div', { class: 'hero-ability' }, [
+        el('span', { class: 'block-label', text: t('roster.ability') }),
+        el('span', { class: 'hero-ability-name', text: t(`ability.${id}.name` as StringKey) }),
+        el('span', {
+          class: 'hero-ability-line',
+          text: t(`ability.${id}.line` as StringKey, {
+            value: ['bulwark', 'mend', 'rally', 'snare'].includes(definition.ability.kind)
+              ? formatPercent(definition.ability.power)
+              : definition.ability.power.toFixed(1),
+          }),
+        }),
+      ]);
+
+      const body = el('div', { class: 'hero-body' });
+      const foot = el('div', { class: 'hero-foot' });
+
       if (!hero.unlocked) {
         const hire = el('button', {
-          class: 'button',
+          class: 'button wide',
           type: 'button',
           disabled: state.bank.coin < definition.cost,
           html: `${icon('coin')}<span>${t('action.recruit')} · ${formatNumber(definition.cost)}</span>`,
@@ -1079,69 +1131,76 @@ export class App {
           sound.play('buy', { gain: 0.8 });
           this.game.recruit(id);
           this.renderPanel('roster', true);
+          this.renderPurse();
         });
-        body.push(el('p', { class: 'muted', text: t('roster.locked') }), hire);
+        body.append(ability, el('p', { class: 'note', text: t('roster.lockedNote') }));
+        foot.append(hire);
       } else {
         const training = masteryCost(hero);
         const train = el('button', {
-          class: 'button',
+          class: 'button wide',
           type: 'button',
           disabled: state.bank.coin < training.coin || state.bank.iron < training.iron,
-          html: `${icon('upgrade')}<span>${t('action.train')} · ${formatNumber(training.coin)} ${t('res.coin')} · ${formatNumber(training.iron)} ${t('res.iron')}</span>`,
+          html: `${icon('upgrade')}<span>${t('action.train')}</span><span class="button-cost">${formatNumber(training.coin)} ${t('res.coin')} · ${formatNumber(training.iron)} ${t('res.iron')}</span>`,
         });
         on(train, 'click', () => {
           sound.play('buy', { gain: 0.8 });
           this.game.train(id);
           this.renderPanel('roster', true);
+          this.renderPurse();
         });
 
         const xpBar = this.keep(`xp:${id}`, el('span', { class: 'bar-fill' }));
         xpBar.style.width = `${this.game.progressToNextLevel(hero) * 100}%`;
         const xpText = this.keep(
           `xpText:${id}`,
-          el('span', { class: 'muted', text: `${formatNumber(hero.xp)} / ${formatNumber(xpForLevel(hero.level))}` }),
+          el('span', { class: 'hero-xp-count', text: `${formatNumber(hero.xp)} / ${formatNumber(xpForLevel(hero.level))}` }),
         );
 
-        body.push(
-          el('div', { class: 'stat-line' }, [
-            el('span', { text: `${t('roster.level')} ${hero.level}` }),
-            xpText,
+        body.append(
+          el('div', { class: 'hero-xp' }, [
+            el('div', { class: 'hero-xp-head' }, [
+              el('span', { class: 'block-label', text: t('roster.xp') }),
+              xpText,
+            ]),
+            el('div', { class: 'bar thin' }, [xpBar]),
           ]),
-          el('div', { class: 'bar thin' }, [xpBar]),
-          el('p', {
-            class: 'stats',
-            text: t('roster.stats', {
-              hp: formatNumber(stats.maxHp),
-              attack: formatNumber(stats.attack),
-              defence: formatNumber(stats.defence),
-              speed: stats.speed,
-              crit: formatPercent(stats.crit),
-            }),
-          }),
-          el('p', { class: 'note' }, [
-            el('strong', { text: `${t(`ability.${id}.name` as StringKey)}: ` }),
-            document.createTextNode(
-              t(`ability.${id}.line` as StringKey, {
-                value:
-                  ['bulwark', 'mend', 'rally', 'snare'].includes(definition.ability.kind)
-                    ? formatPercent(definition.ability.power)
-                    : definition.ability.power.toFixed(1),
-              }),
-            ),
+          el('div', { class: 'stat-grid' }, [
+            statCell(t('roster.stat.hp'), formatNumber(stats.maxHp)),
+            statCell(t('roster.stat.attack'), formatNumber(stats.attack)),
+            statCell(t('roster.stat.defence'), formatNumber(stats.defence)),
+            statCell(t('roster.stat.speed'), stats.speed.toFixed(2)),
+            statCell(t('roster.stat.crit'), formatPercent(stats.crit)),
+            statCell(t('roster.stat.drill'), `${hero.mastery}`),
           ]),
-          el('div', { class: 'gear-row' }, SLOTS.map((slot) => this.gearChip(hero.gear[slot], slot))),
-          this.setLine(hero),
+          ability,
+          el('div', { class: 'hero-block' }, [
+            el('div', { class: 'block-head' }, [el('h4', { class: 'block-title', text: t('roster.gear') })]),
+            el('div', { class: 'gear-row' }, SLOTS.map((slot) => this.gearChip(hero.gear[slot], slot))),
+            this.setLine(hero),
+          ]),
           this.talentTree(hero),
-          el('div', { class: 'stat-line' }, [
-            el('span', { text: `${t('roster.mastery')} ${hero.mastery}` }),
-            el('span', { class: hero.wounds > 0 ? 'bad' : 'muted', text: `${t('roster.wounds')} ${hero.wounds}` }),
-          ]),
-          train,
         );
+        foot.append(train);
       }
 
-      cards.append(el('article', { class: `card hero-card${hero.unlocked ? '' : ' locked'}` }, [header, ...body]));
+      cards.append(el('article', { class: `card hero-card${hero.unlocked ? '' : ' locked'}` }, [header, body, foot]));
     }
+
+    panel.append(
+      el('p', { class: 'panel-note', text: t('talent.note') }),
+      cards,
+    );
+  }
+
+  /**
+   * The store. It used to hang off the bottom of the party screen, which meant
+   * scrolling past eight hero cards to melt a ring down.
+   */
+  private renderStash(): void {
+    const panel = this.ref('panel:stash');
+    const state = this.game.state;
+    clear(panel);
 
     const counts = new Map<RarityId, number>();
     for (const item of state.stash) counts.set(item.rarity, (counts.get(item.rarity) ?? 0) + 1);
@@ -1161,7 +1220,7 @@ export class App {
       on(button, 'click', () => {
         sound.play('click', { gain: 0.4 });
         this.stashFilter = option;
-        this.renderPanel('roster', true);
+        this.renderPanel('stash', true);
       });
       filters.append(button);
     }
@@ -1188,13 +1247,17 @@ export class App {
     on(scrap, 'click', () => {
       sound.play('buy', { gain: 0.6 });
       for (const item of shown) this.game.scrapItem(item.uid);
-      this.renderPanel('roster', true);
+      this.renderPanel('stash', true);
     });
 
     panel.append(
-      cards,
-      el('div', { class: 'card' }, [
-        el('h2', { class: 'card-title', html: `${icon('hoard')}<span>${t('roster.stash')}</span>` }),
+      el('div', { class: 'card wide' }, [
+        el('h2', { class: 'card-title' }, [
+          el('span', { html: icon('hoard') }),
+          el('span', { text: t('roster.stash') }),
+          el('span', { class: 'tagline', text: `${state.stash.length}` }),
+        ]),
+        el('p', { class: 'note', text: t('roster.stashNote') }),
         filters,
         stash,
         scrap,
@@ -1202,7 +1265,6 @@ export class App {
     );
   }
 
-  /** Plain reading of what a piece of gear is worth: "+128 attack, +0.4% crit". */
   private gearGainText(item: Item): string {
     const gain = itemGain(item);
     const parts: string[] = [];
@@ -1292,10 +1354,9 @@ export class App {
       this.renderPurse();
     });
 
-    return el('div', { class: 'talent-tree' }, [
-      el('div', { class: 'talent-header' }, [el('h4', { class: 'talent-title', text: t('talent.title') }), reset]),
+    return el('div', { class: 'hero-block talent-tree' }, [
+      el('div', { class: 'block-head' }, [el('h4', { class: 'block-title', text: t('talent.title') }), reset]),
       ...rows,
-      el('p', { class: 'note', text: t('talent.note') }),
     ]);
   }
 
@@ -1333,7 +1394,7 @@ export class App {
     if (!item) {
       return el('div', { class: 'gear-chip empty' }, [
         el('span', { class: 'gear-slot', text: t(`slot.${slot}` as StringKey) }),
-        el('span', { class: 'muted', text: t('roster.empty') }),
+        el('span', { class: 'gear-name is-empty', text: t('roster.empty') }),
       ]);
     }
     const chip = el('div', { class: 'gear-chip' }, [
@@ -1350,21 +1411,25 @@ export class App {
       const current = hero.gear[item.slot];
       const change = item.power - (current?.power ?? 0);
       const button = el('button', {
-        class: `button tiny${change > 0 ? ' primary' : ''}`,
+        class: `button tiny pick${change > 0 ? ' primary' : ''}`,
         type: 'button',
         title: t(`hero.${hero.id}.name` as StringKey),
-        html: `${icon(HEROES[hero.id].icon)}<span>${t(`hero.${hero.id}.name` as StringKey)} ${change >= 0 ? '+' : ''}${formatNumber(change)}</span>`,
+        html:
+          `${icon(HEROES[hero.id].icon)}` +
+          `<span class="pick-name">${t(`hero.${hero.id}.name` as StringKey)}</span>` +
+          `<span class="pick-change${change > 0 ? ' is-up' : change < 0 ? ' is-down' : ''}">${change >= 0 ? '+' : ''}${formatNumber(change)}</span>`,
       });
       on(button, 'click', () => {
         sound.play('loot', { gain: 0.7 });
         this.game.equip(hero.id, item);
+        this.renderPanel('stash', true);
         this.renderPanel('roster', true);
       });
       return button;
     });
 
     const melt = el('button', {
-      class: 'button tiny',
+      class: 'button tiny stash-melt',
       type: 'button',
       html: `${icon('pick')}<span>${formatNumber(this.game.scrapValue(item))} ${t('res.iron')}</span>`,
       title: t('action.scrap'),
@@ -1372,12 +1437,14 @@ export class App {
     on(melt, 'click', () => {
       sound.play('buy', { gain: 0.6 });
       this.game.scrapItem(item.uid);
-      this.renderPanel('roster', true);
+      this.renderPanel('stash', true);
+      this.renderPurse();
     });
 
     return el('div', { class: 'stash-row' }, [
       this.gearChip(item, item.slot),
-      el('div', { class: 'stash-actions' }, [...buttons, melt]),
+      el('div', { class: 'stash-actions' }, buttons),
+      melt,
     ]);
   }
 
@@ -1396,21 +1463,22 @@ export class App {
       const value = formatPercent(effect as number);
 
       const button = el('button', {
-        class: 'button',
+        class: 'button wide',
         type: 'button',
         disabled: maxed || !this.game.canAfford(cost),
         html: maxed
           ? `<span>${t('camp.max')}</span>`
-          : `${icon('upgrade')}<span>${t('action.upgrade')} · ${this.costLabel(cost)}</span>`,
+          : `${icon('upgrade')}<span>${t('action.upgrade')}</span><span class="button-cost">${this.costLabel(cost)}</span>`,
       });
       on(button, 'click', () => {
         sound.play('buy', { gain: 0.8 });
         this.game.upgrade(id as BuildingId);
         this.renderPanel('camp', true);
+        this.renderPurse();
       });
 
       grid.append(
-        el('article', { class: 'card' }, [
+        el('article', { class: 'card tile' }, [
           el('h3', { class: 'card-title', html: `${icon(definition.icon)}<span>${t(`building.${id}.name` as StringKey)}</span>` }),
           el('p', { class: 'note', text: t(`building.${id}.line` as StringKey, { value }) }),
           el('div', { class: 'stat-line' }, [
@@ -1498,7 +1566,7 @@ export class App {
       const value = id === 'guidestone' || id === 'wakingcamp' ? `${raw}` : formatPercent(raw as number);
 
       const button = el('button', {
-        class: 'button',
+        class: 'button wide',
         type: 'button',
         disabled: maxed || state.bank.relic < cost,
         html: maxed ? `<span>${t('camp.max')}</span>` : `${icon('relic')}<span>${formatNumber(cost)} ${t('res.relic')}</span>`,
@@ -1510,7 +1578,7 @@ export class App {
       });
 
       grid.append(
-        el('article', { class: 'card' }, [
+        el('article', { class: 'card tile' }, [
           el('h3', { class: 'card-title', html: `${icon(definition.icon)}<span>${t(`relic.${id}.name` as StringKey)}</span>` }),
           el('p', { class: 'note', text: t(`relic.${id}.line` as StringKey, { value }) }),
           el('div', { class: 'stat-line' }, [
@@ -1577,7 +1645,7 @@ export class App {
       const value = id === 'oldlamp' || id === 'firstlight' ? `${raw}` : formatPercent(raw as number);
 
       const button = el('button', {
-        class: 'button',
+        class: 'button wide',
         type: 'button',
         disabled: maxed || state.bank.echo < cost,
         html: maxed ? `<span>${t('camp.max')}</span>` : `${icon('stone')}<span>${formatNumber(cost)} ${t('res.echo')}</span>`,
@@ -1589,7 +1657,7 @@ export class App {
       });
 
       grid.append(
-        el('article', { class: 'card' }, [
+        el('article', { class: 'card tile' }, [
           el('h3', { class: 'card-title', html: `${icon(definition.icon)}<span>${t(`echo.${id}.name` as StringKey)}</span>` }),
           el('p', { class: 'note', text: t(`echo.${id}.line` as StringKey) }),
           el('div', { class: 'stat-line' }, [
