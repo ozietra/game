@@ -186,6 +186,7 @@ export const tr = {
   'res.crystal': 'Kristal',
   'res.relic': 'Kalıntı',
 
+  'shaft.wounded': 'Yaralar kapanmadan inilmiyor',
   'phase.camp': 'Kampta',
   'phase.descending': 'İniyor',
   'phase.event': 'Bir şey var',

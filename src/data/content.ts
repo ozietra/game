@@ -10,7 +10,7 @@ export const BALANCE = {
   campRestSeconds: 6,
   wipePauseSeconds: 5,
   betweenFightHealing: 0.1,
-  woundRecoverySeconds: 110,
+  woundRecoverySeconds: 55,
   restHealPerSecond: 0.09,
   offlineHoursBase: 4,
   offlineHoursPerRelic: 2,

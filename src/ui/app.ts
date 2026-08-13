@@ -751,7 +751,7 @@ export class App {
     setText(this.ref('phase'), t(`phase.${run.phase}` as StringKey));
 
     let note = '';
-    if (run.phase === 'camp') note = t('shaft.idle');
+    if (run.phase === 'camp') note = this.game.heldBackByWounds() ? t('shaft.wounded') : t('shaft.idle');
     else if (run.manual && (run.phase === 'descending' || run.phase === 'fighting' || run.phase === 'looting'))
       note = t('shaft.manual');
     else if (run.phase === 'wiped') note = t('shaft.wiped');

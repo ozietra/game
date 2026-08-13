@@ -739,6 +739,14 @@ export class Game {
     this.closeReport(true, lost);
   }
 
+  /**
+   * Whether the party is too badly cut up to be sent down again. Only the last
+   * two wound levels count, so a scratch never stops anybody.
+   */
+  heldBackByWounds(): boolean {
+    return partyOf(this.state).some((hero) => hero.wounds >= BALANCE.maxWounds - 1);
+  }
+
   /** Time in camp closes wounds without a healer's fee. */
   private restWounds(seconds: number): void {
     this.woundRest += seconds;
@@ -832,11 +840,11 @@ export class Game {
           const party = partyOf(this.state);
           const rested = party.every((hero) => hero.hp >= heroStats(this.state, hero).maxHp * 0.98);
           // Wounds compound: every rout adds one, each one costs stats, and a
-          // weaker party is likelier to be routed again. Waiting for the worst
-          // of them to close is what stops one bad dive turning into a night
-          // of them.
-          const patched = party.every((hero) => hero.wounds < 2);
-          if (rested && patched) this.beginDive();
+          // weaker party is likelier to be routed again. The party waits only
+          // when it is genuinely in no state to go down, and the shaft screen
+          // says so, because an automatic descent that silently stops looks
+          // exactly like one that is broken.
+          if (rested && !this.heldBackByWounds()) this.beginDive();
         }
         break;
       }

@@ -188,6 +188,7 @@ export const en: Record<StringKey, string> = {
   'res.crystal': 'Crystal',
   'res.relic': 'Relic',
 
+  'shaft.wounded': 'Not going down until the wounds close',
   'phase.camp': 'In camp',
   'phase.descending': 'Descending',
   'phase.event': 'Something here',
