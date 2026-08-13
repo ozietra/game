@@ -9,7 +9,10 @@ import { metrics } from '../net/telemetry';
 import { icon, portraitStyle } from './assets';
 import { clear, el, on } from './dom';
 
-type Section = 'main' | 'settings' | 'credits';
+type Section = 'main' | 'settings' | 'credits' | 'guide';
+
+/** The chapters of the guide, in the order somebody meets them. */
+const CHAPTERS = ['shaft', 'orders', 'risk', 'gear', 'party', 'camp', 'prestige', 'daily', 'save'] as const;
 
 interface CreditEntry {
   source: string;
@@ -30,6 +33,7 @@ export class Menu {
   private readonly onPlay: () => void;
   private readonly onRestart: () => void;
   private section: Section = 'main';
+  private chapter: (typeof CHAPTERS)[number] = 'shaft';
 
   constructor(game: Game, host: HTMLElement, onPlay: () => void, onRestart: () => void) {
     this.game = game;
@@ -41,7 +45,13 @@ export class Menu {
   render(): void {
     clear(this.host);
     const body =
-      this.section === 'settings' ? this.settings() : this.section === 'credits' ? this.credits() : this.main();
+      this.section === 'settings'
+        ? this.settings()
+        : this.section === 'credits'
+          ? this.credits()
+          : this.section === 'guide'
+            ? this.guide()
+            : this.main();
 
     this.host.append(
       el('div', { class: 'menu' }, [
@@ -96,6 +106,7 @@ export class Menu {
 
     const rows = [
       this.button(started ? t('menu.continue') : t('menu.play'), 'descend', () => this.onPlay(), true),
+      this.button(t('menu.guide'), 'ledger', () => this.go('guide')),
       this.button(t('ledger.settings'), 'settings', () => this.go('settings')),
       this.button(t('ledger.title'), 'ledger', () => this.go('credits')),
     ];
@@ -309,6 +320,43 @@ export class Menu {
     });
 
     return el('div', {}, [el('div', { class: 'menu-buttons' }, [download, load, picker]), note]);
+  }
+
+  /**
+   * The guide. Everything the game does is explained somewhere in the
+   * interface already, but only once you are standing in front of it, and a
+   * player deciding whether to keep playing should not have to go and find
+   * out what a workshop mark is by collecting two of them.
+   */
+  private guide(): HTMLElement {
+    const picker = el('div', { class: 'guide-chapters' });
+    for (const id of CHAPTERS) {
+      const button = el('button', {
+        class: `button tiny${this.chapter === id ? ' primary' : ''}`,
+        type: 'button',
+        text: t(`guide.${id}.title` as StringKey),
+      });
+      on(button, 'click', () => {
+        sound.play('click', { gain: 0.4 });
+        this.chapter = id;
+        this.render();
+      });
+      picker.append(button);
+    }
+
+    const body = el('div', { class: 'guide-body' }, [
+      el('h3', { class: 'guide-heading', text: t(`guide.${this.chapter}.title` as StringKey) }),
+      ...t(`guide.${this.chapter}.body` as StringKey)
+        .split('\n')
+        .map((line) => el('p', { class: 'guide-line', text: line })),
+    ]);
+
+    return el('div', { class: 'menu-body' }, [
+      el('p', { class: 'note', text: t('guide.intro') }),
+      picker,
+      body,
+      el('div', { class: 'menu-buttons' }, [this.button(t('menu.back'), 'ascend', () => this.go('main'))]),
+    ]);
   }
 
   private credits(): HTMLElement {

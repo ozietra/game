@@ -379,6 +379,46 @@ export const tr = {
   'menu.saveExported': 'Kopya indirildi.',
   'menu.saveBad': 'Bu dosya bir Hollowdeep kaydı değil.',
   'menu.saveOverwrite': 'Bu tarayıcıdaki ilerleme silinip yüklenen kayıt kullanılacak. Emin misin?',
+  'menu.guide': 'Rehber',
+  'guide.intro':
+    'Kuyu kendi kendine işler. Senin işin kadroyu kurmak, emri yazmak ve ne zaman durulacağına karar vermek.',
+
+  'guide.shaft.title': 'Kuyu ve çanta',
+  'guide.shaft.body':
+    'Kadro aşağı iner, her katta üç çarpışma verir ve bulduğunu çantaya atar.\nÇantadaki hiçbir şey, kadro yukarı çıkana kadar senin değildir. Bozgunda hepsi aşağıda kalır; sadece Halat Düğümü kalıntısı bir kısmını kurtarır.\nBu yüzden asıl soru "ne kadar aşağı" değil, "ne zaman dönmeli".\nOyun sen kapatsan da çalışır. Geri döndüğünde geçen süre baştan oynatılır; Uyanık Kamp kalıntısı ve Eski Kandil yankısı bu süreyi uzatır.',
+
+  'guide.orders.title': 'İniş emri',
+  'guide.orders.body':
+    'Kendiliğinden in açıkken kadro emre göre hareket eder. Elle "İn" dersen emir dinlemez, sen "Geri dön" diyene kadar iner.\nBaşlangıç katı: daha önce sağ salim çıktığın en derin kata kadar yazabilirsin.\nHedef kat: buraya varınca döner.\nGeri dönüş canı: kadronun toplam canı bu oranın altına düşerse çarpışmayı bırakıp kaçar. Kaçarken çantadaki akçenin dörtte biri düşer, ama hepsini kaybetmekten iyidir.\nÇanta sınırı: çantanın değeri bunu aşınca döner. Sıfır bırakırsan sınırsızdır.\nYaralarla da in: kapalıysa kadro ağır yaralıyken bekler.',
+
+  'guide.risk.title': 'Risk ve kat olayları',
+  'guide.risk.body':
+    'Risk kadranı tek kolla hem düşmanı hem ganimeti büyütür. Her kademe düşmana %20, ganimete %34 ekler. Kadran inişe başlarken sabitlenir, ortada değiştirmek o inişi etkilemez.\nHer beş kattan birinde bir olay çıkar: sunak, tuzak, hazine odası veya pusu. Her biri iki seçenek sunar; cesur olan pahalıdır ama daha çok verir.\nSen izlemiyorsan emir cevaplar. "Bana sor" seçiliyse ve 14 saniye içinde cevap gelmezse temkinli olan seçilir.',
+
+  'guide.gear.title': 'Teçhizat',
+  'guide.gear.body':
+    'Her parçanın bir gücü, bir türü ve bir nadirliği vardır. Kart üzerinde ne verdiği açıkça yazar; "Efsanevi Balta" tek başına bir şey söylemez, "+192 saldırı" söyler.\nÖn ek: Zalim, Ayı Postundan gibi. Parçaya bir istatistik daha ekler.\nAtölye damgası: Kuyu İşi, Mezar Dövmesi, Kor Örsü, Avcı Düzeni. Kart üzerinde parantez içinde görünür.\nAynı damgadan aynı kahramanda iki parça olursa takım bonusu açılır, üç parçada tam öder. Kadro ekranındaki "Kuyu İşi 2/3" yazısı bunu gösterir: kahramanın üç yuvasından ikisi o atölyeden. Yazı yeşilse bonus işliyor demektir.\nGanimet dönüşte kendiliğinden dağıtılır: en çok kim kazanıyorsa o kuşanır, gerisi ambarda bekler.',
+
+  'guide.party.title': 'Kadro',
+  'guide.party.body':
+    'Sekiz kahraman var, ilki bedava, gerisi akçeyle katılır. Hepsi aynı anda döğüşür.\nSeviye çarpışmadan gelir. Talim akçe ve demirle satın alınır, her derece bütün nitelikleri artırır.\nYetenek ağacı 5, 12 ve 22. seviyelerde ikili çatal sunar. Son çatal kahramana özeldir. Yanlış seçtiysen bir bedel karşılığı hepsini geri alabilirsin.\nYara bozgunda gelir ve nitelikleri düşürür. Zamanla kendiliğinden kapanır; Revir kademesi hızlandırır, akçeyle hemen sardırabilirsin.',
+
+  'guide.camp.title': 'Kamp',
+  'guide.camp.body':
+    'Kamp kademeleri kalıcıdır ve kadronun tamamına işler: Demirhane saldırıyı, Cephanelik canı ve savunmayı, Revir iyileşmeyi, Talimhane deneyimi, Halatçı tırmanışı, Haritacı iniş süresini iyileştirir.\nHer kademe bir öncekinden pahalıdır, o yüzden hepsini birden yükseltmek yerine sıkıştığın yeri seçmek daha iyidir.',
+
+  'guide.prestige.title': 'Kalıntılar ve derin iniş',
+  'guide.prestige.body':
+    '25. kattan sonra her şeyi kuyuya bırakıp kalıntı kazanabilirsin. Akçe, teçhizat, kadro ve kamp sıfırlanır; kalıntılar ve dereceleri kalır. Kalıntılar her turu daha hızlı başlatır.\n60. kattan sonra derin iniş açılır. O, kalıntıları da bırakır ve karşılığında yankı verir. Yankıyı hiçbir şey geri almaz.\nKilometre taşları ise ikisinden de etkilenmez: her 10 katta bir dikilir ve kalıcı olarak saldırı ve can ekler.',
+
+  'guide.daily.title': 'Sözleşme, kayıtlar, sıralama',
+  'guide.daily.body':
+    'Her gün üç sözleşme yenilenir. Tamamlananın ödülünü Kayıtlar sekmesinden alırsın; almayı unuttuğun bir ödül gün dönerken kendiliğinden ödenir. Üçünü birden bitirmek bir kalıntı verir.\nKayıtlar sekmesi son sekiz inişi, başarımları ve bestiyeri tutar.\nSıralama sekmesi kadronun sağ salim çıkabildiği en derin katı sıralar. Haftalık ve tüm zamanlar ayrı ayrı. Sadece yazdığın ad ve o sayı gönderilir.',
+
+  'guide.save.title': 'Kaydın',
+  'guide.save.body':
+    'Oyun bu tarayıcının belleğinde durur. Hesap yok, sunucu yok, o yüzden tarayıcı verisini temizlemek her şeyi siler.\nAyarlar ekranından kaydını dosya olarak indirebilir, sonra aynı yerden geri yükleyebilirsin. Uzun bir ilerlemen varsa ara sıra bir kopyasını al.',
+
   'menu.privacy': 'Gizlilik',
   'menu.metrics': 'Anonim ölçüm gönder',
   'menu.metricsNote':

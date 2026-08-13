@@ -381,6 +381,46 @@ export const en: Record<StringKey, string> = {
   'menu.saveExported': 'Copy downloaded.',
   'menu.saveBad': 'That file is not a Hollowdeep save.',
   'menu.saveOverwrite': 'The progress in this browser will be replaced by the loaded save. Are you sure?',
+  'menu.guide': 'Guide',
+  'guide.intro':
+    'The shaft runs itself. Your part is building the party, writing the orders and deciding when to stop.',
+
+  'guide.shaft.title': 'The shaft and the satchel',
+  'guide.shaft.body':
+    'The party goes down, fights three times on every floor and puts what it finds in the satchel.\nNothing in that satchel is yours until they climb back out. A rout leaves all of it on the floor they died on; only the Rope Knot relic saves any of it.\nSo the real question is never how deep, it is when to turn back.\nIt keeps running with the tab closed. The time away is replayed when you return, and the Waking Camp relic and the Old Lamp echo both lengthen how much of it counts.',
+
+  'guide.orders.title': 'Standing orders',
+  'guide.orders.body':
+    'With the automatic descent on, the party follows the orders. Press Descend by hand and it ignores them until you press Turn back.\nStart floor: any floor you have already climbed out of.\nTarget floor: they turn back on reaching it.\nRetreat health: if the party total drops below this share they break off the fight and run. A quarter of the coin falls out on the way, which beats losing all of it.\nSatchel limit: they turn back once the satchel is worth this much. Zero means no limit.\nDescend wounded: with it off, a badly cut up party waits instead.',
+
+  'guide.risk.title': 'Risk and floor events',
+  'guide.risk.body':
+    'The risk dial raises the foes and the takings together: each step adds 20 percent to foes and 34 percent to spoils. It is fixed when a dive starts, so moving it mid dive changes nothing until the next one.\nOne floor in five holds an event: an altar, a trap, a guarded hoard or an ambush. Each asks a question with two answers; the bold one costs more and gives more.\nIf you are not watching, the orders answer. With Ask me set, the careful answer stands if nothing comes back within fourteen seconds.',
+
+  'guide.gear.title': 'Gear',
+  'guide.gear.body':
+    'Every piece has a power, a kind and a grade. The card says plainly what it adds, because a Fabled Axe means nothing next to plus 192 attack.\nA prefix, such as Cruel or Bearhide, hangs one more stat on the piece.\nA workshop mark, one of Wellwork, Gravewrought, Emberforged or Huntsman, appears in brackets on the card.\nTwo pieces from the same workshop on the same hero start paying, three pay properly. The Wellwork 2/3 line on a hero card means two of that hero\'s three slots came from that workshop. When the line is green the bonus is live.\nSpoils are sorted out on the way home: whoever gains most puts it on, the rest waits in the store.',
+
+  'guide.party.title': 'The party',
+  'guide.party.body':
+    'There are eight heroes. The first is free, the rest are recruited with coin, and all of them fight at once.\nLevels come from fighting. Drill is bought with coin and iron, and every rank raises everything.\nThe talent tree forks at levels 5, 12 and 22, and the last fork is the hero\'s own. A wrong pick can be given back for a fee.\nWounds come from routs and cost stats. They close on their own with time, the Infirmary speeds that up, and coin clears them outright.',
+
+  'guide.camp.title': 'Camp',
+  'guide.camp.body':
+    'Camp levels are permanent and apply to the whole party: the Smithy raises attack, the Armoury health and defence, the Infirmary healing, the Drillyard experience, the Ropewright the climb and the Cartographer the walk between floors.\nEach level costs more than the last, so picking the one that is actually holding you back beats raising all six.',
+
+  'guide.prestige.title': 'Relics and the deep descent',
+  'guide.prestige.body':
+    'Past floor 25 you can leave everything in the shaft for relics. Coin, gear, party and camp all reset; the relics and their ranks stay, and they make every following run start stronger.\nPast floor 60 the deep descent opens. That one gives up the relics as well and pays in echoes, and nothing takes an echo back.\nMilestones survive both: one is set every ten floors and adds attack and health for good.',
+
+  'guide.daily.title': 'Contracts, records, ladder',
+  'guide.daily.body':
+    'Three contracts roll over every day. Collect a finished one from the Records tab; anything you forget is paid out as the day turns. Finishing all three gives a relic.\nRecords keeps the last eight dives, the achievements and the bestiary.\nThe Ladder ranks the deepest floor a party climbed back out of, weekly and all time. Only the name you type and that number are sent.',
+
+  'guide.save.title': 'Your save',
+  'guide.save.body':
+    "The game lives in this browser's storage. No account, no server, which means clearing site data takes all of it.\nSettings can write the save out as a file and read one back. If you have a long run going, take a copy now and then.",
+
   'menu.privacy': 'Privacy',
   'menu.metrics': 'Send anonymous metrics',
   'menu.metricsNote':

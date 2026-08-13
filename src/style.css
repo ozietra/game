@@ -1462,3 +1462,32 @@ input[type='checkbox'] {
 .talent-header .talent-title {
   margin: 0;
 }
+
+/* --------------------------------------------------------------- guide */
+
+.guide-chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 14px;
+}
+
+.guide-body {
+  border-top: 1px solid var(--edge);
+  padding-top: 12px;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.guide-heading {
+  font-size: 21px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.guide-line {
+  margin: 0 0 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
