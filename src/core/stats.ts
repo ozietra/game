@@ -12,6 +12,7 @@ import {
   RELIC_EFFECT,
   SETS,
   SLOTS,
+  talentGain,
   type AffixId,
   type ItemKindId,
   type SetBonus,
@@ -119,12 +120,14 @@ export function heroStats(state: GameState, hero: Hero): Stats {
 
   const set = setBonus(hero);
   const ironblood = 1 + (state.echoes?.ironblood ?? 0) * ECHO_EFFECT.ironblood;
+  const talents = talentGain(hero.id, hero.talents);
 
-  maxHp = maxHp * mastery * armoury * deepmark * wounds * (1 + marks * MILESTONE.health) * (1 + (set.maxHp ?? 0)) * ironblood;
-  attack = attack * mastery * smithy * deepmark * (1 + marks * MILESTONE.attack) * (1 + (set.attack ?? 0));
-  defence = defence * mastery * armoury * deepmark * (1 + (set.defence ?? 0));
-  speed += set.speed ?? 0;
-  crit += set.crit ?? 0;
+  maxHp =
+    maxHp * mastery * armoury * deepmark * wounds * (1 + marks * MILESTONE.health) * (1 + (set.maxHp ?? 0)) * ironblood * (1 + (talents.maxHp ?? 0));
+  attack = attack * mastery * smithy * deepmark * (1 + marks * MILESTONE.attack) * (1 + (set.attack ?? 0)) * (1 + (talents.attack ?? 0));
+  defence = defence * mastery * armoury * deepmark * (1 + (set.defence ?? 0)) * (1 + (talents.defence ?? 0));
+  speed += (set.speed ?? 0) + (talents.speed ?? 0);
+  crit += (set.crit ?? 0) + (talents.crit ?? 0);
 
   return {
     maxHp: Math.round(maxHp),

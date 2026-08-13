@@ -6,6 +6,7 @@ import {
   HEROES,
   KEEPER,
   ZONES,
+  talentGain,
   cycleForFloor,
   isBossFloor,
   isEliteFloor,
@@ -26,6 +27,9 @@ export interface CombatEvent {
 export function heroCombatant(state: GameState, hero: Hero): Combatant {
   const stats = heroStats(state, hero);
   const look = heroLook(hero);
+  const talents = talentGain(hero.id, hero.talents);
+  const ability = HEROES[hero.id].ability;
+  const cooldown = ability.cooldown * (1 - Math.min(0.6, talents.haste ?? 0));
   return {
     key: `hero:${hero.id}`,
     side: 'party',
@@ -37,7 +41,9 @@ export function heroCombatant(state: GameState, hero: Hero): Combatant {
     stats,
     hp: Math.max(1, Math.round(hero.hp)),
     timer: 0,
-    abilityTimer: HEROES[hero.id].ability.cooldown * 0.5,
+    abilityTimer: cooldown * 0.5,
+    abilityCooldown: cooldown,
+    abilityPower: ability.power * (1 + (talents.power ?? 0)),
     guard: 0,
     alive: hero.hp > 0,
     action: 'idle',
@@ -191,7 +197,10 @@ function pickTarget(candidates: Combatant[], rng: Rng, taunted: boolean): Combat
 
 function useAbility(actor: Combatant, allies: Combatant[], foes: Combatant[], rng: Rng, events: CombatEvent[]): boolean {
   if (!actor.hero) return false;
-  const ability = HEROES[actor.hero].ability;
+  const shape = HEROES[actor.hero].ability;
+  // Talents change what an ability does and how often, so the fighter carries
+  // its own numbers rather than reading them back off the definition.
+  const ability = { kind: shape.kind, power: actor.abilityPower ?? shape.power };
   if (actor.abilityTimer > 0) return false;
 
   switch (ability.kind) {
@@ -271,7 +280,7 @@ function useAbility(actor: Combatant, allies: Combatant[], foes: Combatant[], rn
     }
   }
 
-  actor.abilityTimer = ability.cooldown;
+  actor.abilityTimer = actor.abilityCooldown ?? shape.cooldown;
   actor.action = 'attack';
   actor.actionUntil = 0.5;
   return true;

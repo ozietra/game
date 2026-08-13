@@ -1,7 +1,7 @@
 -- Hollowdeep metrics store.
 --
--- Generated from schema.js, which is what the worker applies to itself on a
--- cold start. Edit that file, not this one:
+-- Generated from the list in worker.js, which the worker applies to itself
+-- on a cold start. Edit it there, not here:
 --
 --   node analytics/schema.js > analytics/schema.sql
 --

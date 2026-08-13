@@ -11,6 +11,11 @@ import {
   BUILDING_ORDER,
   CONTRACTS,
   EVENTS,
+  TALENTS,
+  TALENT_LEVELS,
+  TALENT_TREES,
+  talentsOpen,
+  type TalentGain,
   EVENT_SECONDS,
   FOE_ORDER,
   HEROES,
@@ -51,7 +56,7 @@ import { clear, el, on, setText, setWidth } from './dom';
 import { Menu } from './menu';
 import { Scene, type AttackStyle } from './scene';
 
-type TabId = 'shaft' | 'roster' | 'camp' | 'relics' | 'records';
+type TabId = 'shaft' | 'roster' | 'camp' | 'relics' | 'records' | 'ladder';
 
 const TAB_ICONS: Record<TabId, string> = {
   shaft: 'descend',
@@ -59,6 +64,7 @@ const TAB_ICONS: Record<TabId, string> = {
   camp: 'camp',
   relics: 'relic',
   records: 'ledger',
+  ladder: 'rank',
 };
 
 export class App {
@@ -207,6 +213,7 @@ export class App {
       this.keep('panel:camp', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:relics', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:records', el('section', { class: 'panel', hidden: true })),
+      this.keep('panel:ladder', el('section', { class: 'panel', hidden: true })),
     ]);
 
     this.root.append(el('div', { class: 'frame' }, [header, tabs, panels]));
@@ -988,6 +995,7 @@ export class App {
         state.echoes ?? {},
       ).join('.')}|${relicYield(state)}|${echoYield(state)}`;
     }
+    if (id === 'ladder') return `${state.ladderName}|${state.deepestBanked}|${this.boardScope}`;
     if (id === 'records') {
       // Kill counts tick up constantly and nothing on this panel needs to
       // follow them that closely. Rebuilding on every one of them threw away
@@ -1025,6 +1033,9 @@ export class App {
         break;
       case 'records':
         this.renderRecords();
+        break;
+      case 'ladder':
+        this.renderLadder();
         break;
       default:
         break;
@@ -1120,6 +1131,7 @@ export class App {
           ]),
           el('div', { class: 'gear-row' }, SLOTS.map((slot) => this.gearChip(hero.gear[slot], slot))),
           this.setLine(hero),
+          this.talentTree(hero),
           el('div', { class: 'stat-line' }, [
             el('span', { text: `${t('roster.mastery')} ${hero.mastery}` }),
             el('span', { class: hero.wounds > 0 ? 'bad' : 'muted', text: `${t('roster.wounds')} ${hero.wounds}` }),
@@ -1205,6 +1217,72 @@ export class App {
     add(gain.speed, 'stat.speed');
     add(gain.crit, 'stat.crit', true);
     return parts.join('  ');
+  }
+
+  /** What one talent is worth, read off its own numbers. */
+  private talentGainText(id: string): string {
+    const talent = TALENTS[id];
+    if (!talent) return '';
+    const parts: string[] = [];
+    for (const [stat, value] of Object.entries(talent.gain) as [keyof TalentGain, number][]) {
+      const label = t(`talent.stat.${stat}` as StringKey);
+      // Speed is a flat number, a shorter cooldown is a reduction, the rest
+      // are percentages of what the hero already has.
+      if (stat === 'speed') parts.push(`${value > 0 ? '+' : ''}${value} ${label}`);
+      else if (stat === 'haste') parts.push(`-${formatPercent(value)} ${label}`);
+      else parts.push(`+${formatPercent(value)} ${label}`);
+    }
+    return parts.join('  ');
+  }
+
+  /** The three forks a hero is offered, and which way they went. */
+  private talentTree(hero: Hero): HTMLElement {
+    const tree = TALENT_TREES[hero.id] ?? [];
+    const open = talentsOpen(hero.level);
+    const rows: HTMLElement[] = [];
+
+    tree.forEach((fork, tier) => {
+      const level = TALENT_LEVELS[tier];
+      const taken = hero.talents?.[tier];
+      const reachable = tier < open;
+
+      const options = fork.map((id) => {
+        const chosen = taken === id;
+        const button = el('button', {
+          class: `talent${chosen ? ' is-chosen' : ''}${!reachable ? ' is-locked' : ''}`,
+          type: 'button',
+          disabled: !reachable || Boolean(taken),
+        }, [
+          el('span', { class: 'talent-head' }, [
+            el('span', { class: 'talent-icon', html: icon(TALENTS[id]?.icon ?? 'talent') }),
+            el('span', { class: 'talent-name', text: t(`talent.${id}.name` as StringKey) }),
+          ]),
+          el('span', { class: 'talent-gain', text: this.talentGainText(id) }),
+        ]);
+        on(button, 'click', () => {
+          if (!this.game.chooseTalent(hero.id, tier, id)) return;
+          sound.play('rank', { gain: 0.7 });
+          this.renderPanel('roster', true);
+        });
+        return button;
+      });
+
+      rows.push(
+        el('div', { class: 'talent-fork' }, [
+          el('span', {
+            class: 'talent-tier',
+            text: reachable ? `${t('camp.level')} ${level}` : t('talent.locked', { level }),
+          }),
+          el('div', { class: 'talent-options' }, options),
+        ]),
+      );
+    });
+
+    return el('div', { class: 'talent-tree' }, [
+      el('h4', { class: 'talent-title', text: t('talent.title') }),
+      ...rows,
+      el('p', { class: 'note', text: t('talent.note') }),
+    ]);
   }
 
   /** Which workshops a hero has pieces from, and which of them are paying. */
@@ -1529,8 +1607,6 @@ export class App {
     this.renderContracts();
     this.renderLastDive();
 
-    if (ladderAvailable()) panel.append(this.refs.get('ladderCard') ?? this.buildLadder());
-
     // Milestones, which are the only permanent thing a rout cannot touch.
     const marks = state.milestones;
     const nextFloor = (marks + 1) * MILESTONE.everyFloors;
@@ -1635,6 +1711,16 @@ export class App {
   }
 
   // ------------------------------------------------------------------ ladder
+
+  private renderLadder(): void {
+    const panel = this.ref('panel:ladder');
+    clear(panel);
+    if (!ladderAvailable()) {
+      panel.append(el('p', { class: 'muted', text: t('ladder.offline') }));
+      return;
+    }
+    panel.append(this.refs.get('ladderCard') ?? this.buildLadder());
+  }
 
   /**
    * The board ranks the deepest floor a party actually climbed out of, which

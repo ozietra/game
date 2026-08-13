@@ -26,6 +26,9 @@ import {
   RELIC_EFFECT,
   RISK,
   SLOTS,
+  TALENT_LEVELS,
+  TALENT_TREES,
+  talentsOpen,
   contractReward,
   contractTarget,
   isBossFloor,
@@ -124,6 +127,7 @@ function newHero(id: HeroId, unlocked: boolean): Hero {
     wounds: 0,
     hp: HEROES[id].base.maxHp,
     gear: { weapon: null, armour: null, charm: null },
+    talents: [],
   };
 }
 
@@ -1099,6 +1103,25 @@ export class Game {
     this.state.bank.crystal -= cost.crystal;
     this.state.buildings[id] += 1;
     this.note('log.build', { name: `building.${id}.name`, level: this.state.buildings[id] }, 'good');
+    return true;
+  }
+
+  /**
+   * Takes one side of a fork. It only works once per tier and only once the
+   * hero has actually reached it, and there is no way back.
+   */
+  chooseTalent(id: HeroId, tier: number, talent: string): boolean {
+    const hero = this.state.heroes[id];
+    if (!hero.unlocked) return false;
+    if (tier < 0 || tier >= TALENT_LEVELS.length) return false;
+    if (tier >= talentsOpen(hero.level)) return false;
+
+    if (!Array.isArray(hero.talents)) hero.talents = [];
+    if (hero.talents[tier]) return false;
+    if (!(TALENT_TREES[id]?.[tier] ?? []).includes(talent)) return false;
+
+    hero.talents[tier] = talent;
+    this.note('log.talent', { name: `hero.${id}.name`, talent: `talent.${talent}.name` }, 'good');
     return true;
   }
 

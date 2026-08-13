@@ -1364,3 +1364,89 @@ input[type='checkbox'] {
   background: #33291d;
   border: 1px solid #241d15;
 }
+
+/* ---------------------------------------------------------------- talents */
+
+.talent-tree {
+  border-top: 1px solid var(--edge);
+  margin-top: 10px;
+  padding-top: 8px;
+}
+
+.talent-title {
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.talent-fork {
+  margin-bottom: 8px;
+}
+
+.talent-tier {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.talent-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.talent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  border: 1px solid var(--edge-lit);
+  background: var(--panel-raised);
+  color: var(--text);
+  padding: 6px 8px 7px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.talent:hover:not(:disabled) {
+  border-color: var(--gold);
+}
+
+.talent:disabled {
+  cursor: default;
+}
+
+.talent.is-locked {
+  opacity: 0.4;
+}
+
+.talent.is-chosen {
+  border-color: var(--gold);
+  background: #2a2115;
+}
+
+.talent-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.talent-icon .icon {
+  width: 16px;
+  height: 16px;
+  fill: var(--gold);
+}
+
+.talent-name {
+  font-size: 15px;
+}
+
+.talent-gain {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}

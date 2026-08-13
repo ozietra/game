@@ -68,7 +68,14 @@ function migrate(state: GameState): GameState {
 
   for (const id of Object.keys(base.heroes) as (keyof GameState['heroes'])[]) {
     const stored = state.heroes?.[id];
-    merged.heroes[id] = stored ? { ...base.heroes[id], ...stored, gear: { ...base.heroes[id].gear, ...stored.gear } } : base.heroes[id];
+    merged.heroes[id] = stored
+      ? {
+          ...base.heroes[id],
+          ...stored,
+          gear: { ...base.heroes[id].gear, ...stored.gear },
+          talents: Array.isArray(stored.talents) ? stored.talents : [],
+        }
+      : base.heroes[id];
   }
 
   merged.stash = (Array.isArray(state.stash) ? state.stash : []).map(withKind);

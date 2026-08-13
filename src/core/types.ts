@@ -41,6 +41,8 @@ export interface Hero {
   wounds: number;
   hp: number;
   gear: Record<SlotId, Item | null>;
+  /** One talent id per fork reached, in level order. */
+  talents: string[];
 }
 
 export interface Stats {
@@ -79,6 +81,9 @@ export interface Combatant {
   summons?: number;
   /** Already caught by a snare, so a second one is wasted on it. */
   snared?: boolean;
+  /** Talent adjusted ability numbers, worked out once when the dive starts. */
+  abilityCooldown?: number;
+  abilityPower?: number;
 }
 
 export interface Satchel {

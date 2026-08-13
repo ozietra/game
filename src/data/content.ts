@@ -571,3 +571,122 @@ export const FOE_ORDER: string[] = ALL_FOES.slice().sort((a, b) => {
   };
   return depth(a) - depth(b) || a.localeCompare(b);
 });
+
+// ---------------------------------------------------------------- talents
+
+/**
+ * Talents are the only place two players' parties genuinely diverge. Every
+ * hero gets three forks, at level five, twelve and twenty two, and the last
+ * one is theirs alone. A pick is permanent: a fork nobody can walk back is a
+ * decision, and a decision is the point.
+ */
+export interface TalentGain {
+  attack?: number;
+  maxHp?: number;
+  defence?: number;
+  speed?: number;
+  crit?: number;
+  /** Multiplies what the hero's ability does. */
+  power?: number;
+  /** Cuts the wait between uses of it. */
+  haste?: number;
+}
+
+export interface TalentDefinition {
+  id: string;
+  icon: string;
+  gain: TalentGain;
+}
+
+export const TALENT_LEVELS = [5, 12, 22] as const;
+
+export const TALENTS: Record<string, TalentDefinition> = {
+  ironhide: { id: 'ironhide', icon: 'vitals', gain: { maxHp: 0.14 } },
+  keenedge: { id: 'keenedge', icon: 'blade', gain: { attack: 0.12 } },
+  bulwarked: { id: 'bulwarked', icon: 'guard', gain: { defence: 0.18 } },
+  quickstep: { id: 'quickstep', icon: 'talent', gain: { speed: 10 } },
+  sharpeye: { id: 'sharpeye', icon: 'bow', gain: { crit: 0.05 } },
+  deepbreath: { id: 'deepbreath', icon: 'ember', gain: { haste: 0.2 } },
+  channelled: { id: 'channelled', icon: 'spell', gain: { power: 0.3 } },
+  hardened: { id: 'hardened', icon: 'helm', gain: { maxHp: 0.08, defence: 0.08 } },
+  savage: { id: 'savage', icon: 'fang', gain: { attack: 0.08, crit: 0.03 } },
+  relentless: { id: 'relentless', icon: 'swords', gain: { speed: 6, haste: 0.1 } },
+  stalwart: { id: 'stalwart', icon: 'stone', gain: { maxHp: 0.18, speed: -4 } },
+  focused: { id: 'focused', icon: 'rank', gain: { power: 0.18, haste: 0.1 } },
+
+  // One each, and only at the end of the tree.
+  lastwall: { id: 'lastwall', icon: 'guard', gain: { defence: 0.35, maxHp: 0.12 } },
+  heartseeker: { id: 'heartseeker', icon: 'bow', gain: { crit: 0.1, power: 0.35 } },
+  firestorm: { id: 'firestorm', icon: 'ember', gain: { power: 0.45 } },
+  evensong: { id: 'evensong', icon: 'faith', gain: { power: 0.4, haste: 0.15 } },
+  throatcut: { id: 'throatcut', icon: 'blade', gain: { attack: 0.18, crit: 0.08 } },
+  standfast: { id: 'standfast', icon: 'guard', gain: { power: 0.5, maxHp: 0.12 } },
+  martyr: { id: 'martyr', icon: 'faith', gain: { attack: 0.22, maxHp: 0.15 } },
+  clockwork: { id: 'clockwork', icon: 'gear', gain: { haste: 0.3, speed: 8 } },
+};
+
+/** The three forks each hero is offered, in level order. */
+export const TALENT_TREES: Record<HeroId, [string, string][]> = {
+  warden: [
+    ['ironhide', 'bulwarked'],
+    ['hardened', 'deepbreath'],
+    ['lastwall', 'stalwart'],
+  ],
+  ranger: [
+    ['keenedge', 'sharpeye'],
+    ['quickstep', 'channelled'],
+    ['heartseeker', 'relentless'],
+  ],
+  magus: [
+    ['channelled', 'keenedge'],
+    ['deepbreath', 'ironhide'],
+    ['firestorm', 'focused'],
+  ],
+  preacher: [
+    ['channelled', 'ironhide'],
+    ['deepbreath', 'bulwarked'],
+    ['evensong', 'hardened'],
+  ],
+  cutpurse: [
+    ['savage', 'quickstep'],
+    ['sharpeye', 'relentless'],
+    ['throatcut', 'keenedge'],
+  ],
+  sentinel: [
+    ['bulwarked', 'ironhide'],
+    ['channelled', 'hardened'],
+    ['standfast', 'stalwart'],
+  ],
+  zealot: [
+    ['savage', 'ironhide'],
+    ['keenedge', 'deepbreath'],
+    ['martyr', 'focused'],
+  ],
+  tinker: [
+    ['quickstep', 'sharpeye'],
+    ['relentless', 'channelled'],
+    ['clockwork', 'savage'],
+  ],
+};
+
+/** Everything a hero's chosen talents add up to. */
+export function talentGain(hero: HeroId, picks: string[] | undefined): TalentGain {
+  const total: TalentGain = {};
+  if (!picks) return total;
+  const tree = TALENT_TREES[hero] ?? [];
+  const allowed = new Set(tree.flat());
+  for (const id of picks) {
+    if (!allowed.has(id)) continue;
+    const talent = TALENTS[id];
+    if (!talent) continue;
+    for (const [stat, value] of Object.entries(talent.gain) as [keyof TalentGain, number][]) {
+      total[stat] = (total[stat] ?? 0) + value;
+    }
+  }
+  return total;
+}
+
+/** How many forks a hero has reached, and how many are still unspent. */
+export function talentsOpen(level: number): number {
+  return TALENT_LEVELS.filter((needed) => level >= needed).length;
+}
