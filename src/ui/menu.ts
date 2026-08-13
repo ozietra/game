@@ -1,7 +1,7 @@
 import { HERO_ORDER } from '../data/content';
 import creditsData from '../data/credits.json';
 import type { Game } from '../core/game';
-import { clearSave, writeSave } from '../core/save';
+import { clearSave, exportSave, importSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, setLanguage, t, type Language, type StringKey } from '../i18n';
 import { sound } from './audio';
 import { heroLook } from '../core/stats';
@@ -236,6 +236,11 @@ export class Menu {
           ),
         ),
       ]),
+      el('div', { class: 'menu-section' }, [
+        el('h2', { class: 'menu-heading', text: t('menu.saveTitle') }),
+        el('p', { class: 'note', text: t('menu.saveNote') }),
+        this.saveTools(),
+      ]),
       el('div', { class: 'menu-buttons' }, [
         this.button(t('action.wipeSave'), 'grave', () => {
           if (!window.confirm(t('ledger.wipeWarning'))) return;
@@ -245,6 +250,65 @@ export class Menu {
         this.button(t('menu.back'), 'ascend', () => this.go('main')),
       ]),
     ]);
+  }
+
+  /**
+   * Taking a copy of the save out, and putting one back. Local storage is one
+   * cleared cache from gone, and losing thirty hours of a shaft to a browser
+   * setting is not something anybody should have to risk.
+   */
+  private saveTools(): HTMLElement {
+    const state = this.game.state;
+    const note = el('p', { class: 'note', text: '' });
+
+    const download = el('button', {
+      class: 'button',
+      type: 'button',
+      html: `${icon('ledger')}<span>${t('menu.saveExport')}</span>`,
+    });
+    on(download, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      writeSave(state);
+      const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+      const blob = new Blob([exportSave(state)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = el('a', { href: url, download: `hollowdeep-${stamp}.json` });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      note.textContent = t('menu.saveExported');
+    });
+
+    const picker = el('input', { type: 'file', accept: 'application/json,.json', style: 'display:none' });
+    on(picker, 'change', () => {
+      const file = (picker as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = importSave(String(reader.result));
+        if (!result.ok) {
+          note.textContent = t('menu.saveBad');
+          return;
+        }
+        if (!window.confirm(t('menu.saveOverwrite'))) return;
+        writeSave(result.state);
+        window.location.reload();
+      };
+      reader.readAsText(file);
+    });
+
+    const load = el('button', {
+      class: 'button',
+      type: 'button',
+      html: `${icon('ascend')}<span>${t('menu.saveImport')}</span>`,
+    });
+    on(load, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      (picker as HTMLInputElement).click();
+    });
+
+    return el('div', {}, [el('div', { class: 'menu-buttons' }, [download, load, picker]), note]);
   }
 
   private credits(): HTMLElement {

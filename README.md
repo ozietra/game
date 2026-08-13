@@ -162,11 +162,21 @@ interface answering, and a music level. All of them travel with the save.
 **The theme is optional and not shipped.** The mixer looks for
 `public/assets/sound/theme.ogg`, loops it under everything else at about a
 third of the master volume, and simply has no music if the file is absent, in
-which case the music slider stays hidden. To add one, drop a CC0 or otherwise
-cleared loop in at that path and add its author, licence and source to
-`ASSETS.md` beside everything else. Kenney's Music Loops and Music Jingles
-packs are public domain and suit the game; so does the CC0 shelf on
-OpenGameArt. Nothing else needs changing.
+which case the music slider stays hidden.
+
+A track has to be chosen by somebody who can hear it and its licence read by
+somebody who can read it, so the pipeline takes both as arguments and does the
+rest, putting the file where the mixer looks and the credit where the credits
+screen reads:
+
+```sh
+python3 tools/build_assets.py music <url> \
+  --author "Kenney" --licence "CC0 1.0" --source https://kenney.nl/assets/music-loops
+```
+
+Kenney's Music Loops and Music Jingles packs are public domain and suit the
+game; so does the CC0 shelf on OpenGameArt. Pick one that already loops and is
+already quiet, because the file is used exactly as it arrives.
 
 `tools/build_assets.py` fetches all of it and writes the credits at the same
 time, straight from the metadata each source ships with:

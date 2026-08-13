@@ -122,9 +122,10 @@ export const tr = {
 
   'talent.title': 'Yetenekler',
   'talent.locked': '{level}. seviyede açılır',
+  'talent.respec': 'Yetenekleri sıfırla',
   'talent.pick': 'Seç',
   'talent.chosen': 'Seçildi',
-  'talent.note': 'Her çatal kalıcıdır. Seçmediğin dal bir daha açılmaz.',
+  'talent.note': 'Çatallar kalıcıdır ama vazgeçilebilir: bir bedel karşılığı hepsi geri alınır.',
   'talent.ironhide.name': 'Demir Deri',
   'talent.keenedge.name': 'Keskin Ağız',
   'talent.bulwarked.name': 'Sağlam Duruş',
@@ -370,6 +371,14 @@ export const tr = {
   'menu.music': 'Müzik',
   'menu.audioNote':
     'Kuyu sesleri kapalıyken darbeler, kapılar ve akçe susar; menü sesleri açık kalır. Her şey sessiz olan hepsini birden kapatır.',
+  'menu.saveTitle': 'Kayıt dosyası',
+  'menu.saveNote':
+    'Oyun bu tarayıcının belleğinde duruyor. Tarayıcı verisini temizlersen gider, o yüzden ara sıra bir kopyasını indir.',
+  'menu.saveExport': 'Kaydı indir',
+  'menu.saveImport': 'Kayıt yükle',
+  'menu.saveExported': 'Kopya indirildi.',
+  'menu.saveBad': 'Bu dosya bir Hollowdeep kaydı değil.',
+  'menu.saveOverwrite': 'Bu tarayıcıdaki ilerleme silinip yüklenen kayıt kullanılacak. Emin misin?',
   'menu.privacy': 'Gizlilik',
   'menu.metrics': 'Anonim ölçüm gönder',
   'menu.metricsNote':
@@ -485,6 +494,7 @@ export const tr = {
   'log.build': '{name} {level}. kademeye çıktı.',
   'log.recruit': '{name} kadroya katıldı.',
   'log.talent': '{name} {talent} yeteneğini aldı.',
+  'log.respec': '{name} yeteneklerini bıraktı. {coin} akçe.',
   'log.train': '{name} {rank}. talim derecesine ulaştı.',
   'log.mend': 'Yaralar sarıldı.',
   'log.relic': '{name} {rank}. dereceye çıktı.',

@@ -1450,3 +1450,15 @@ input[type='checkbox'] {
   font-size: 11px;
   color: var(--muted);
 }
+
+.talent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.talent-header .talent-title {
+  margin: 0;
+}

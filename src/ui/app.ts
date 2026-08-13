@@ -985,7 +985,7 @@ export class App {
       const heroes = HERO_ORDER.map((hero) => {
         const one = state.heroes[hero];
         const gear = SLOTS.map((slot) => one.gear[slot]?.uid ?? 0).join('.');
-        return `${one.unlocked ? 1 : 0}${one.level}:${one.mastery}:${one.wounds}:${gear}`;
+        return `${one.unlocked ? 1 : 0}${one.level}:${one.mastery}:${one.wounds}:${gear}:${(one.talents ?? []).join(',')}`;
       }).join('|');
       return `${purse}|${heroes}|${this.stashFilter}|${state.stash.map((item) => item.uid).join('.')}`;
     }
@@ -1278,8 +1278,22 @@ export class App {
       );
     });
 
+    const cost = this.game.respecCost(hero.id);
+    const reset = el('button', {
+      class: 'button tiny',
+      type: 'button',
+      disabled: cost === 0 || this.game.state.bank.coin < cost,
+      html: `${icon('grave')}<span>${t('talent.respec')}${cost > 0 ? ` · ${formatNumber(cost)}` : ''}</span>`,
+    });
+    on(reset, 'click', () => {
+      if (!this.game.respecTalents(hero.id)) return;
+      sound.play('buy', { gain: 0.7 });
+      this.renderPanel('roster', true);
+      this.renderPurse();
+    });
+
     return el('div', { class: 'talent-tree' }, [
-      el('h4', { class: 'talent-title', text: t('talent.title') }),
+      el('div', { class: 'talent-header' }, [el('h4', { class: 'talent-title', text: t('talent.title') }), reset]),
       ...rows,
       el('p', { class: 'note', text: t('talent.note') }),
     ]);

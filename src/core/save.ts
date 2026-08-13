@@ -37,6 +37,40 @@ export function readSave(): GameState | null {
   }
 }
 
+/**
+ * The save as a file the player owns.
+ *
+ * Everything lives in one browser's local storage, which is one cleared cache
+ * away from gone, so there has to be a way to take a copy out and put it back.
+ * It is the same JSON the game already writes, with a stamp on it so an
+ * import can tell a save from any other file that happens to be JSON.
+ */
+export const EXPORT_TAG = 'hollowdeep.save';
+
+export function exportSave(state: GameState): string {
+  return JSON.stringify({ tag: EXPORT_TAG, version: SAVE_VERSION, saved: Date.now(), state }, null, 2);
+}
+
+export type ImportResult = { ok: true; state: GameState } | { ok: false; reason: 'shape' | 'parse' };
+
+export function importSave(text: string): ImportResult {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return { ok: false, reason: 'parse' };
+  }
+
+  const wrapper = parsed as { tag?: string; state?: GameState };
+  // A bare save file from somewhere else is still worth accepting, so long as
+  // it looks like one: the tag is a convenience, not a lock.
+  const candidate = wrapper && wrapper.tag === EXPORT_TAG ? wrapper.state : (parsed as GameState);
+  if (!candidate || typeof candidate !== 'object' || typeof candidate.heroes !== 'object') {
+    return { ok: false, reason: 'shape' };
+  }
+  return { ok: true, state: migrate(candidate) };
+}
+
 export function clearSave(): void {
   try {
     localStorage.removeItem(KEY);

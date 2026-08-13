@@ -361,6 +361,67 @@ SOUNDS = {
 }
 
 
+
+def build_music(argv: list) -> None:
+    """Fetch a looping theme and record who made it.
+
+    The game has no music of its own on purpose: a track has to be chosen by
+    somebody who can hear it, and its licence has to be written down by
+    somebody who read it. This does both in one command, so the file lands in
+    the right place with its credit attached rather than being dropped in
+    loose:
+
+      python3 tools/build_assets.py music <url> --author "Name" \
+        --licence "CC0 1.0" --source https://example.org/the-page
+
+    Kenney's Music Loops and Music Jingles packs are public domain and suit
+    the game; so does the CC0 shelf on OpenGameArt. The file is used as is,
+    so pick one that already loops and is already quiet.
+    """
+    if not argv:
+        print("  music: give the url of a track, see the docstring")
+        return
+
+    url = argv[0]
+    options = {"author": "unknown", "licence": "CC0 1.0", "source": url}
+    index = 1
+    while index + 1 < len(argv) + 1 and index < len(argv):
+        flag = argv[index].lstrip("-")
+        if flag in options and index + 1 < len(argv):
+            options[flag] = argv[index + 1]
+            index += 2
+        else:
+            index += 1
+
+    out_dir = os.path.join(PUBLIC, "sound")
+    os.makedirs(out_dir, exist_ok=True)
+    suffix = os.path.splitext(url.split("?")[0])[1].lower() or ".ogg"
+    if suffix not in {".ogg", ".mp3", ".m4a", ".wav"}:
+        print(f"  music: {suffix} is not an audio extension this can use")
+        return
+
+    cached = download(url, os.path.join(CACHE, "music", f"theme{suffix}"))
+    target = os.path.join(out_dir, f"theme{suffix}")
+    with open(cached, "rb") as source, open(target, "wb") as destination:
+        destination.write(source.read())
+
+    # The mixer looks for theme.ogg by name, so anything else is renamed on
+    # the way in rather than leaving the game to guess.
+    if suffix != ".ogg":
+        os.replace(target, os.path.join(out_dir, "theme.ogg"))
+
+    record(
+        "music/theme",
+        [options["author"]],
+        [options["licence"]],
+        [options["source"]],
+        "sound:theme",
+        "Looping theme, played under everything else at the music volume.",
+    )
+    size = os.path.getsize(os.path.join(out_dir, "theme.ogg"))
+    print(f"  music theme.ogg {size // 1024} kB, {options['author']}, {options['licence']}")
+
+
 def build_sounds() -> dict:
     out_dir = os.path.join(PUBLIC, "sound")
     os.makedirs(out_dir, exist_ok=True)
@@ -614,6 +675,7 @@ def write_credits() -> None:
 
 def main() -> None:
     all_stages = ["sprites", "tiles", "effects", "sounds", "icons", "fonts"]
+    # music is deliberately not in all_stages: it needs a url chosen by hand.
     stages = sys.argv[1:] or all_stages
     manifest_path = os.path.join(DATA, "assets.json")
     credits_path = os.path.join(DATA, "credits.json")
@@ -640,6 +702,10 @@ def main() -> None:
         if "effects" in stages:
             print("effects")
             manifest["effects"] = build_effects(excluded)
+    if "music" in stages:
+        print("music")
+        build_music([value for value in sys.argv[2:] if value != "music"])
+
     if "sounds" in stages:
         print("sounds")
         manifest["sounds"] = build_sounds()

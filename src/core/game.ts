@@ -1125,6 +1125,28 @@ export class Game {
     return true;
   }
 
+  /**
+   * What tearing up a hero's talents costs. It scales with their level, so
+   * changing your mind early is cheap and changing it on a veteran is not.
+   */
+  respecCost(id: HeroId): number {
+    const hero = this.state.heroes[id];
+    const taken = (hero.talents ?? []).filter(Boolean).length;
+    if (taken === 0) return 0;
+    return Math.round(500 * hero.level * taken);
+  }
+
+  /** Gives back every fork, for a fee, so a bad pick is a setback not a scar. */
+  respecTalents(id: HeroId): boolean {
+    const hero = this.state.heroes[id];
+    const cost = this.respecCost(id);
+    if (cost === 0 || this.state.bank.coin < cost) return false;
+    this.state.bank.coin -= cost;
+    hero.talents = [];
+    this.note('log.respec', { name: `hero.${id}.name`, coin: cost }, 'good');
+    return true;
+  }
+
   recruit(id: HeroId): boolean {
     const hero = this.state.heroes[id];
     if (hero.unlocked) return false;

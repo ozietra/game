@@ -124,9 +124,10 @@ export const en: Record<StringKey, string> = {
 
   'talent.title': 'Talents',
   'talent.locked': 'Opens at level {level}',
+  'talent.respec': 'Reset talents',
   'talent.pick': 'Take',
   'talent.chosen': 'Taken',
-  'talent.note': 'Every fork is permanent. The branch you leave never opens again.',
+  'talent.note': 'The forks stand, but they are not a life sentence: they can all be given back for a fee.',
   'talent.ironhide.name': 'Ironhide',
   'talent.keenedge.name': 'Keen Edge',
   'talent.bulwarked.name': 'Set Stance',
@@ -372,6 +373,14 @@ export const en: Record<StringKey, string> = {
   'menu.music': 'Music',
   'menu.audioNote':
     'With shaft sounds off, blows, doors and coin go quiet while the interface still answers. Everything silent turns off the lot.',
+  'menu.saveTitle': 'Save file',
+  'menu.saveNote':
+    "The game lives in this browser's storage. Clearing site data takes it with it, so take a copy out now and then.",
+  'menu.saveExport': 'Download save',
+  'menu.saveImport': 'Load a save',
+  'menu.saveExported': 'Copy downloaded.',
+  'menu.saveBad': 'That file is not a Hollowdeep save.',
+  'menu.saveOverwrite': 'The progress in this browser will be replaced by the loaded save. Are you sure?',
   'menu.privacy': 'Privacy',
   'menu.metrics': 'Send anonymous metrics',
   'menu.metricsNote':
@@ -488,6 +497,7 @@ export const en: Record<StringKey, string> = {
   'log.build': '{name} rose to tier {level}.',
   'log.recruit': '{name} joined the party.',
   'log.talent': '{name} took {talent}.',
+  'log.respec': '{name} gave up their talents. {coin} coin.',
   'log.train': '{name} reached drill rank {rank}.',
   'log.mend': 'Wounds dressed.',
   'log.relic': '{name} rose to rank {rank}.',
