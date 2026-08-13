@@ -834,57 +834,6 @@
   ]
  },
  {
-  "source": "crawl/dngn/floor/dirt0.png",
-  "authors": [
-   "Dungeon Crawl Stone Soup contributors"
-  ],
-  "licenses": [
-   "CC0 1.0"
-  ],
-  "urls": [
-   "https://github.com/crawl/tiles",
-   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
-  ],
-  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
-  "usedBy": [
-   "zone:warrens"
-  ]
- },
- {
-  "source": "crawl/dngn/floor/dirt1.png",
-  "authors": [
-   "Dungeon Crawl Stone Soup contributors"
-  ],
-  "licenses": [
-   "CC0 1.0"
-  ],
-  "urls": [
-   "https://github.com/crawl/tiles",
-   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
-  ],
-  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
-  "usedBy": [
-   "zone:warrens"
-  ]
- },
- {
-  "source": "crawl/dngn/floor/dirt2.png",
-  "authors": [
-   "Dungeon Crawl Stone Soup contributors"
-  ],
-  "licenses": [
-   "CC0 1.0"
-  ],
-  "urls": [
-   "https://github.com/crawl/tiles",
-   "https://opengameart.org/content/dungeon-crawl-32x32-tiles"
-  ],
-  "notes": "Tiles released to the public domain by the artists listed in crawl/tiles ARTISTS.md.",
-  "usedBy": [
-   "zone:warrens"
-  ]
- },
- {
   "source": "crawl/dngn/floor/mud0.png",
   "authors": [
    "Dungeon Crawl Stone Soup contributors"
@@ -2482,6 +2431,414 @@
   "notes": "original wolf animation by Redshrike, commissioned by William.Thompsonj; wolfman sprite by BenCreating, commissioned by castelonia; tweaks and headless version by bluecarrot16",
   "usedBy": [
    "enemy:wolfman"
+  ]
+ },
+ {
+  "source": "kenney/book_open.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:leaf"
+  ]
+ },
+ {
+  "source": "kenney/book_place_1.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:rank"
+  ]
+ },
+ {
+  "source": "kenney/chop.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:strike"
+  ]
+ },
+ {
+  "source": "kenney/click1.wav",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:click"
+  ]
+ },
+ {
+  "source": "kenney/creak_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:rope"
+  ]
+ },
+ {
+  "source": "kenney/door_close_4.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:rout"
+  ]
+ },
+ {
+  "source": "kenney/door_open_1.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:gate"
+  ]
+ },
+ {
+  "source": "kenney/draw_knife_1.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:draw"
+  ]
+ },
+ {
+  "source": "kenney/draw_knife_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:draw"
+  ]
+ },
+ {
+  "source": "kenney/draw_knife_3.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:draw"
+  ]
+ },
+ {
+  "source": "kenney/footstep_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:step"
+  ]
+ },
+ {
+  "source": "kenney/footstep_5.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:step"
+  ]
+ },
+ {
+  "source": "kenney/footstep_8.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:step"
+  ]
+ },
+ {
+  "source": "kenney/handle_coins.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:coins"
+  ]
+ },
+ {
+  "source": "kenney/handle_coins_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:coins"
+  ]
+ },
+ {
+  "source": "kenney/handle_small_leather.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:loot"
+  ]
+ },
+ {
+  "source": "kenney/handle_small_leather_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:loot"
+  ]
+ },
+ {
+  "source": "kenney/knife_slice.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:strike"
+  ]
+ },
+ {
+  "source": "kenney/knife_slice_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:strike"
+  ]
+ },
+ {
+  "source": "kenney/metal_click.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:buy"
+  ]
+ },
+ {
+  "source": "kenney/metal_latch.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:keeper"
+  ]
+ },
+ {
+  "source": "kenney/metal_pot_1.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:clank"
+  ]
+ },
+ {
+  "source": "kenney/metal_pot_2.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:clank"
+  ]
+ },
+ {
+  "source": "kenney/metal_pot_3.ogg",
+  "authors": [
+   "Kenney"
+  ],
+  "licenses": [
+   "CC0 1.0"
+  ],
+  "urls": [
+   "https://kenney.nl/assets/rpg-audio",
+   "https://kenney.nl/assets/ui-audio"
+  ],
+  "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+  "usedBy": [
+   "sound:clank"
   ]
  },
  {

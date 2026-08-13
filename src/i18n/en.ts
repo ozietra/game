@@ -106,6 +106,17 @@ export const en: Record<StringKey, string> = {
   'action.confirm': 'Confirm',
   'action.cancel': 'Never mind',
 
+  'menu.play': 'Go down',
+  'menu.continue': 'Continue',
+  'menu.restart': 'Start over',
+  'menu.restartWarning': 'Every bit of progress is erased, relics included. Are you sure?',
+  'menu.back': 'Back',
+  'menu.audio': 'Sound',
+  'menu.volume': 'Volume',
+  'menu.mute': 'Silent',
+  'menu.first': 'Nobody is waiting for you at the mouth of the shaft.',
+  'menu.open': 'Menu',
+
   'policy.title': 'Standing orders',
   'policy.start': 'Starting floor',
   'policy.target': 'Target floor',

@@ -121,6 +121,124 @@ h3 {
   flex: none;
 }
 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* -------------------------------------------------------------------- menu */
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px 18px;
+}
+
+.menu-plate {
+  width: 100%;
+  max-width: 640px;
+  border: 1px solid var(--edge-lit);
+  background: var(--panel);
+  padding: 34px 34px 30px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+}
+
+.menu-title {
+  font-size: 58px;
+  line-height: 0.95;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-shadow: 0 3px 0 #000;
+}
+
+.menu-line {
+  margin: 10px 0 0;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  font-size: 16px;
+}
+
+.menu-party {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 22px 0 6px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--edge);
+}
+
+.menu-portrait {
+  width: 72px;
+  height: 104px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.menu-portrait.dim {
+  filter: grayscale(0.95) brightness(0.45);
+}
+
+.menu-body {
+  margin-top: 18px;
+}
+
+.menu-status {
+  text-align: center;
+  margin: 0 0 18px;
+  font-size: 15px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.menu-button {
+  justify-content: flex-start;
+  padding: 12px 18px;
+  font-size: 18px;
+  font-family: var(--display);
+  letter-spacing: 0.06em;
+}
+
+.menu-section {
+  margin-bottom: 20px;
+}
+
+.menu-heading {
+  font-size: 19px;
+  color: var(--gold);
+  border-bottom: 1px solid var(--edge);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.menu .credit-list {
+  max-height: 44vh;
+}
+
+@media (max-width: 560px) {
+  .menu-plate {
+    padding: 22px 18px 20px;
+  }
+
+  .menu-title {
+    font-size: 40px;
+  }
+
+  .menu-portrait {
+    width: 56px;
+    height: 82px;
+  }
+}
+
 /* -------------------------------------------------------------------- tabs */
 
 .tabs {

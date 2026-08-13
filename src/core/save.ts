@@ -44,6 +44,7 @@ function migrate(state: GameState): GameState {
   const merged: GameState = {
     ...base,
     ...state,
+    audio: { ...base.audio, ...state.audio },
     bank: { ...base.bank, ...state.bank },
     buildings: { ...base.buildings, ...state.buildings },
     relics: { ...base.relics, ...state.relics },

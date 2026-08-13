@@ -483,5 +483,59 @@
   "tusk": "assets/icons/tusk.svg",
   "bone": "assets/icons/bone.svg",
   "crystal": "assets/icons/crystal.svg"
+ },
+ "sounds": {
+  "strike": [
+   "assets/sound/strike_0.ogg",
+   "assets/sound/strike_1.ogg",
+   "assets/sound/strike_2.ogg"
+  ],
+  "clank": [
+   "assets/sound/clank_0.ogg",
+   "assets/sound/clank_1.ogg",
+   "assets/sound/clank_2.ogg"
+  ],
+  "draw": [
+   "assets/sound/draw_0.ogg",
+   "assets/sound/draw_1.ogg",
+   "assets/sound/draw_2.ogg"
+  ],
+  "step": [
+   "assets/sound/step_0.ogg",
+   "assets/sound/step_1.ogg",
+   "assets/sound/step_2.ogg"
+  ],
+  "loot": [
+   "assets/sound/loot_0.ogg",
+   "assets/sound/loot_1.ogg"
+  ],
+  "coins": [
+   "assets/sound/coins_0.ogg",
+   "assets/sound/coins_1.ogg"
+  ],
+  "gate": [
+   "assets/sound/gate_0.ogg"
+  ],
+  "rout": [
+   "assets/sound/rout_0.ogg"
+  ],
+  "rope": [
+   "assets/sound/rope_0.ogg"
+  ],
+  "keeper": [
+   "assets/sound/keeper_0.ogg"
+  ],
+  "buy": [
+   "assets/sound/buy_0.ogg"
+  ],
+  "rank": [
+   "assets/sound/rank_0.ogg"
+  ],
+  "leaf": [
+   "assets/sound/leaf_0.ogg"
+  ],
+  "click": [
+   "assets/sound/click_0.wav"
+  ]
  }
 }

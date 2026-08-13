@@ -9,13 +9,24 @@ in one browser tab and saves to local storage.
 
 ## Playing
 
+**<https://ozietra.github.io/game/>** is the published build. Nothing to install:
+open it, press the button on the title screen and the party starts climbing
+down. Progress lives in that browser's local storage.
+
+Every push to the branch rebuilds and republishes through
+`.github/workflows/pages.yml`. GitHub needs one manual step before the first
+deploy: repository Settings, then Pages, then set Source to GitHub Actions.
+
+To run it locally instead:
+
 ```sh
 npm install
 npm run dev
 ```
 
 Open the address Vite prints. `npm run build` produces a static `dist/` that can
-be served from any file host.
+be served from any file host, including a subdirectory, since every asset path
+is relative.
 
 The first descent is manual. After that, standing orders take over: pick the
 floor to start from, the floor to stop at, the health level that sends the party
@@ -28,7 +39,7 @@ the tab is closed, up to the offline window that Waking Camp relics extend.
 | --- | --- |
 | `src/core` | The simulation: combat resolution, the descent state machine, loot, saves, offline catch up. No DOM access, so it also runs under Node. |
 | `src/data/content.ts` | Every tuning number, foe, hero, building and relic in one file. |
-| `src/ui` | Canvas scene, panels, floating numbers, formatting. |
+| `src/ui` | Title screen, canvas scene, panels, floating numbers, the sound mixer. |
 | `src/i18n` | Turkish and English string tables. The English table is typed against the Turkish one, so a missing key fails the type check. |
 | `tools` | The asset pipeline and a headless balance harness. |
 
@@ -60,19 +71,23 @@ npm install --no-save playwright
 npm run smoke -- tools/.cache/save.json tools/.cache
 ```
 
-## Art and typefaces
+## Art, sound and typefaces
 
-Nothing here was drawn for this project and nothing was generated. Character
-sheets are composited from the Liberated Pixel Cup libraries, dungeon tiles come
-from the CC0 export of Dungeon Crawl Stone Soup, interface icons come from
-game-icons.net, and the typefaces are Open Font Licence families served from the
-game's own files.
+Nothing here was drawn or recorded for this project and nothing was generated.
+Character sheets are composited from the Liberated Pixel Cup libraries, dungeon
+tiles come from the CC0 export of Dungeon Crawl Stone Soup, interface icons come
+from game-icons.net, sound effects are Kenney's CC0 RPG and UI audio packs, and
+the typefaces are Open Font Licence families served from the game's own files.
+
+Sound is deliberately quiet: every cue has a minimum gap and the mixer as a
+whole is capped, so a busy fight does not turn into a rattle. Volume and a
+silent switch live on the title screen and travel with the save.
 
 `tools/build_assets.py` fetches all of it and writes the credits at the same
 time, straight from the metadata each source ships with:
 
 ```sh
-python3 tools/build_assets.py           # sprites, tiles, icons, fonts
+python3 tools/build_assets.py           # sprites, tiles, sounds, icons, fonts
 python3 tools/build_assets.py sprites   # one stage at a time
 ```
 

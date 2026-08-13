@@ -83,6 +83,7 @@ export function freshState(): GameState {
   return {
     version: SAVE_VERSION,
     language: 'tr',
+    audio: { volume: 0.6, muted: false },
     bank: { coin: 0, iron: 0, crystal: 0, relic: 0 },
     heroes,
     stash: [],
@@ -603,6 +604,7 @@ export class Game {
     const keptRelics = { ...this.state.relics };
     const relicBank = this.state.bank.relic + gain;
     const language = this.state.language;
+    const audio = { ...this.state.audio };
     const policy = { ...this.state.policy };
     const deepestBanked = 1;
 
@@ -618,6 +620,7 @@ export class Game {
 
     const fresh = freshState();
     fresh.language = language;
+    fresh.audio = audio;
     fresh.relics = keptRelics;
     fresh.bank.relic = relicBank;
     fresh.policy = policy;

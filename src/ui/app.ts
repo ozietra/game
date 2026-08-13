@@ -12,33 +12,24 @@ import {
   SLOTS,
   zoneForFloor,
 } from '../data/content';
-import creditsData from '../data/credits.json';
 import type { Game, Harvest } from '../core/game';
 import { masteryCost, heroStats, maxStartFloor, partyOf, relicYield, xpForLevel } from '../core/stats';
 import type { BuildingId, Item, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
-import { formatDuration, formatNumber, formatPercent, setLanguage, t, type Language, type StringKey } from '../i18n';
+import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
+import { sound } from './audio';
 import { icon, portraitStyle, preload } from './assets';
 import { clear, el, on, setText, setWidth } from './dom';
+import { Menu } from './menu';
 import { Scene } from './scene';
 
-type TabId = 'shaft' | 'roster' | 'camp' | 'relics' | 'ledger';
-
-interface CreditEntry {
-  source: string;
-  authors: string[];
-  licenses: string[];
-  urls: string[];
-  notes: string;
-  usedBy: string[];
-}
+type TabId = 'shaft' | 'roster' | 'camp' | 'relics';
 
 const TAB_ICONS: Record<TabId, string> = {
   shaft: 'descend',
   roster: 'swords',
   camp: 'camp',
   relics: 'relic',
-  ledger: 'ledger',
 };
 
 export class App {
@@ -52,6 +43,10 @@ export class App {
   private saveTimer = 0;
   private panelTimer = 0;
   private floatSeen = 0;
+  private view: 'menu' | 'game' = 'menu';
+  private menu!: Menu;
+  private lastPhase = '';
+  private lastLogId = 0;
 
   constructor(game: Game, root: HTMLElement) {
     this.game = game;
@@ -60,7 +55,20 @@ export class App {
 
   async start(): Promise<void> {
     setLanguage(this.game.state.language);
-    this.build();
+    sound.setVolume(this.game.state.audio.volume);
+    sound.setMuted(this.game.state.audio.muted);
+    void sound.load();
+
+    this.menu = new Menu(
+      this.game,
+      this.root,
+      () => this.enterGame(),
+      () => {
+        clearSave();
+        window.location.reload();
+      },
+    );
+    this.showMenu();
     await preload();
 
     const away = (Date.now() - this.game.state.lastSeen) / 1000;
@@ -68,15 +76,37 @@ export class App {
       const harvest = this.game.catchUp(away);
       if (harvest.seconds > 60) this.showHarvest(harvest);
     }
-    if (!this.game.state.tutorialSeen) this.showIntro();
 
-    window.addEventListener('resize', () => this.scene.resize(this.ref('stage')));
+    // Audio may only start from a gesture, and any click counts.
+    const wake = () => void sound.unlock();
+    window.addEventListener('pointerdown', wake, { once: true });
+    window.addEventListener('keydown', wake, { once: true });
+
+    window.addEventListener('resize', () => {
+      if (this.view === 'game') this.scene.resize(this.ref('stage'));
+    });
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') writeSave(this.game.state);
     });
     window.addEventListener('beforeunload', () => writeSave(this.game.state));
 
     requestAnimationFrame(() => this.frame());
+  }
+
+  // ------------------------------------------------------------------ views
+
+  private showMenu(): void {
+    this.view = 'menu';
+    this.refs.clear();
+    clear(this.root);
+    this.menu.render();
+  }
+
+  private enterGame(): void {
+    void sound.unlock();
+    this.view = 'game';
+    this.build();
+    if (!this.game.state.tutorialSeen) this.showIntro();
   }
 
   // ------------------------------------------------------------------ shell
@@ -102,7 +132,17 @@ export class App {
     ]);
 
     const purse = this.keep('purse', el('div', { class: 'purse' }));
-    const header = el('header', { class: 'topbar' }, [brand, purse]);
+    const toMenu = el('button', {
+      class: 'button tiny',
+      type: 'button',
+      html: `${icon('ledger')}<span>${t('menu.open')}</span>`,
+    });
+    on(toMenu, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      writeSave(this.game.state);
+      this.showMenu();
+    });
+    const header = el('header', { class: 'topbar' }, [brand, el('div', { class: 'topbar-right' }, [purse, toMenu])]);
 
     const tabs = el(
       'nav',
@@ -114,7 +154,10 @@ export class App {
           'data-tab': id,
           html: `${icon(TAB_ICONS[id])}<span>${t(`tab.${id}` as StringKey)}</span>`,
         });
-        on(button, 'click', () => this.selectTab(id));
+        on(button, 'click', () => {
+          sound.play('click', { gain: 0.4 });
+          this.selectTab(id);
+        });
         this.keep(`tab:${id}`, button);
         return button;
       }),
@@ -125,7 +168,6 @@ export class App {
       this.keep('panel:roster', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:camp', el('section', { class: 'panel', hidden: true })),
       this.keep('panel:relics', el('section', { class: 'panel', hidden: true })),
-      this.keep('panel:ledger', el('section', { class: 'panel', hidden: true })),
     ]);
 
     this.root.append(el('div', { class: 'frame' }, [header, tabs, panels]));
@@ -155,9 +197,15 @@ export class App {
     ]);
 
     const dive = el('button', { class: 'button primary', type: 'button', html: `${icon('descend')}<span>${t('action.dive')}</span>` });
-    on(dive, 'click', () => this.game.beginDive());
+    on(dive, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      this.game.beginDive();
+    });
     const back = el('button', { class: 'button', type: 'button', html: `${icon('ascend')}<span>${t('action.extract')}</span>` });
-    on(back, 'click', () => this.game.extract());
+    on(back, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      this.game.extract();
+    });
     this.keep('diveButton', dive);
     this.keep('backButton', back);
 
@@ -266,15 +314,22 @@ export class App {
       steps += 1;
     }
 
-    this.scene.render(this.game.state, elapsed);
-    this.spawnFloats();
-    this.renderPurse();
-    this.renderShaft();
+    this.cuesForPhase();
 
-    this.panelTimer += elapsed;
-    if (this.panelTimer > 0.4) {
-      this.panelTimer = 0;
-      if (this.tab !== 'shaft') this.renderPanel(this.tab);
+    if (this.view === 'game') {
+      this.scene.render(this.game.state, elapsed);
+      this.spawnFloats();
+      this.renderPurse();
+      this.renderShaft();
+
+      this.panelTimer += elapsed;
+      if (this.panelTimer > 0.4) {
+        this.panelTimer = 0;
+        if (this.tab !== 'shaft') this.renderPanel(this.tab);
+      }
+    } else {
+      this.game.events.length = 0;
+      this.lastLogId = this.game.log[0]?.id ?? this.lastLogId;
     }
 
     this.saveTimer += elapsed;
@@ -284,6 +339,39 @@ export class App {
     }
 
     requestAnimationFrame(() => this.frame());
+  }
+
+  // ----------------------------------------------------------------- sound
+
+  /** One cue per phase change, and one per fresh line in the log. */
+  private cuesForPhase(): void {
+    const phase = this.game.run.phase;
+    if (phase !== this.lastPhase) {
+      if (this.lastPhase === 'descending' && phase === 'fighting') sound.play('draw', { gain: 0.5 });
+      if (phase === 'descending') sound.play('step', { gain: 0.45 });
+      this.lastPhase = phase;
+    }
+
+    const newest = this.game.log[0];
+    if (!newest || newest.id === this.lastLogId) return;
+    const fresh = this.game.log.filter((entry) => entry.id > this.lastLogId);
+    this.lastLogId = newest.id;
+
+    const cues: Record<string, { cue: string; gain: number }> = {
+      'log.dive.start': { cue: 'gate', gain: 0.7 },
+      'log.climb.start': { cue: 'rope', gain: 0.7 },
+      'log.bank': { cue: 'coins', gain: 0.8 },
+      'log.wipe': { cue: 'rout', gain: 0.9 },
+      'log.loot.item': { cue: 'loot', gain: 0.6 },
+      'log.level': { cue: 'rank', gain: 0.7 },
+      'log.boss': { cue: 'keeper', gain: 0.9 },
+    };
+
+    // Oldest first, so a burst of lines still plays in the order they happened.
+    for (const entry of fresh.reverse()) {
+      const cue = cues[entry.key];
+      if (cue) sound.play(cue.cue, { gain: cue.gain });
+    }
   }
 
   // ------------------------------------------------------------------ shaft
@@ -452,6 +540,14 @@ export class App {
     const spots = new Map(this.scene.positions().map((spot) => [spot.key, spot]));
 
     for (const event of events) {
+      const onParty = event.key.startsWith('hero:');
+      if (event.kind === 'hit' || event.kind === 'crit') {
+        // Blows landing on the party ring off armour; the party's own hits cut.
+        sound.play(onParty ? 'clank' : 'strike', { gain: event.kind === 'crit' ? 0.85 : 0.5 });
+      } else if (event.kind === 'heal') {
+        sound.play('leaf', { gain: 0.5 });
+      }
+
       const spot = spots.get(event.key);
       if (!spot) continue;
       if (event.kind === 'guard') continue;
@@ -491,9 +587,6 @@ export class App {
       case 'relics':
         this.renderRelics();
         break;
-      case 'ledger':
-        this.renderLedger();
-        break;
       default:
         break;
     }
@@ -527,6 +620,7 @@ export class App {
           html: `${icon('coin')}<span>${t('action.recruit')} · ${formatNumber(definition.cost)}</span>`,
         });
         on(hire, 'click', () => {
+          sound.play('buy', { gain: 0.8 });
           this.game.recruit(id);
           this.renderRoster();
         });
@@ -540,6 +634,7 @@ export class App {
           html: `${icon('upgrade')}<span>${t('action.train')} · ${formatNumber(training.coin)} ${t('res.coin')} · ${formatNumber(training.iron)} ${t('res.iron')}</span>`,
         });
         on(train, 'click', () => {
+          sound.play('buy', { gain: 0.8 });
           this.game.train(id);
           this.renderRoster();
         });
@@ -641,6 +736,7 @@ export class App {
         html: `${icon(HEROES[hero.id].icon)}<span>${t(`hero.${hero.id}.name` as StringKey)}</span>`,
       });
       on(button, 'click', () => {
+        sound.play('loot', { gain: 0.7 });
         this.game.equip(hero.id, item);
         this.renderRoster();
       });
@@ -674,6 +770,7 @@ export class App {
           : `${icon('upgrade')}<span>${t('action.upgrade')} · ${this.costLabel(cost)}</span>`,
       });
       on(button, 'click', () => {
+        sound.play('buy', { gain: 0.8 });
         this.game.upgrade(id as BuildingId);
         this.renderCamp();
       });
@@ -699,6 +796,7 @@ export class App {
       html: cost === 0 ? `<span>${t('camp.mendNone')}</span>` : `${icon('vitals')}<span>${t('action.mend')} · ${formatNumber(cost)}</span>`,
     });
     on(mend, 'click', () => {
+      sound.play('buy', { gain: 0.8 });
       this.game.mend();
       this.renderCamp();
     });
@@ -769,6 +867,7 @@ export class App {
         html: maxed ? `<span>${t('camp.max')}</span>` : `${icon('relic')}<span>${formatNumber(cost)} ${t('res.relic')}</span>`,
       });
       on(button, 'click', () => {
+        sound.play('buy', { gain: 0.8 });
         this.game.buyRelic(id as RelicId);
         this.renderRelics();
       });
@@ -786,98 +885,6 @@ export class App {
       );
     }
     panel.append(grid);
-  }
-
-  private renderLedger(): void {
-    const panel = this.ref('panel:ledger');
-    const state = this.game.state;
-    clear(panel);
-
-    const stats: [StringKey, string][] = [
-      ['ledger.stat.dives', formatNumber(state.totalDives)],
-      ['ledger.stat.wipes', formatNumber(state.totalWipes)],
-      ['ledger.stat.floors', formatNumber(state.descents)],
-      ['ledger.stat.coin', formatNumber(state.lifetimeCoin)],
-      ['ledger.stat.deepest', formatNumber(state.deepestFloor)],
-      ['ledger.stat.prestiges', formatNumber(state.prestiges)],
-      ['ledger.stat.played', formatDuration(state.playedSeconds)],
-    ];
-
-    const language = el('div', { class: 'lang-switch' });
-    for (const code of ['tr', 'en'] as Language[]) {
-      const button = el('button', {
-        class: `button tiny${state.language === code ? ' primary' : ''}`,
-        type: 'button',
-        text: code === 'tr' ? 'Türkçe' : 'English',
-      });
-      on(button, 'click', () => {
-        state.language = code;
-        setLanguage(code);
-        writeSave(state);
-        this.build();
-        this.selectTab('ledger');
-      });
-      language.append(button);
-    }
-
-    const wipe = el('button', { class: 'button', type: 'button', html: `${icon('grave')}<span>${t('action.wipeSave')}</span>` });
-    on(wipe, 'click', () => {
-      if (!window.confirm(t('ledger.wipeWarning'))) return;
-      clearSave();
-      window.location.reload();
-    });
-
-    panel.append(
-      el('div', { class: 'card wide' }, [
-        el('h2', { class: 'card-title', html: `${icon('ledger')}<span>${t('ledger.stats')}</span>` }),
-        el(
-          'div',
-          { class: 'record-grid' },
-          stats.map(([key, value]) =>
-            el('div', { class: 'record' }, [el('span', { class: 'label', text: t(key) }), el('strong', { class: 'readout', text: value })]),
-          ),
-        ),
-      ]),
-      el('div', { class: 'card wide' }, [
-        el('h2', { class: 'card-title', html: `${icon('settings')}<span>${t('ledger.settings')}</span>` }),
-        el('div', { class: 'stat-line' }, [el('span', { text: t('ledger.language') }), language]),
-        wipe,
-      ]),
-      this.creditsCard(),
-    );
-  }
-
-  private creditsCard(): HTMLElement {
-    const entries = creditsData as CreditEntry[];
-    const groups = new Map<string, CreditEntry[]>();
-    for (const entry of entries) {
-      const key = entry.authors.join(', ') || 'unknown';
-      const bucket = groups.get(key);
-      if (bucket) bucket.push(entry);
-      else groups.set(key, [entry]);
-    }
-
-    const list = el('div', { class: 'credit-list' });
-    const sorted = [...groups.entries()].sort((a, b) => b[1].length - a[1].length);
-    for (const [authors, group] of sorted) {
-      const licences = [...new Set(group.flatMap((entry) => entry.licenses))].join(', ');
-      const url = group.find((entry) => entry.urls.length > 0)?.urls[0];
-      const files = group.length;
-      list.append(
-        el('div', { class: 'credit' }, [
-          el('span', { class: 'credit-authors', text: authors }),
-          el('span', { class: 'credit-meta', text: `${licences} · ${files}` }),
-          url ? el('a', { class: 'credit-link', href: url, target: '_blank', rel: 'noreferrer noopener', text: url }) : null,
-        ]),
-      );
-    }
-
-    return el('div', { class: 'card wide' }, [
-      el('h2', { class: 'card-title', html: `${icon('ledger')}<span>${t('ledger.title')}</span>` }),
-      el('p', { class: 'note', text: t('ledger.assets') }),
-      list,
-      el('p', { class: 'note', text: t('ledger.licence') }),
-    ]);
   }
 
   // ---------------------------------------------------------------- overlays

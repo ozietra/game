@@ -104,6 +104,17 @@ export const tr = {
   'action.confirm': 'Onayla',
   'action.cancel': 'Vazgeç',
 
+  'menu.play': 'Kuyuya in',
+  'menu.continue': 'Devam et',
+  'menu.restart': 'Baştan başla',
+  'menu.restartWarning': 'Bütün ilerleme silinir, kalıntılar dahil. Emin misin?',
+  'menu.back': 'Geri',
+  'menu.audio': 'Ses',
+  'menu.volume': 'Ses seviyesi',
+  'menu.mute': 'Sessiz',
+  'menu.first': 'Kuyunun ağzında kimse seni beklemiyor.',
+  'menu.open': 'Menü',
+
   'policy.title': 'İniş emri',
   'policy.start': 'Başlangıç katı',
   'policy.target': 'Hedef kat',

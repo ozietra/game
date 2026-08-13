@@ -102,9 +102,15 @@ export interface Bank {
   relic: number;
 }
 
+export interface AudioSettings {
+  volume: number;
+  muted: boolean;
+}
+
 export interface GameState {
   version: number;
   language: 'tr' | 'en';
+  audio: AudioSettings;
   bank: Bank;
   heroes: Record<HeroId, Hero>;
   stash: Item[];

@@ -69,9 +69,6 @@ Composited from the Liberated Pixel Cup character libraries via the Universal LP
 - **crawl/dngn/floor/demonic_red1.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
 - **crawl/dngn/floor/demonic_red4.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
 - **crawl/dngn/floor/demonic_red8.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
-- **crawl/dngn/floor/dirt0.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
-- **crawl/dngn/floor/dirt1.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
-- **crawl/dngn/floor/dirt2.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
 - **crawl/dngn/floor/mud0.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
 - **crawl/dngn/floor/mud1.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
 - **crawl/dngn/floor/mud2.png** - Dungeon Crawl Stone Soup contributors - CC0 1.0 - <https://github.com/crawl/tiles>
@@ -137,6 +134,33 @@ Composited from the Liberated Pixel Cup character libraries via the Universal LP
 - **game-icons/skoll/hearts.svg** - skoll - CC BY 3.0 - <https://game-icons.net/>
 - **game-icons/skoll/rank-3.svg** - skoll - CC BY 3.0 - <https://game-icons.net/>
 - **game-icons/willdabeast/gold-bar.svg** - willdabeast - CC BY 3.0 - <https://game-icons.net/>
+
+## Sound
+
+- **kenney/book_open.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/book_place_1.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/chop.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/click1.wav** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/creak_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/door_close_4.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/door_open_1.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/draw_knife_1.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/draw_knife_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/draw_knife_3.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/footstep_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/footstep_5.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/footstep_8.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/handle_coins.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/handle_coins_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/handle_small_leather.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/handle_small_leather_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/knife_slice.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/knife_slice_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/metal_click.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/metal_latch.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/metal_pot_1.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/metal_pot_2.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
+- **kenney/metal_pot_3.ogg** - Kenney - CC0 1.0 - <https://kenney.nl/assets/rpg-audio>
 
 ## Share-alike
 

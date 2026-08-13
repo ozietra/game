@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Fetch and prepare every piece of art the game ships.
+"""Fetch and prepare every asset the game ships.
 
-Nothing here is drawn by hand or generated: character sheets are composited
+Nothing here is drawn, recorded or generated: character sheets are composited
 from the Liberated Pixel Cup libraries, dungeon tiles come from the CC0 export
-of Dungeon Crawl Stone Soup, interface icons come from game-icons.net, and the
-typefaces are Open Font Licence families pulled once and served locally.
+of Dungeon Crawl Stone Soup, interface icons come from game-icons.net, sound
+effects come from Kenney's CC0 audio packs, and the typefaces are Open Font
+Licence families pulled once and served locally.
 
 Every fetched file records its authors, licence and source URL; those records
 are written to src/data/credits.json and ASSETS.md, which is what the in-game
@@ -265,6 +266,72 @@ def build_tiles() -> dict:
 
 
 # --------------------------------------------------------------------------
+# sound
+# --------------------------------------------------------------------------
+
+KENNEY_RPG = "https://raw.githubusercontent.com/Boyquotes/kenney-rpg-audio-for-godot/main/addons/kenney%20rpg%20audio/"
+KENNEY_UI = "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/master/addons/kenney_ui_audio/"
+
+KENNEY_CREDIT = {
+    "authors": ["Kenney"],
+    "licenses": ["CC0 1.0"],
+    "urls": ["https://kenney.nl/assets/rpg-audio", "https://kenney.nl/assets/ui-audio"],
+    "notes": "Kenney's RPG Audio and UI Audio packs, both released to the public domain.",
+}
+
+# Cue name to source files. Several files per cue means the player picks one at
+# random, so repeated hits do not sound like a loop.
+SOUNDS = {
+    "strike": [(KENNEY_RPG, "chop.ogg"), (KENNEY_RPG, "knife_slice.ogg"), (KENNEY_RPG, "knife_slice_2.ogg")],
+    "clank": [(KENNEY_RPG, "metal_pot_1.ogg"), (KENNEY_RPG, "metal_pot_2.ogg"), (KENNEY_RPG, "metal_pot_3.ogg")],
+    "draw": [(KENNEY_RPG, "draw_knife_1.ogg"), (KENNEY_RPG, "draw_knife_2.ogg"), (KENNEY_RPG, "draw_knife_3.ogg")],
+    "step": [(KENNEY_RPG, "footstep_2.ogg"), (KENNEY_RPG, "footstep_5.ogg"), (KENNEY_RPG, "footstep_8.ogg")],
+    "loot": [(KENNEY_RPG, "handle_small_leather.ogg"), (KENNEY_RPG, "handle_small_leather_2.ogg")],
+    "coins": [(KENNEY_RPG, "handle_coins.ogg"), (KENNEY_RPG, "handle_coins_2.ogg")],
+    "gate": [(KENNEY_RPG, "door_open_1.ogg")],
+    "rout": [(KENNEY_RPG, "door_close_4.ogg")],
+    "rope": [(KENNEY_RPG, "creak_2.ogg")],
+    "keeper": [(KENNEY_RPG, "metal_latch.ogg")],
+    "buy": [(KENNEY_RPG, "metal_click.ogg")],
+    "rank": [(KENNEY_RPG, "book_place_1.ogg")],
+    "leaf": [(KENNEY_RPG, "book_open.ogg")],
+    "click": [(KENNEY_UI, "click1.wav")],
+}
+
+
+def build_sounds() -> dict:
+    out_dir = os.path.join(PUBLIC, "sound")
+    os.makedirs(out_dir, exist_ok=True)
+    manifest = {}
+
+    for cue, sources in SOUNDS.items():
+        kept = []
+        for base, name in sources:
+            try:
+                cached = download(base + name, os.path.join(CACHE, "sound", name))
+            except Exception as error:  # noqa: BLE001
+                print(f"  missing sound {name}: {error}")
+                continue
+            target = f"{cue}_{len(kept)}{os.path.splitext(name)[1]}"
+            with open(cached, "rb") as source, open(os.path.join(out_dir, target), "wb") as destination:
+                destination.write(source.read())
+            kept.append(f"assets/sound/{target}")
+            record(
+                f"kenney/{name}",
+                KENNEY_CREDIT["authors"],
+                KENNEY_CREDIT["licenses"],
+                KENNEY_CREDIT["urls"],
+                f"sound:{cue}",
+                KENNEY_CREDIT["notes"],
+            )
+        if kept:
+            manifest[cue] = kept
+
+    print(f"  sounds {len(manifest)} cues, {sum(len(v) for v in manifest.values())} files")
+    return manifest
+
+
+# --------------------------------------------------------------------------
 # interface icons
 # --------------------------------------------------------------------------
 
@@ -430,6 +497,8 @@ def write_credits() -> None:
             key = "Dungeon tiles"
         elif entry["source"].startswith("game-icons/"):
             key = "Interface icons"
+        elif entry["source"].startswith("kenney/"):
+            key = "Sound"
         elif entry["source"].startswith("font/"):
             key = "Typefaces"
         else:
@@ -482,7 +551,7 @@ def write_credits() -> None:
 
 
 def main() -> None:
-    all_stages = ["sprites", "tiles", "icons", "fonts"]
+    all_stages = ["sprites", "tiles", "sounds", "icons", "fonts"]
     stages = sys.argv[1:] or all_stages
     manifest_path = os.path.join(DATA, "assets.json")
     credits_path = os.path.join(DATA, "credits.json")
@@ -504,6 +573,9 @@ def main() -> None:
     if "tiles" in stages:
         print("tiles")
         manifest["zones"] = build_tiles()
+    if "sounds" in stages:
+        print("sounds")
+        manifest["sounds"] = build_sounds()
     if "icons" in stages:
         print("icons")
         manifest["icons"] = build_icons()

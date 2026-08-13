@@ -50,6 +50,21 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
   const modal = page.locator('.backdrop .button');
   if (await modal.count()) await modal.first().click();
 
+  // title screen: credits live here now
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: `${OUT}/mid-menu.png` });
+  await page.locator('.menu-buttons .button').nth(2).click();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${OUT}/mid-credits.png` });
+  await page.locator('.menu-buttons .button').last().click();
+  await page.waitForTimeout(300);
+  await page.locator('.menu-buttons .button').nth(1).click();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${OUT}/mid-settings.png` });
+  await page.locator('.menu-buttons .button').last().click();
+  await page.waitForTimeout(300);
+
+  await page.locator('.menu-buttons .button').first().click();
   await page.waitForTimeout(6000);
   await page.screenshot({ path: `${OUT}/mid-shaft.png` });
 
@@ -59,12 +74,16 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
     await page.screenshot({ path: `${OUT}/mid-${tab}.png`, fullPage: tab === 'roster' });
   }
 
-  // english pass
-  await page.click('[data-tab="ledger"]');
+  // english pass, switched from the title screen
+  await page.click('.topbar-right .button');
+  await page.waitForTimeout(400);
+  await page.locator('.menu-buttons .button').nth(1).click();
   await page.waitForTimeout(400);
   await page.click('.lang-switch .button:nth-child(2)');
-  await page.waitForTimeout(700);
-  await page.click('[data-tab="shaft"]');
+  await page.waitForTimeout(500);
+  await page.locator('.menu-buttons .button').last().click();
+  await page.waitForTimeout(300);
+  await page.locator('.menu-buttons .button').first().click();
   await page.waitForTimeout(2500);
   await page.screenshot({ path: `${OUT}/mid-english.png` });
 
