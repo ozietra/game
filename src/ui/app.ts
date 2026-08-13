@@ -13,7 +13,10 @@ import {
   EVENTS,
   TALENTS,
   TALENT_LEVELS,
+  TALENT_LINES,
   TALENT_TREES,
+  lineCounts,
+  talentOpen,
   talentsOpen,
   type TalentGain,
   EVENT_SECONDS,
@@ -45,7 +48,7 @@ import {
   setsWorn,
   xpForLevel,
 } from '../core/stats';
-import type { BuildingId, DiveReport, Hero, Item, RarityId, RelicId } from '../core/types';
+import type { BuildingId, DiveReport, Hero, HeroId, Item, RarityId, RelicId } from '../core/types';
 import { clearSave, writeSave } from '../core/save';
 import { formatDuration, formatNumber, formatPercent, setLanguage, t, type StringKey } from '../i18n';
 import { metrics } from '../net/telemetry';
@@ -1179,7 +1182,7 @@ export class App {
             el('div', { class: 'gear-row' }, SLOTS.map((slot) => this.gearChip(hero.gear[slot], slot))),
             this.setLine(hero),
           ]),
-          this.talentTree(hero),
+          this.talentSummary(hero),
         );
         foot.append(train);
       }
@@ -1297,67 +1300,216 @@ export class App {
     return parts.join('  ');
   }
 
-  /** The three forks a hero is offered, and which way they went. */
-  private talentTree(hero: Hero): HTMLElement {
+  /** What a talent does beyond its numbers, read off its keyword. */
+  private talentEffectText(id: string): string {
+    const effect = TALENTS[id]?.effect;
+    if (!effect) return '';
+    return t(`talent.effect.${effect.kind}` as StringKey, { value: formatPercent(effect.value) });
+  }
+
+  /** Icon, name, numbers, and whatever it changes about the fight. */
+  private talentFace(id: string): HTMLElement[] {
+    const line = TALENTS[id]?.line ?? 'might';
+    const face: HTMLElement[] = [
+      el('span', { class: 'talent-head' }, [
+        el('span', { class: 'talent-icon', html: icon(TALENTS[id]?.icon ?? 'talent') }),
+        el('span', { class: 'talent-name', text: t(`talent.${id}.name` as StringKey) }),
+        // Carried in the markup always, shown only when the tree has folded
+        // down to one column and the header row is gone.
+        el('span', { class: 'talent-line-tag', text: t(`talent.line.${line}` as StringKey) }),
+      ]),
+    ];
+    const gain = this.talentGainText(id);
+    if (gain) face.push(el('span', { class: 'talent-gain', text: gain }));
+    const effect = this.talentEffectText(id);
+    if (effect) face.push(el('span', { class: 'talent-effect', text: effect }));
+    return face;
+  }
+
+  /** How far down each of the three paths a hero has gone. */
+  private lineTally(hero: Hero): HTMLElement {
+    const counts = lineCounts(hero.id, hero.talents);
+    return el(
+      'div',
+      { class: 'line-tally' },
+      TALENT_LINES.map((line) =>
+        el('span', { class: `line-mark is-${line}${counts[line] > 0 ? ' is-live' : ''}` }, [
+          el('span', { class: 'line-name', text: t(`talent.line.${line}` as StringKey) }),
+          el('span', { class: 'line-count', text: `${counts[line]}` }),
+        ]),
+      ),
+    );
+  }
+
+  /**
+   * The card only carries the summary. Five rows of three would bury the rest
+   * of the hero, so the tree itself opens over the screen where it has room to
+   * be read.
+   */
+  private talentSummary(hero: Hero): HTMLElement {
     const tree = TALENT_TREES[hero.id] ?? [];
-    const open = talentsOpen(hero.level);
-    const rows: HTMLElement[] = [];
+    const picks = (hero.talents ?? []).filter(Boolean);
+    const unspent = Math.max(0, talentsOpen(hero.level) - picks.length);
 
-    tree.forEach((fork, tier) => {
-      const level = TALENT_LEVELS[tier];
-      const taken = hero.talents?.[tier];
-      const reachable = tier < open;
-
-      const options = fork.map((id) => {
-        const chosen = taken === id;
-        const button = el('button', {
-          class: `talent${chosen ? ' is-chosen' : ''}${!reachable ? ' is-locked' : ''}`,
-          type: 'button',
-          disabled: !reachable || Boolean(taken),
-        }, [
-          el('span', { class: 'talent-head' }, [
-            el('span', { class: 'talent-icon', html: icon(TALENTS[id]?.icon ?? 'talent') }),
-            el('span', { class: 'talent-name', text: t(`talent.${id}.name` as StringKey) }),
+    const taken = el('div', { class: 'talent-taken' });
+    if (picks.length === 0) {
+      taken.append(el('span', { class: 'muted', text: t('talent.none') }));
+    } else {
+      for (const id of picks) {
+        const talent = TALENTS[id];
+        if (!talent) continue;
+        taken.append(
+          el('span', { class: `talent-chip is-${talent.line}` }, [
+            el('span', { html: icon(talent.icon) }),
+            el('span', { text: t(`talent.${id}.name` as StringKey) }),
           ]),
-          el('span', { class: 'talent-gain', text: this.talentGainText(id) }),
-        ]);
-        on(button, 'click', () => {
-          if (!this.game.chooseTalent(hero.id, tier, id)) return;
-          sound.play('rank', { gain: 0.7 });
-          this.renderPanel('roster', true);
-        });
-        return button;
+        );
+      }
+    }
+
+    const openTree = el('button', {
+      class: `button wide${unspent > 0 ? ' primary' : ''}`,
+      type: 'button',
+      html:
+        `${icon('talent')}<span>${t('talent.open')}</span>` +
+        `<span class="button-cost">${picks.length} / ${tree.length}${
+          unspent > 0 ? ` · ${t('talent.unspent', { count: unspent })}` : ''
+        }</span>`,
+    });
+    on(openTree, 'click', () => {
+      sound.play('click', { gain: 0.5 });
+      this.showTalents(hero.id);
+    });
+
+    return el('div', { class: 'hero-block' }, [
+      el('div', { class: 'block-head' }, [
+        el('h4', { class: 'block-title', text: t('talent.title') }),
+        this.lineTally(hero),
+      ]),
+      taken,
+      openTree,
+    ]);
+  }
+
+  /**
+   * The tree itself: three paths across, five rows down, redrawn in place as
+   * picks are made so the line counts and the crowning row keep up.
+   */
+  private showTalents(id: HeroId): void {
+    const backdrop = el('div', { class: 'backdrop' });
+    const modal = el('div', { class: 'modal talent-modal' });
+    backdrop.append(modal);
+
+    const draw = (): void => {
+      clear(modal);
+      const hero = this.game.state.heroes[id];
+      const tree = TALENT_TREES[id] ?? [];
+      const reach = talentsOpen(hero.level);
+      const counts = lineCounts(id, hero.talents);
+
+      const grid = el('div', { class: 'talent-grid' });
+      grid.append(el('span', { class: 'talent-corner', text: t('camp.level') }));
+      for (const line of TALENT_LINES) {
+        grid.append(
+          el('span', { class: `talent-column is-${line}` }, [
+            el('span', { class: 'talent-column-name', text: t(`talent.line.${line}` as StringKey) }),
+            el('span', { class: 'talent-column-count', text: `${counts[line]}` }),
+          ]),
+        );
+      }
+
+      tree.forEach((row, tier) => {
+        const level = TALENT_LEVELS[tier];
+        const taken = hero.talents?.[tier];
+        const reachable = tier < reach;
+
+        grid.append(
+          el('span', { class: `talent-rank${reachable ? '' : ' is-locked'}` }, [
+            el('span', { class: 'talent-rank-index', text: t('talent.tier', { index: tier + 1 }) }),
+            el('span', { class: 'talent-rank-level', text: `${level}` }),
+          ]),
+        );
+
+        for (const talentId of row) {
+          const talent = TALENTS[talentId];
+          const chosen = taken === talentId;
+          const passed = Boolean(taken) && !chosen;
+          const barred = !talentOpen(id, hero.talents, talentId);
+          const state = chosen
+            ? ' is-chosen'
+            : !reachable
+              ? ' is-locked'
+              : passed
+                ? ' is-passed'
+                : barred
+                  ? ' is-barred'
+                  : '';
+
+          const face = this.talentFace(talentId);
+          if (!reachable) {
+            face.push(el('span', { class: 'talent-bar', text: t('talent.locked', { level }) }));
+          } else if (barred && !chosen && talent?.needs) {
+            face.push(
+              el('span', {
+                class: 'talent-bar',
+                text: t('talent.needs', {
+                  count: talent.needs,
+                  line: t(`talent.line.${talent.line}` as StringKey),
+                }),
+              }),
+            );
+          }
+
+          const button = el('button', {
+            class: `talent is-${talent?.line ?? 'might'}${state}`,
+            type: 'button',
+            disabled: !reachable || Boolean(taken) || barred,
+          }, face);
+          on(button, 'click', () => {
+            if (!this.game.chooseTalent(id, tier, talentId)) return;
+            sound.play('rank', { gain: 0.7 });
+            this.renderPanel('roster', true);
+            draw();
+          });
+          grid.append(button);
+        }
       });
 
-      rows.push(
-        el('div', { class: 'talent-fork' }, [
-          el('span', {
-            class: 'talent-tier',
-            text: reachable ? `${t('camp.level')} ${level}` : t('talent.locked', { level }),
-          }),
-          el('div', { class: 'talent-options' }, options),
+      const cost = this.game.respecCost(id);
+      const reset = el('button', {
+        class: 'button',
+        type: 'button',
+        disabled: cost === 0 || this.game.state.bank.coin < cost,
+        html: `${icon('grave')}<span>${t('talent.respec')}${cost > 0 ? ` · ${formatNumber(cost)}` : ''}</span>`,
+      });
+      on(reset, 'click', () => {
+        if (!this.game.respecTalents(id)) return;
+        sound.play('buy', { gain: 0.7 });
+        this.renderPanel('roster', true);
+        this.renderPurse();
+        draw();
+      });
+
+      const close = el('button', { class: 'button primary', type: 'button', text: t('action.close') });
+      on(close, 'click', () => backdrop.remove());
+
+      modal.append(
+        el('h2', { class: 'modal-title' }, [
+          el('span', { html: icon('talent') }),
+          el('span', { text: `${t(`hero.${id}.name` as StringKey)} · ${t('talent.title')}` }),
+          el('span', { class: 'tagline', text: `${t('roster.level')} ${hero.level}` }),
         ]),
+        el('p', { class: 'note', text: t('talent.note') }),
+        grid,
+        el('div', { class: 'talent-foot' }, [reset, close]),
       );
-    });
+    };
 
-    const cost = this.game.respecCost(hero.id);
-    const reset = el('button', {
-      class: 'button tiny',
-      type: 'button',
-      disabled: cost === 0 || this.game.state.bank.coin < cost,
-      html: `${icon('grave')}<span>${t('talent.respec')}${cost > 0 ? ` · ${formatNumber(cost)}` : ''}</span>`,
+    draw();
+    on(backdrop, 'click', (event) => {
+      if (event.target === backdrop) backdrop.remove();
     });
-    on(reset, 'click', () => {
-      if (!this.game.respecTalents(hero.id)) return;
-      sound.play('buy', { gain: 0.7 });
-      this.renderPanel('roster', true);
-      this.renderPurse();
-    });
-
-    return el('div', { class: 'hero-block talent-tree' }, [
-      el('div', { class: 'block-head' }, [el('h4', { class: 'block-title', text: t('talent.title') }), reset]),
-      ...rows,
-    ]);
+    this.root.append(backdrop);
   }
 
   /** Which workshops a hero has pieces from, and which of them are paying. */

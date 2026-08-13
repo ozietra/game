@@ -7,6 +7,7 @@ import {
   KEEPER,
   ZONES,
   talentGain,
+  talentEffects,
   cycleForFloor,
   isBossFloor,
   isEliteFloor,
@@ -28,9 +29,10 @@ export function heroCombatant(state: GameState, hero: Hero): Combatant {
   const stats = heroStats(state, hero);
   const look = heroLook(hero);
   const talents = talentGain(hero.id, hero.talents);
+  const traits = talentEffects(hero.id, hero.talents);
   const ability = HEROES[hero.id].ability;
   const cooldown = ability.cooldown * (1 - Math.min(0.6, talents.haste ?? 0));
-  return {
+  const fighter: Combatant = {
     key: `hero:${hero.id}`,
     side: 'party',
     sprite: hero.id,
@@ -41,14 +43,35 @@ export function heroCombatant(state: GameState, hero: Hero): Combatant {
     stats,
     hp: Math.max(1, Math.round(hero.hp)),
     timer: 0,
-    abilityTimer: cooldown * 0.5,
+    // Forethought and the like start the knack charged instead of half wound.
+    abilityTimer: traits.primed ? 0 : cooldown * 0.5,
     abilityCooldown: cooldown,
     abilityPower: ability.power * (1 + (talents.power ?? 0)),
     guard: 0,
     alive: hero.hp > 0,
     action: 'idle',
     actionUntil: 0,
+    traits,
   };
+  if (traits.aegis) {
+    fighter.wardMax = Math.max(1, Math.round(stats.maxHp * traits.aegis));
+    fighter.ward = fighter.wardMax;
+  }
+  return fighter;
+}
+
+/**
+ * Wipes the once-an-encounter talent state and puts a talent shield back up.
+ * Called when a fight starts, not when the dive does, so a hero who spent
+ * their second wind on the first room still has one in the second.
+ */
+export function readyForEncounter(fighter: Combatant): void {
+  fighter.opened = false;
+  fighter.recovered = false;
+  const aegis = fighter.traits?.aegis;
+  if (!aegis) return;
+  fighter.wardMax = Math.max(1, Math.round(fighter.stats.maxHp * aegis));
+  fighter.ward = fighter.alive ? fighter.wardMax : 0;
 }
 
 function foeStats(kind: string, floor: number, rank: 'common' | 'elite' | 'boss', danger: number): Stats {
@@ -157,15 +180,28 @@ function interval(combatant: Combatant): number {
 }
 
 function strike(attacker: Combatant, defender: Combatant, multiplier: number, rng: Rng, events: CombatEvent[]): void {
+  const traits = attacker.traits;
   const mitigation = 100 / (100 + defender.stats.defence);
   const critical = rng.chance(attacker.stats.crit);
   let damage = attacker.stats.attack * multiplier * mitigation * rng.range(0.9, 1.12);
   if (critical) damage *= BALANCE.critMultiplier;
   if (defender.guard > 0) damage *= 1 - HEROES.warden.ability.power;
 
+  // An opening blow is thrown once an encounter, whether it lands as a swing
+  // or as the hero's knack.
+  if (traits?.opener && !attacker.opened) {
+    attacker.opened = true;
+    damage *= 1 + traits.opener;
+  }
+  // Anything already down to a third of its health is worth finishing.
+  if (traits?.execute && defender.hp / Math.max(1, defender.stats.maxHp) <= 0.33) {
+    damage *= 1 + traits.execute;
+  }
+
   let dealt = Math.max(1, Math.round(damage));
 
-  // A keeper's ward soaks the blow before its health ever hears about it.
+  // A ward soaks the blow before health ever hears about it. Keepers raise one
+  // at a threshold, heroes walk in behind one off a talent.
   if (defender.ward && defender.ward > 0) {
     const soaked = Math.min(defender.ward, dealt);
     defender.ward -= soaked;
@@ -177,7 +213,38 @@ function strike(attacker: Combatant, defender: Combatant, multiplier: number, rn
   defender.hp -= dealt;
   events.push({ kind: critical ? 'crit' : 'hit', key: defender.key, amount: dealt, from: attacker.key });
 
+  if (traits?.leech && attacker.alive && attacker.hp < attacker.stats.maxHp) {
+    const drawn = Math.max(1, Math.round(dealt * traits.leech));
+    attacker.hp = Math.min(attacker.stats.maxHp, attacker.hp + drawn);
+    events.push({ kind: 'heal', key: attacker.key, amount: drawn, from: attacker.key });
+  }
+
+  // Briar mail answers the blow directly, with no second round of thorns off
+  // the answer, so two thorned fighters cannot bounce a hit between them.
+  const thorns = defender.traits?.thorns;
+  if (thorns && attacker.alive && attacker !== defender) {
+    const back = Math.max(1, Math.round(dealt * thorns));
+    attacker.hp -= back;
+    events.push({ kind: 'hit', key: attacker.key, amount: back, from: defender.key });
+    if (attacker.hp <= 0) {
+      attacker.hp = 0;
+      attacker.alive = false;
+      attacker.action = 'down';
+      events.push({ kind: 'down', key: attacker.key, amount: 0 });
+    }
+  }
+
   if (defender.hp <= 0) {
+    // A second wind is spent the moment it would be needed, once a fight.
+    const wind = defender.traits?.secondwind;
+    if (wind && !defender.recovered) {
+      defender.recovered = true;
+      defender.hp = Math.max(1, Math.round(defender.stats.maxHp * wind));
+      defender.action = 'hurt';
+      defender.actionUntil = 0.25;
+      events.push({ kind: 'heal', key: defender.key, amount: defender.hp, from: defender.key });
+      return;
+    }
     defender.hp = 0;
     defender.alive = false;
     defender.action = 'down';
@@ -319,6 +386,13 @@ export function stepCombat(party: Combatant[], foes: Combatant[], dt: number, rn
       const target = pickTarget(enemies, rng, actor.side === 'foe');
       if (!target) continue;
       strike(actor, target, 1, rng, events);
+      // A flurry is a second swing off the same wind up, never a third, and it
+      // only lands if there is still something standing to land it on.
+      const flurry = actor.traits?.flurry;
+      if (flurry && actor.alive && rng.chance(flurry)) {
+        const again = pickTarget(enemies, rng, false);
+        if (again) strike(actor, again, 1, rng, events);
+      }
       actor.action = 'attack';
       actor.actionUntil = 0.45;
     }

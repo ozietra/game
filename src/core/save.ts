@@ -1,6 +1,22 @@
-import { KINDS_BY_SLOT } from '../data/content';
+import { KINDS_BY_SLOT, TALENT_TREES } from '../data/content';
 import { SAVE_VERSION, freshState } from './game';
-import type { GameState, Item } from './types';
+import type { GameState, HeroId, Item } from './types';
+
+/**
+ * Keeps only the picks that still sit on the row they were recorded against.
+ * When a tree is rebuilt, a stale pick would otherwise hold its row shut
+ * forever while counting for nothing, so it is dropped and the row reopens.
+ */
+function keepTalents(hero: HeroId, stored: unknown): string[] {
+  if (!Array.isArray(stored)) return [];
+  const tree = TALENT_TREES[hero] ?? [];
+  const kept: string[] = [];
+  for (let tier = 0; tier < tree.length; tier += 1) {
+    const pick = stored[tier];
+    kept[tier] = typeof pick === 'string' && tree[tier].includes(pick) ? pick : '';
+  }
+  return kept;
+}
 
 const KEY = 'hollowdeep.save.v1';
 /** The game was called Alacakuyu until the rename; those saves still load. */
@@ -85,8 +101,13 @@ function withKind(item: Item): Item {
   return item.kind ? item : { ...item, kind: KINDS_BY_SLOT[item.slot][0] };
 }
 
-/** Fills in anything a newer build expects but an older save never wrote. */
-function migrate(state: GameState): GameState {
+/**
+ * Fills in anything a newer build expects but an older save never wrote.
+ * Exported so the offline harnesses read a save the same way the game does,
+ * rather than handing raw JSON to the resolver and tripping over a field that
+ * only exists in this build.
+ */
+export function migrate(state: GameState): GameState {
   const base = freshState();
   const merged: GameState = {
     ...base,
@@ -107,7 +128,7 @@ function migrate(state: GameState): GameState {
           ...base.heroes[id],
           ...stored,
           gear: { ...base.heroes[id].gear, ...stored.gear },
-          talents: Array.isArray(stored.talents) ? stored.talents : [],
+          talents: keepTalents(id, stored.talents),
         }
       : base.heroes[id];
   }

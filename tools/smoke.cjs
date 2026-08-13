@@ -76,6 +76,15 @@ const SAVE = JSON.parse(fs.readFileSync(SAVE_PATH, 'utf8'));
     await page.screenshot({ path: `${OUT}/mid-${tab}.png`, fullPage: tab === 'roster' || tab === 'relics' });
   }
 
+  // the talent tree, which lives over the top of the party screen
+  await page.click('[data-tab="roster"]');
+  await page.waitForTimeout(500);
+  await page.locator('.hero-card .button').filter({ hasText: /Yetenek ağacı|Talent tree/ }).first().click();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${OUT}/mid-talents.png` });
+  await page.locator('.talent-foot .button').last().click();
+  await page.waitForTimeout(300);
+
   // english pass, switched from the title screen
   await page.click('.topbar-right .button');
   await page.waitForTimeout(400);

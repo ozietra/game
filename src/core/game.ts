@@ -28,6 +28,7 @@ import {
   SLOTS,
   TALENT_LEVELS,
   TALENT_TREES,
+  talentOpen,
   talentsOpen,
   contractReward,
   contractTarget,
@@ -36,7 +37,15 @@ import {
   zoneForFloor,
   type ContractId,
 } from '../data/content';
-import { buildFoes, encounterOver, heroCombatant, makeFoe, stepCombat, type CombatEvent } from './combat';
+import {
+  buildFoes,
+  encounterOver,
+  heroCombatant,
+  makeFoe,
+  readyForEncounter,
+  stepCombat,
+  type CombatEvent,
+} from './combat';
 import { Rng } from './rng';
 import {
   grantXp,
@@ -314,6 +323,7 @@ export class Game {
     this.surgeElite = false;
     this.run.phase = 'fighting';
     this.syncPartyHealth();
+    for (const fighter of this.run.party) readyForEncounter(fighter);
     if (isBossFloor(this.run.floor) && this.run.encounter === BALANCE.encountersPerFloor) {
       this.note('log.boss', { name: `foe.${zoneForFloor(this.run.floor).boss}`, floor: this.run.floor }, 'loud');
     }
@@ -1107,8 +1117,8 @@ export class Game {
   }
 
   /**
-   * Takes one side of a fork. It only works once per tier and only once the
-   * hero has actually reached it, and there is no way back.
+   * Takes one branch of a row. It only works once per row, only once the hero
+   * has reached it, and a crowning talent also wants the line behind it.
    */
   chooseTalent(id: HeroId, tier: number, talent: string): boolean {
     const hero = this.state.heroes[id];
@@ -1119,6 +1129,7 @@ export class Game {
     if (!Array.isArray(hero.talents)) hero.talents = [];
     if (hero.talents[tier]) return false;
     if (!(TALENT_TREES[id]?.[tier] ?? []).includes(talent)) return false;
+    if (!talentOpen(id, hero.talents, talent)) return false;
 
     hero.talents[tier] = talent;
     this.note('log.talent', { name: `hero.${id}.name`, talent: `talent.${talent}.name` }, 'good');

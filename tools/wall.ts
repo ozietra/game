@@ -13,6 +13,7 @@
 
 import { readFileSync } from 'node:fs';
 import { Game } from '../src/core/game';
+import { migrate } from '../src/core/save';
 import type { GameState } from '../src/core/types';
 
 const path = process.argv[2] ?? 'tools/.cache/save.json';
@@ -22,7 +23,9 @@ const target = Number(process.argv[4] ?? 0);
 // offline catch up uses a fifth, and the two must agree.
 const step = Number(process.argv[5] ?? 0.2);
 
-const save = JSON.parse(readFileSync(path, 'utf8')) as GameState;
+// Through the same migration the game uses, so a save written before a hero or
+// a field existed is filled in rather than crashing the resolver.
+const save = migrate(JSON.parse(readFileSync(path, 'utf8')) as GameState);
 if (target > 0) save.policy.targetFloor = target;
 save.policy.autoDive = true;
 

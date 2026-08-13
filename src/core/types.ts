@@ -1,3 +1,7 @@
+// Type only, and erased at build time, so this does not make a cycle with the
+// content module that reads HeroId back out of here.
+import type { TalentEffects } from '../data/content';
+
 export type HeroId =
   | 'warden'
   | 'ranger'
@@ -84,6 +88,12 @@ export interface Combatant {
   /** Talent adjusted ability numbers, worked out once when the dive starts. */
   abilityCooldown?: number;
   abilityPower?: number;
+  /** Talent behaviours the resolver honours, read once when the dive starts. */
+  traits?: TalentEffects;
+  /** Whether the opening blow of this encounter has already been thrown. */
+  opened?: boolean;
+  /** Whether a second wind has already been spent this encounter. */
+  recovered?: boolean;
 }
 
 export interface Satchel {

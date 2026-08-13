@@ -1724,28 +1724,159 @@ input[type='checkbox'] {
 
 /* ---------------------------------------------------------------- talents */
 
-.talent-fork {
-  margin-bottom: 9px;
+/*
+ * Three paths, each with a colour it keeps everywhere it appears: in the tally
+ * on the hero card, on the chips of what was taken, and down its own column of
+ * the tree. Reading a build is then a matter of seeing which colour repeats.
+ */
+.is-might {
+  --line: var(--blood);
 }
 
-.talent-fork:last-child {
-  margin-bottom: 0;
+.is-guard {
+  --line: var(--frost);
 }
 
-.talent-tier {
-  display: block;
+.is-craft {
+  --line: var(--moss);
+}
+
+/* ------------------------------------------------- the summary on the card */
+
+.line-tally {
+  display: flex;
+  gap: 4px;
+}
+
+.line-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  border: 1px solid var(--edge);
+  border-bottom: 2px solid var(--line, var(--edge-lit));
+  padding: 2px 7px 1px;
+  opacity: 0.55;
+}
+
+.line-mark.is-live {
+  opacity: 1;
+}
+
+.line-name {
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.line-count {
   font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-size: 13px;
+  color: var(--line, var(--text));
+}
+
+.talent-taken {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 11px;
+}
+
+.talent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--edge-lit);
+  border-left: 3px solid var(--line, var(--edge-lit));
+  background: #100d0a;
+  padding: 3px 9px 4px;
+  font-size: 14px;
+}
+
+.talent-chip .icon {
+  width: 15px;
+  height: 15px;
+  fill: var(--line, var(--gold));
+}
+
+/* --------------------------------------------------- the tree, over the top */
+
+.talent-modal {
+  max-width: 980px;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+
+.talent-modal .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--edge);
+  padding-bottom: 9px;
+}
+
+.talent-grid {
+  display: grid;
+  grid-template-columns: 104px repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 16px 0 6px;
+  align-items: stretch;
+}
+
+.talent-corner {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 5px;
+  align-self: end;
+  padding-bottom: 7px;
 }
 
-.talent-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+.talent-column {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 2px solid var(--line, var(--edge-lit));
+  padding: 0 4px 6px;
+}
+
+.talent-column-name {
+  font-family: var(--display);
+  font-size: 19px;
+  color: var(--line, var(--gold));
+}
+
+.talent-column-count {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* The row marker doubles as the trunk the three branches hang off. */
+.talent-rank {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  border-right: 2px solid var(--edge-lit);
+  padding-right: 10px;
+  text-align: right;
+}
+
+.talent-rank.is-locked {
+  opacity: 0.45;
+  border-right-style: dashed;
+}
+
+.talent-rank-index {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.talent-rank-level {
+  font-family: var(--mono);
+  font-size: 21px;
+  color: var(--gold);
 }
 
 .talent {
@@ -1754,44 +1885,55 @@ input[type='checkbox'] {
   gap: 3px;
   text-align: left;
   border: 1px solid var(--edge-lit);
+  border-top: 2px solid var(--line, var(--edge-lit));
   background: var(--panel-raised);
   color: var(--text);
-  padding: 7px 9px 8px;
+  padding: 8px 10px 9px;
   cursor: pointer;
   font: inherit;
 }
 
 .talent:hover:not(:disabled) {
   border-color: var(--gold);
+  border-top-color: var(--line, var(--gold));
+  background: #241e17;
 }
 
 .talent:disabled {
   cursor: default;
 }
 
-.talent.is-locked {
+.talent.is-locked,
+.talent.is-passed {
   opacity: 0.4;
+}
+
+.talent.is-barred {
+  opacity: 0.62;
+  background: var(--panel);
 }
 
 .talent.is-chosen {
   border-color: var(--gold);
+  border-top-color: var(--line, var(--gold));
   background: #2a2115;
+  box-shadow: inset 0 0 0 1px rgba(195, 154, 69, 0.25);
 }
 
 .talent-head {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
 .talent-icon .icon {
-  width: 16px;
-  height: 16px;
-  fill: var(--gold);
+  width: 17px;
+  height: 17px;
+  fill: var(--line, var(--gold));
 }
 
 .talent-name {
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.25;
 }
 
@@ -1800,6 +1942,89 @@ input[type='checkbox'] {
   font-size: 12.5px;
   color: var(--muted);
   line-height: 1.4;
+}
+
+.talent-effect {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.4;
+  border-left: 2px solid var(--line, var(--edge-lit));
+  padding-left: 7px;
+  margin-top: 2px;
+}
+
+/* The one thing in the panel that is a refusal, so it gets the only red. */
+.talent-bar {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--blood);
+  line-height: 1.4;
+  border-top: 1px dashed rgba(160, 68, 52, 0.45);
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+.talent-line-tag {
+  display: none;
+  margin-left: auto;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--line, var(--muted));
+}
+
+.talent-foot {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--edge);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+.talent-foot .button {
+  margin-top: 0;
+}
+
+/* On a narrow screen the row marker rides above its three branches. */
+@media (max-width: 760px) {
+  .talent-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .talent-corner {
+    display: none;
+  }
+
+  .talent-rank {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+    border-right: none;
+    border-bottom: 1px solid var(--edge-lit);
+    padding: 8px 0 4px;
+  }
+
+  .talent-rank-level {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 520px) {
+  .talent-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .talent-column {
+    display: none;
+  }
+
+  .talent-line-tag {
+    display: inline;
+  }
 }
 
 /* --------------------------------------------------------------- guide */

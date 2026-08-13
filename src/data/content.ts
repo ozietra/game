@@ -592,91 +592,241 @@ export interface TalentGain {
   haste?: number;
 }
 
+/**
+ * A talent that changes how a hero fights rather than how large their numbers
+ * are. Every one of these is resolved in the combat step, so a party built
+ * around them plays differently instead of merely hitting harder.
+ */
+export type TalentEffectKind =
+  /** Returns a share of every blow taken to whoever threw it. */
+  | 'thorns'
+  /** Heals the striker for a share of the damage they land. */
+  | 'leech'
+  /** Hits harder against anything already down to a third health. */
+  | 'execute'
+  /** The first blow of every encounter lands heavier. */
+  | 'opener'
+  /** Walks into each encounter behind a shield worth this much health. */
+  | 'aegis'
+  /** Once an encounter, refuses to fall and gets back up on this much. */
+  | 'secondwind'
+  /** Walks in with the knack already charged. */
+  | 'primed'
+  /** A chance to swing twice off one wind up. */
+  | 'flurry';
+
+export type TalentEffects = Partial<Record<TalentEffectKind, number>>;
+
+/**
+ * Which of the three columns a talent sits in. Lines matter twice: they lay
+ * the tree out, and the crowning talents ask for two picks from their own line
+ * before they open. Four picks across three lines means one line always
+ * reaches two, so nobody is ever locked out of the last row entirely.
+ */
+export type TalentLine = 'might' | 'guard' | 'craft';
+
+export const TALENT_LINES: readonly TalentLine[] = ['might', 'guard', 'craft'] as const;
+
 export interface TalentDefinition {
   id: string;
   icon: string;
+  line: TalentLine;
   gain: TalentGain;
+  effect?: { kind: TalentEffectKind; value: number };
+  /** Picks needed in this talent's own line before it can be taken. */
+  needs?: number;
 }
 
-export const TALENT_LEVELS = [5, 12, 22] as const;
+export const TALENT_LEVELS = [4, 9, 15, 23, 32] as const;
+
+/** How much of its own line a crowning talent asks for. */
+export const CAPSTONE_NEEDS = 2;
 
 export const TALENTS: Record<string, TalentDefinition> = {
-  ironhide: { id: 'ironhide', icon: 'vitals', gain: { maxHp: 0.14 } },
-  keenedge: { id: 'keenedge', icon: 'blade', gain: { attack: 0.12 } },
-  bulwarked: { id: 'bulwarked', icon: 'guard', gain: { defence: 0.18 } },
-  quickstep: { id: 'quickstep', icon: 'talent', gain: { speed: 10 } },
-  sharpeye: { id: 'sharpeye', icon: 'bow', gain: { crit: 0.05 } },
-  deepbreath: { id: 'deepbreath', icon: 'ember', gain: { haste: 0.2 } },
-  channelled: { id: 'channelled', icon: 'spell', gain: { power: 0.3 } },
-  hardened: { id: 'hardened', icon: 'helm', gain: { maxHp: 0.08, defence: 0.08 } },
-  savage: { id: 'savage', icon: 'fang', gain: { attack: 0.08, crit: 0.03 } },
-  relentless: { id: 'relentless', icon: 'swords', gain: { speed: 6, haste: 0.1 } },
-  stalwart: { id: 'stalwart', icon: 'stone', gain: { maxHp: 0.18, speed: -4 } },
-  focused: { id: 'focused', icon: 'rank', gain: { power: 0.18, haste: 0.1 } },
+  // ------------------------------------------------------------------ might
+  keenedge: { id: 'keenedge', icon: 'blade', line: 'might', gain: { attack: 0.12 } },
+  sharpeye: { id: 'sharpeye', icon: 'bow', line: 'might', gain: { crit: 0.05 } },
+  savage: { id: 'savage', icon: 'fang', line: 'might', gain: { attack: 0.08, crit: 0.03 } },
+  quickstep: { id: 'quickstep', icon: 'talent', line: 'might', gain: { speed: 10 } },
+  bloodlet: { id: 'bloodlet', icon: 'fang', line: 'might', gain: { attack: 0.05 }, effect: { kind: 'leech', value: 0.08 } },
+  finisher: { id: 'finisher', icon: 'blade', line: 'might', gain: {}, effect: { kind: 'execute', value: 0.4 } },
+  ambusher: { id: 'ambusher', icon: 'swords', line: 'might', gain: { crit: 0.03 }, effect: { kind: 'opener', value: 0.6 } },
+  flurried: { id: 'flurried', icon: 'swords', line: 'might', gain: {}, effect: { kind: 'flurry', value: 0.14 } },
 
-  // One each, and only at the end of the tree.
-  lastwall: { id: 'lastwall', icon: 'guard', gain: { defence: 0.35, maxHp: 0.12 } },
-  heartseeker: { id: 'heartseeker', icon: 'bow', gain: { crit: 0.1, power: 0.35 } },
-  firestorm: { id: 'firestorm', icon: 'ember', gain: { power: 0.45 } },
-  evensong: { id: 'evensong', icon: 'faith', gain: { power: 0.4, haste: 0.15 } },
-  throatcut: { id: 'throatcut', icon: 'blade', gain: { attack: 0.18, crit: 0.08 } },
-  standfast: { id: 'standfast', icon: 'guard', gain: { power: 0.5, maxHp: 0.12 } },
-  martyr: { id: 'martyr', icon: 'faith', gain: { attack: 0.22, maxHp: 0.15 } },
-  clockwork: { id: 'clockwork', icon: 'gear', gain: { haste: 0.3, speed: 8 } },
+  // ------------------------------------------------------------------ guard
+  ironhide: { id: 'ironhide', icon: 'vitals', line: 'guard', gain: { maxHp: 0.14 } },
+  bulwarked: { id: 'bulwarked', icon: 'guard', line: 'guard', gain: { defence: 0.18 } },
+  hardened: { id: 'hardened', icon: 'helm', line: 'guard', gain: { maxHp: 0.08, defence: 0.08 } },
+  stalwart: { id: 'stalwart', icon: 'stone', line: 'guard', gain: { maxHp: 0.18, speed: -4 } },
+  briarmail: { id: 'briarmail', icon: 'fang', line: 'guard', gain: { defence: 0.06 }, effect: { kind: 'thorns', value: 0.18 } },
+  wardstone: { id: 'wardstone', icon: 'stone', line: 'guard', gain: {}, effect: { kind: 'aegis', value: 0.18 } },
+  gravewalk: { id: 'gravewalk', icon: 'grave', line: 'guard', gain: { maxHp: 0.05 }, effect: { kind: 'secondwind', value: 0.3 } },
+
+  // ------------------------------------------------------------------ craft
+  channelled: { id: 'channelled', icon: 'spell', line: 'craft', gain: { power: 0.3 } },
+  deepbreath: { id: 'deepbreath', icon: 'ember', line: 'craft', gain: { haste: 0.2 } },
+  focused: { id: 'focused', icon: 'rank', line: 'craft', gain: { power: 0.18, haste: 0.1 } },
+  relentless: { id: 'relentless', icon: 'swords', line: 'craft', gain: { speed: 6, haste: 0.1 } },
+  forethought: { id: 'forethought', icon: 'ledger', line: 'craft', gain: { power: 0.1 }, effect: { kind: 'primed', value: 1 } },
+  attuned: { id: 'attuned', icon: 'crystal', line: 'craft', gain: { power: 0.22, crit: 0.02 } },
+
+  // -------------------------------------------------- crowning, one per hero
+  lastwall: { id: 'lastwall', icon: 'guard', line: 'guard', gain: { defence: 0.35, maxHp: 0.12 }, needs: CAPSTONE_NEEDS },
+  heartseeker: { id: 'heartseeker', icon: 'bow', line: 'might', gain: { crit: 0.1, power: 0.35 }, needs: CAPSTONE_NEEDS },
+  firestorm: { id: 'firestorm', icon: 'ember', line: 'craft', gain: { power: 0.45 }, needs: CAPSTONE_NEEDS },
+  evensong: { id: 'evensong', icon: 'faith', line: 'craft', gain: { power: 0.4, haste: 0.15 }, needs: CAPSTONE_NEEDS },
+  throatcut: { id: 'throatcut', icon: 'blade', line: 'might', gain: { attack: 0.18, crit: 0.08 }, needs: CAPSTONE_NEEDS },
+  standfast: { id: 'standfast', icon: 'guard', line: 'guard', gain: { power: 0.5, maxHp: 0.12 }, needs: CAPSTONE_NEEDS },
+  martyr: { id: 'martyr', icon: 'faith', line: 'might', gain: { attack: 0.22, maxHp: 0.15 }, needs: CAPSTONE_NEEDS },
+  clockwork: { id: 'clockwork', icon: 'gear', line: 'craft', gain: { haste: 0.3, speed: 8 }, needs: CAPSTONE_NEEDS },
+
+  // ------------------------------------ crowning, shared across the eight
+  headsman: {
+    id: 'headsman',
+    icon: 'fang',
+    line: 'might',
+    gain: { attack: 0.14 },
+    effect: { kind: 'execute', value: 0.7 },
+    needs: CAPSTONE_NEEDS,
+  },
+  bloodoath: {
+    id: 'bloodoath',
+    icon: 'faith',
+    line: 'might',
+    gain: { attack: 0.1, crit: 0.04 },
+    effect: { kind: 'leech', value: 0.14 },
+    needs: CAPSTONE_NEEDS,
+  },
+  ironvow: {
+    id: 'ironvow',
+    icon: 'helm',
+    line: 'guard',
+    gain: { defence: 0.16, maxHp: 0.1 },
+    effect: { kind: 'aegis', value: 0.3 },
+    needs: CAPSTONE_NEEDS,
+  },
+  deathward: {
+    id: 'deathward',
+    icon: 'grave',
+    line: 'guard',
+    gain: { maxHp: 0.16 },
+    effect: { kind: 'secondwind', value: 0.55 },
+    needs: CAPSTONE_NEEDS,
+  },
+  quickhand: {
+    id: 'quickhand',
+    icon: 'gear',
+    line: 'craft',
+    gain: { haste: 0.18, speed: 5 },
+    effect: { kind: 'primed', value: 1 },
+    needs: CAPSTONE_NEEDS,
+  },
+  farsight: {
+    id: 'farsight',
+    icon: 'crystal',
+    line: 'craft',
+    gain: { power: 0.3, haste: 0.12 },
+    needs: CAPSTONE_NEEDS,
+  },
 };
 
-/** The three forks each hero is offered, in level order. */
-export const TALENT_TREES: Record<HeroId, [string, string][]> = {
+/**
+ * Five rows, three columns. Every row offers one talent from each line, so a
+ * player choosing the same column every time is deliberately building down a
+ * path, and the last row asks whether they actually did.
+ */
+export const TALENT_TREES: Record<HeroId, [string, string, string][]> = {
   warden: [
-    ['ironhide', 'bulwarked'],
-    ['hardened', 'deepbreath'],
-    ['lastwall', 'stalwart'],
+    ['keenedge', 'ironhide', 'channelled'],
+    ['savage', 'bulwarked', 'deepbreath'],
+    ['ambusher', 'briarmail', 'forethought'],
+    ['quickstep', 'stalwart', 'focused'],
+    ['bloodoath', 'lastwall', 'quickhand'],
   ],
   ranger: [
-    ['keenedge', 'sharpeye'],
-    ['quickstep', 'channelled'],
-    ['heartseeker', 'relentless'],
+    ['keenedge', 'ironhide', 'channelled'],
+    ['sharpeye', 'hardened', 'relentless'],
+    ['ambusher', 'wardstone', 'forethought'],
+    ['finisher', 'bulwarked', 'attuned'],
+    ['heartseeker', 'ironvow', 'farsight'],
   ],
   magus: [
-    ['channelled', 'keenedge'],
-    ['deepbreath', 'ironhide'],
-    ['firestorm', 'focused'],
+    ['savage', 'ironhide', 'channelled'],
+    ['sharpeye', 'hardened', 'deepbreath'],
+    ['bloodlet', 'wardstone', 'attuned'],
+    ['finisher', 'stalwart', 'focused'],
+    ['headsman', 'ironvow', 'firestorm'],
   ],
   preacher: [
-    ['channelled', 'ironhide'],
-    ['deepbreath', 'bulwarked'],
-    ['evensong', 'hardened'],
+    ['keenedge', 'ironhide', 'channelled'],
+    ['savage', 'bulwarked', 'deepbreath'],
+    ['bloodlet', 'gravewalk', 'forethought'],
+    ['finisher', 'hardened', 'focused'],
+    ['bloodoath', 'deathward', 'evensong'],
   ],
   cutpurse: [
-    ['savage', 'quickstep'],
-    ['sharpeye', 'relentless'],
-    ['throatcut', 'keenedge'],
+    ['savage', 'ironhide', 'relentless'],
+    ['sharpeye', 'hardened', 'deepbreath'],
+    ['ambusher', 'wardstone', 'forethought'],
+    ['flurried', 'stalwart', 'attuned'],
+    ['throatcut', 'ironvow', 'quickhand'],
   ],
   sentinel: [
-    ['bulwarked', 'ironhide'],
-    ['channelled', 'hardened'],
-    ['standfast', 'stalwart'],
+    ['keenedge', 'bulwarked', 'channelled'],
+    ['quickstep', 'ironhide', 'deepbreath'],
+    ['ambusher', 'briarmail', 'forethought'],
+    ['savage', 'hardened', 'focused'],
+    ['headsman', 'standfast', 'quickhand'],
   ],
   zealot: [
-    ['savage', 'ironhide'],
-    ['keenedge', 'deepbreath'],
-    ['martyr', 'focused'],
+    ['savage', 'ironhide', 'channelled'],
+    ['keenedge', 'bulwarked', 'deepbreath'],
+    ['bloodlet', 'briarmail', 'forethought'],
+    ['flurried', 'gravewalk', 'focused'],
+    ['martyr', 'deathward', 'farsight'],
   ],
   tinker: [
-    ['quickstep', 'sharpeye'],
-    ['relentless', 'channelled'],
-    ['clockwork', 'savage'],
+    ['quickstep', 'ironhide', 'relentless'],
+    ['sharpeye', 'hardened', 'channelled'],
+    ['flurried', 'wardstone', 'forethought'],
+    ['finisher', 'bulwarked', 'attuned'],
+    ['heartseeker', 'ironvow', 'clockwork'],
   ],
 };
+
+/** Only picks that sit at the row they are recorded against count. */
+function validPicks(hero: HeroId, picks: string[] | undefined): string[] {
+  const tree = TALENT_TREES[hero] ?? [];
+  if (!picks) return [];
+  const kept: string[] = [];
+  for (let tier = 0; tier < tree.length; tier += 1) {
+    const pick = picks[tier];
+    if (pick && tree[tier].includes(pick)) kept.push(pick);
+  }
+  return kept;
+}
+
+/** How many picks a hero has made in each line so far. */
+export function lineCounts(hero: HeroId, picks: string[] | undefined): Record<TalentLine, number> {
+  const counts: Record<TalentLine, number> = { might: 0, guard: 0, craft: 0 };
+  for (const id of validPicks(hero, picks)) {
+    const talent = TALENTS[id];
+    if (talent) counts[talent.line] += 1;
+  }
+  return counts;
+}
+
+/** Whether a talent's line requirement is met, ignoring the row it sits on. */
+export function talentOpen(hero: HeroId, picks: string[] | undefined, id: string): boolean {
+  const talent = TALENTS[id];
+  if (!talent?.needs) return true;
+  return lineCounts(hero, picks)[talent.line] >= talent.needs;
+}
 
 /** Everything a hero's chosen talents add up to. */
 export function talentGain(hero: HeroId, picks: string[] | undefined): TalentGain {
   const total: TalentGain = {};
-  if (!picks) return total;
-  const tree = TALENT_TREES[hero] ?? [];
-  const allowed = new Set(tree.flat());
-  for (const id of picks) {
-    if (!allowed.has(id)) continue;
+  for (const id of validPicks(hero, picks)) {
     const talent = TALENTS[id];
     if (!talent) continue;
     for (const [stat, value] of Object.entries(talent.gain) as [keyof TalentGain, number][]) {
@@ -686,7 +836,18 @@ export function talentGain(hero: HeroId, picks: string[] | undefined): TalentGai
   return total;
 }
 
-/** How many forks a hero has reached, and how many are still unspent. */
+/** The behaviours a hero's talents bring into a fight, added where they stack. */
+export function talentEffects(hero: HeroId, picks: string[] | undefined): TalentEffects {
+  const total: TalentEffects = {};
+  for (const id of validPicks(hero, picks)) {
+    const effect = TALENTS[id]?.effect;
+    if (!effect) continue;
+    total[effect.kind] = (total[effect.kind] ?? 0) + effect.value;
+  }
+  return total;
+}
+
+/** How many rows a hero has reached, and how many are still unspent. */
 export function talentsOpen(level: number): number {
   return TALENT_LEVELS.filter((needed) => level >= needed).length;
 }
